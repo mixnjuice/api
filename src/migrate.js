@@ -18,11 +18,14 @@ const postgrator = new Postgrator({
 });
 
 const logMigration = migration => {
-  const isDo = migration.action === 'do';
+  const { name, action, version } = migration;
+  const apply = action === 'do';
 
-  log.info(
-    `${isDo ? 'Applied' : 'Reverted'} #${migration.version} - ${migration.name}`
-  );
+  if (name) {
+    log.info(`${apply ? 'Applied' : 'Reverted'} #${version} - ${name}`);
+  } else {
+    log.info(`${apply ? 'Applied' : 'Reverted'} #${version}`);
+  }
 };
 
 program

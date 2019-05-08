@@ -48,7 +48,7 @@ module.exports = {
     'max-nested-callbacks': 0,
     'max-params': 0,
     'max-statements': 0,
-    'new-cap': [2, { properties: false }],
+    'new-cap': 0,
     'newline-after-var': 1,
     'no-alert': 2,
     'no-array-constructor': 2,

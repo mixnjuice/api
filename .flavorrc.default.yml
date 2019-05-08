@@ -3,3 +3,9 @@ logging:
   timestamp: 'YYYY-MM-DD HH:mm:ss'
 web:
   port: 3000
+database:
+  host: localhost
+  port: 5432
+  database: flavors
+  user: flavors
+  password: changeme

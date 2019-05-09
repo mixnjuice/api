@@ -8,6 +8,8 @@ COPY . .
 # change database hostname from localhost to postgres
 RUN sed -e 's/host: localhost/host: postgres/' < .flavorrc.default.yml > .flavorrc.yml
 
+RUN chmod +x ./bin/start.sh
+
 RUN npm install
 
 EXPOSE 3000

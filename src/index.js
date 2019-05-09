@@ -1,6 +1,8 @@
 import express from 'express';
+import passport from 'passport';
 import bodyParser from 'body-parser';
 import responseTime from 'response-time';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 
 import configs from './config';
 import loggers from './logging';
@@ -15,9 +17,30 @@ const log = loggers('api');
 const app = express();
 
 try {
+  // auth setup
+  const { hostname, port, tokens } = config;
+
+  passport.use(
+    new JwtStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: tokens.secret,
+        issuer: hostname,
+        audience: hostname
+      },
+      (_, done) => {
+        // this logic allows all valid JWTs
+        return done(null, true);
+      }
+    )
+  );
+
   // common middleware
   app.use(responseTime());
   app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(passport.initialize());
+  app.use(passport.authenticate('jwt', { session: false }));
   app.use((req, _, next) => {
     log.info(`request for ${req.path}`);
     next();
@@ -29,8 +52,8 @@ try {
   // app.use('/vendor', vendor);
 
   // start the server
-  log.info(`Listening on http://localhost:${config.port}`);
-  app.listen(config.port);
+  log.info(`Listening on http://localhost:${port}`);
+  app.listen(port);
 } catch (error) {
   log.error(`Fatal error: ${error.message}`);
 }

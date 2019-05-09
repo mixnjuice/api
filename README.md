@@ -5,7 +5,7 @@ This repository is a proof-of-concept of a simple REST API written using Node.js
 ## libraries
 
 - [Express](https://expressjs.com/)
-- Google OpenID auth via [passport-google-openidconnect](https://github.com/kkkon/passport-google-openidconnect).
+- JWT-based authentication provided by [passport-jwt](https://www.npmjs.com/package/passport-jwt)
 - [pg](https://github.com/brianc/node-postgres) as a PostgreSQL client
 - [postgrator](https://github.com/rickbergfalk/postgrator) to handle SQL migrations
 

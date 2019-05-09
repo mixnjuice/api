@@ -38,3 +38,13 @@ npm start
 ```
 
 You can use `npm run migrate 0` to revert all database migrations, or `npm run migrate X` to migrate to version X.
+
+## docker
+
+Simply run `docker-compose up` from the source root. Use the `--no-start` option to create the containers without starting them in interactive mode.
+
+You can manually migrate the database using
+
+```sh
+docker-compose run --rm api npm run migrate
+```

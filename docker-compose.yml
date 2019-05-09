@@ -1,0 +1,22 @@
+version: '3'
+services:
+  api:
+    build: .
+    container_name: flavor-api
+    environment:
+      - FLAVOR_API_JWT_SECRET=changeme
+    ports:
+      - 3000:3000
+    links:
+      - postgres
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=flavors
+      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_DB=flavors
+    ports:
+      - 5432:5432

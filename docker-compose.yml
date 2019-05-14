@@ -11,7 +11,7 @@ services:
       - postgres
   postgres:
     image: postgres:latest
-    container_name: postgres
+    container_name: flavor-api-pg
     environment:
       - POSTGRES_USER=flavors
       - POSTGRES_PASSWORD=changeme
@@ -20,7 +20,7 @@ services:
       - 5432:5432
   nginx:
     image: nginx:latest
-    container_name: nginx
+    container_name: flavor-api-nginx
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/ssl:/etc/nginx/ssl

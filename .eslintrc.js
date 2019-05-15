@@ -4,10 +4,10 @@ module.exports = {
   env: {
     commonjs: true,
     es6: true,
-
-    node: true
+    node: true,
+    jest: true
   },
-  plugins: ['import', 'prettier'],
+  plugins: ['import', 'prettier', 'jest'],
   extends: [
     'eslint:recommended',
     'plugin:prettier/recommended',

@@ -1,11 +1,9 @@
-import cosmiconfig from 'cosmiconfig';
+import dotenv from 'dotenv';
 
-const configSearch = cosmiconfig('flavor').searchSync();
+const config = dotenv.config();
 
-if (configSearch === null) {
-  throw new Error(
-    'Did not find a config file for module name "flavor" - see https://github.com/davidtheclark/cosmiconfig#explorersearch'
-  );
+if (config.error) {
+  throw config.error;
 }
 
-export default configSearch.config;
+export default config.parsed;

@@ -1,24 +1,21 @@
 import { Container, format, transports } from 'winston';
 
-import configs from './config';
-
 const { combine, label, prettyPrint, printf, timestamp } = format;
-const { logging: config } = configs;
 
 const loggers = {};
 const container = new Container();
 
+const formatter = data =>
+  `${data.timestamp} [${data.level}][${data.label}] ${data.message}`;
+
 const createLogger = (category, categoryLabel) => {
-  let formatter = data => `[${data.level}][${data.label}] ${data.message}`;
-  const formatters = [label({ label: categoryLabel })];
+  const formatters = [
+    label({ label: categoryLabel }),
+    timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    prettyPrint(),
+    printf(formatter)
+  ];
 
-  if (config.timestamp !== false) {
-    formatters.push(timestamp({ format: config.timestamp }));
-    formatter = data =>
-      `${data.timestamp} [${data.level}][${data.label}] ${data.message}`;
-  }
-
-  formatters.push(prettyPrint(), printf(formatter));
   container.add(category, {
     transports: [
       new transports.Console({

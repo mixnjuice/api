@@ -1,9 +1,27 @@
 import dotenv from 'dotenv';
 
-const config = dotenv.config();
+const result = dotenv.config();
 
-if (config.error) {
-  throw config.error;
+if (result.error) {
+  throw result.error;
 }
 
-export default config.parsed;
+const { env: config } = process;
+
+export default {
+  web: {
+    hostname: config.API_HOST,
+    port: config.API_PORT,
+    tokens: {
+      age: config.API_TOKEN_AGE,
+      secret: config.API_TOKEN_SECRET
+    }
+  },
+  database: {
+    host: config.DB_HOST,
+    port: config.DB_PORT,
+    database: config.DB_NAME,
+    user: config.DB_USER,
+    password: config.DB_PASS
+  }
+};

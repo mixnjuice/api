@@ -1,13 +1,7 @@
-import { Pool } from 'pg';
 import { Router } from 'express';
 import { check, validationResult } from 'express-validator/check';
 
-import configs from '../config';
-
-const { database } = configs;
-
-const pool = new Pool(database);
-
+import { pool } from '../database';
 import loggers from '../logging';
 
 const router = Router();
@@ -43,7 +37,11 @@ router.get(
         [req.params.id]
       );
 
-      res.writeHead(200).end(JSON.stringify(result.rows));
+      if (result.rows.length === 0) {
+        return res.writeHead(204).end();
+      }
+
+      res.writeHead(200).end(JSON.stringify(result.rows.shift()));
     } catch (error) {
       log.error(error.message);
       res.writeHead(500).end(error.message);

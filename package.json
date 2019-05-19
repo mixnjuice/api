@@ -8,7 +8,8 @@
     "build": "gulp",
     "develop": "gulp watch",
     "start": "gulp && node lib/index.js",
-    "migrate": "gulp && node lib/migrate.js"
+    "migrate": "gulp && node lib/migrate.js",
+    "test": "jest"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

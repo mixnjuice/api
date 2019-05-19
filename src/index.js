@@ -4,7 +4,7 @@ import { app } from './app';
 
 // extract web config, create logger and express app
 const { web: config } = configs;
-const { app: log } = loggers;
+const log = loggers('app');
 
 try {
   const { port } = config;
@@ -13,5 +13,5 @@ try {
   log.info(`Listening on http://localhost:${port}`);
   app.listen(port);
 } catch (error) {
-  log.error(`Fatal error: ${error.message}`);
+  log.error(`Fatal error: ${error}`);
 }

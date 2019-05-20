@@ -5,15 +5,13 @@ import responseTime from 'response-time';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 
 import configs from './config';
-import loggers from './logging';
 
 import flavor from './routes/flavor';
 // import recipe from './routes/recipe';
 // import vendor from './routes/vendor';
 
-// extract web config, create logger and express app
+// extract web config and create express app
 const { web: config } = configs;
-const log = loggers('api');
 
 export const app = express();
 
@@ -41,10 +39,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(passport.authenticate('jwt', { session: false }));
-app.use((req, _, next) => {
-  log.info(`request for ${req.path}`);
-  next();
-});
 
 // routes
 app.use('/flavor', flavor);

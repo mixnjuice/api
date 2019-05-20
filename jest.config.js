@@ -11,5 +11,6 @@ module.exports = {
       statements: 80
     }
   },
+  testMatch: ['<rootDir>/src/**/*.test.js'],
   modulePaths: ['<rootDir>/src/']
 };

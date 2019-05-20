@@ -12,6 +12,6 @@ RUN chmod +x ./bin/start.sh
 
 RUN npm install
 
-EXPOSE ${WEB_PORT:-3000}
+EXPOSE ${API_PORT:-3000}
 
 CMD ["./bin/start.sh"]

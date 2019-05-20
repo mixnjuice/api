@@ -4,13 +4,15 @@ services:
     build: .
     image: gusta-api:latest
     container_name: gusta-api
+    restart: always
     ports:
-      - ${API_PORT:-3000}:3000
+      - ${API_PORT}:${API_PORT}
     environment:
       API_TOKEN_SECRET: changeme
       DB_HOST: database
       DB_PASS: changeme
       VIRTUAL_HOST: ${API_HOST}
+      VIRTUAL_PORT: ${API_PORT}
       LETSENCRYPT_HOST: ${API_HOST}
     depends_on:
       - database
@@ -18,15 +20,13 @@ services:
     image: postgres:latest
     container_name: gusta-api-pg
     environment:
-      - POSTGRES_USER=flavors
-      - POSTGRES_PASSWORD=$DB_PASS
-      - POSTGRES_DB=flavors
+      POSTGRES_USER: flavors
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: flavors
   proxy:
     image: nginx
     container_name: gusta-api-proxy
     restart: always
-    depends_on:
-      - api
     ports:
       - 80:80
       - 443:443

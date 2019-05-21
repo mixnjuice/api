@@ -5,8 +5,6 @@ services:
     image: gusta-api:latest
     container_name: gusta-api
     restart: always
-    ports:
-      - ${API_PORT}:${API_PORT}
     environment:
       API_TOKEN_SECRET: changeme
       DB_HOST: database

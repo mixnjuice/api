@@ -8,5 +8,5 @@ jobs:
       - run: docker-compose up -d
       - run: docker-compose exec api npm test
       - store_artifacts:
-        path: coverage
-        prefix: coverage
+          path: coverage
+          prefix: coverage

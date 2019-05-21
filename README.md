@@ -1,4 +1,4 @@
-# flavor-api
+# Gusta API
 
 This repository is a proof-of-concept of a simple REST API written using Node.js.
 

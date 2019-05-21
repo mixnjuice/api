@@ -41,6 +41,7 @@ router.get(
         return res.writeHead(204).end();
       }
 
+      res.type('application/json');
       res.writeHead(200).end(JSON.stringify(result.rows.shift()));
     } catch (error) {
       log.error(error.message);

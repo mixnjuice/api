@@ -1,0 +1,12 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    working_directory: ~/flavor-api
+    steps:
+      - checkout
+      - run: docker-compose up -d
+      - run: docker-compose exec api npm test
+      - store_artifacts:
+        path: coverage
+        prefix: coverage

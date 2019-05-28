@@ -35,7 +35,7 @@ program
     try {
       const applied = await postgrator.migrate(target ? target : 'max');
 
-      if (applied === []) {
+      if (applied.length === 0) {
         log.info('No migration needed!');
         return;
       }

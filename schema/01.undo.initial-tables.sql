@@ -1,0 +1,11 @@
+drop table flavor_identifier;
+drop table recipes_diluents;
+drop table recipes_flavors;
+drop table users_flavors;
+drop table data_supplier;
+drop table preparation;
+drop table diluent;
+drop table recipe;
+drop table flavor;
+drop table vendor;
+drop table "user";

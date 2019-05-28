@@ -21,7 +21,7 @@ describe('flavor resource', () => {
         200,
         {
           vendor_code: 'CAP',
-          vendor_name: 'Capella Flavors',
+          vendor_name: 'Capella',
           flavor_name: 'Pear'
         },
         done

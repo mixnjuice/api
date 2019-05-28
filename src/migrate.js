@@ -50,7 +50,34 @@ program
 
       log.info('Reached target migration!');
     } catch (error) {
-      log.error(error.stack);
+      const {
+        stack,
+        code = 'unknown',
+        detail,
+        position,
+        schema,
+        table,
+        column
+      } = error;
+
+      let message = `Code ${code} `;
+
+      if (schema && table) {
+        message += `on ${schema}.${table} `;
+
+        if (column) {
+          message += `.${column}`;
+        }
+      } else {
+        message += `at offset ${position} `;
+      }
+
+      if (detail) {
+        message += `- ${detail}`;
+      }
+
+      log.error(message);
+      log.error(stack);
     }
   });
 

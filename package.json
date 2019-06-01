@@ -1,5 +1,5 @@
 {
-  "name": "gusta-api",
+  "name": "@gusta/api",
   "version": "0.1.0",
   "description": "A simple REST API for recipe and flavor information",
   "license": "MIT",

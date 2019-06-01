@@ -2,7 +2,6 @@
   "name": "gusta-api",
   "version": "0.1.0",
   "description": "A simple REST API for recipe and flavor information",
-  "author": "ayan4m1 <andrew@bulletlogic.com>",
   "license": "MIT",
   "scripts": {
     "build": "gulp",

@@ -1,7 +1,7 @@
 import express from 'express';
 import request from 'supertest';
 
-import { pool } from '../database';
+import { pool } from '../modules/database';
 import flavor from './flavor';
 
 afterAll(() => {

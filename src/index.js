@@ -1,5 +1,5 @@
-import configs from './config';
-import loggers from './logging';
+import configs from './modules/config';
+import loggers from './modules/logging';
 import { app } from './app';
 
 // extract web config, create logger and express app

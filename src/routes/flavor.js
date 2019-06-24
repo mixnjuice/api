@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { check, validationResult } from 'express-validator/check';
 
-import { pool } from '../database';
-import loggers from '../logging';
+import { pool } from '../modules/database';
+import loggers from '../modules/logging';
 
 const router = Router();
 const log = loggers('flavor');

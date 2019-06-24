@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import responseTime from 'response-time';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 
-import configs from './config';
+import configs from './modules/config';
 
 import flavor from './routes/flavor';
 // import recipe from './routes/recipe';

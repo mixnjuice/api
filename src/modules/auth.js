@@ -8,20 +8,27 @@ const log = loggers('auth');
 
 passport.use(
   new BearerStrategy(async (token, done) => {
-    const { UserToken } = models;
+    const { UserToken, User } = models;
 
     try {
+      UserToken.belongsTo(User, { foreignKey: 'userId' });
       const result = await UserToken.findAll({
         where: {
           token
-        }
+        },
+        include: [
+          {
+            model: User,
+            required: true
+          }
+        ]
       });
 
       if (!Array.isArray(result) || result.length === 0) {
         return done(new Error('Authentication failed'));
       }
 
-      done(null, result, { scope: 'all' });
+      done(null, result.User, { scope: 'all' });
     } catch (error) {
       log.error(error.message);
       log.error(error.stack);

@@ -12,9 +12,7 @@ const postgrator = new Postgrator({
   migrationDirectory: join(__dirname, '..', 'schema'),
   driver: 'pg',
   schemaTable: 'schemaversion',
-  ...config.database,
-  // need this patch because Postgrator and pg have different field names
-  username: config.database.user
+  ...config.database
 });
 
 const logMigration = migration => {

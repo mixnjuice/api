@@ -1,17 +1,10 @@
-import configs from './modules/config';
 import loggers from './modules/logging';
-import { app } from './app';
+import { start } from './app';
 
-// extract web config, create logger and express app
-const { web: config } = configs;
-const log = loggers('app');
+const log = loggers('index');
 
 try {
-  const { port } = config;
-
-  // start the server
-  log.info(`Listening on http://localhost:${port}`);
-  app.listen(port);
+  start();
 } catch (error) {
   log.error(`Fatal error: ${error}`);
 }

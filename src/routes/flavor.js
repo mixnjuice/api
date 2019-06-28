@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { check, validationResult } from 'express-validator/check';
 
-import { pool } from '../modules/database';
+import { sequelize } from '../modules/database';
 import loggers from '../modules/logging';
 
 const router = Router();
@@ -23,7 +23,7 @@ router.get(
 
     log.info(`request for ${req.params.id}`);
     try {
-      const result = await pool.query(
+      const result = await sequelize.query(
         `select
           v.code vendor_code,
           v.name vendor_name,
@@ -34,15 +34,15 @@ router.get(
             on f.vendor_id = v.id
         where
           f.id = $1::bigint`,
-        [req.params.id]
+        { bind: [req.params.id] }
       );
 
-      if (result.rows.length === 0) {
+      if (result[0].length === 0) {
         return res.writeHead(204).end();
       }
 
       res.type('application/json');
-      res.writeHead(200).end(JSON.stringify(result.rows.shift()));
+      res.writeHead(200).end(JSON.stringify(result[0].shift()));
     } catch (error) {
       log.error(error.message);
       res.writeHead(500).end(error.message);

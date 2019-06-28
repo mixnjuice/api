@@ -28,7 +28,7 @@ passport.use(
         return done(new Error('Authentication failed'));
       }
 
-      done(null, result.User, { scope: 'all' });
+      done(null, result[0].User, { scope: 'all' });
     } catch (error) {
       log.error(error.message);
       log.error(error.stack);

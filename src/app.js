@@ -1,10 +1,12 @@
 import express from 'express';
-import passport from 'passport';
+// import passport from 'passport';
 import bodyParser from 'body-parser';
 import responseTime from 'response-time';
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 
 import configs from './modules/config';
+import loggers from './modules/logging';
+import bindAuth from './modules/auth';
+import { loadModels } from './modules/database';
 
 import flavor from './routes/flavor';
 // import recipe from './routes/recipe';
@@ -12,35 +14,29 @@ import flavor from './routes/flavor';
 
 // extract web config and create express app
 const { web: config } = configs;
+const log = loggers('app');
 
 export const app = express();
 
-// auth setup
-const { hostname, tokens } = config;
+export const start = async () => {
+  await loadModels();
 
-passport.use(
-  new JwtStrategy(
-    {
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: tokens.secret,
-      issuer: hostname,
-      audience: hostname
-    },
-    (_, done) => {
-      // this logic allows all valid JWTs
-      return done(null, true);
-    }
-  )
-);
+  // common middleware
+  app.use(responseTime());
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
 
-// common middleware
-app.use(responseTime());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(passport.initialize());
-app.use(passport.authenticate('jwt', { session: false }));
+  // setup passport
+  bindAuth(app);
 
-// routes
-app.use('/flavor', flavor);
-// app.use('/recipe', recipe);
-// app.use('/vendor', vendor);
+  // routes
+  app.use('/flavor', flavor);
+  // app.use('/recipe', recipe);
+  // app.use('/vendor', vendor);
+
+  // start the server
+  const { port } = config;
+
+  app.listen(port);
+  log.info(`Listening on http://localhost:${port}`);
+};

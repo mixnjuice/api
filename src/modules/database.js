@@ -18,8 +18,21 @@ export const loadModels = async () => {
   try {
     const modelPaths = await globby(join(__dirname, '..', 'models', '*.js'));
 
-    for (const modelPath of modelPaths) {
-      sequelize.import(modelPath);
+    const models = modelPaths.reduce((result, modelPath) => {
+      const Model = require(modelPath);
+
+      const model = Model.init(sequelize);
+
+      return {
+        ...result,
+        [Model.name]: model
+      };
+    }, {});
+
+    for (const model of Object.values(models)) {
+      if (typeof model.associate === 'function') {
+        model.associate(models);
+      }
     }
   } catch (error) {
     log.error(error.message);

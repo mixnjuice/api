@@ -6,7 +6,6 @@ import responseTime from 'response-time';
 import configs from './modules/config';
 import loggers from './modules/logging';
 import bindAuth from './modules/auth';
-// import { loadModels } from './modules/database';
 
 import flavor from './routes/flavor';
 // import recipe from './routes/recipe';
@@ -19,8 +18,6 @@ const log = loggers('app');
 export const app = express();
 
 export const start = async () => {
-  //  await loadModels();
-
   // common middleware
   app.use(responseTime());
   app.use(bodyParser.json());

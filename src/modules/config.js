@@ -11,18 +11,18 @@ const { env: config } = process;
 export default {
   web: {
     hostname: config.API_HOST,
-    port: config.API_PORT,
+    port: parseInt(config.API_PORT, 10),
     passwords: {
-      saltRounds: config.API_PASSWORD_SALT_ROUNDS
+      saltRounds: parseInt(config.API_PASSWORD_SALT_ROUNDS, 10)
     },
     tokens: {
-      length: config.API_TOKEN_LENGTH,
-      age: config.API_TOKEN_AGE
+      length: parseInt(config.API_TOKEN_LENGTH, 10),
+      age: parseInt(config.API_TOKEN_AGE, 10)
     }
   },
   database: {
     host: config.DB_HOST,
-    port: config.DB_PORT,
+    port: parseInt(config.DB_PORT, 10),
     database: config.DB_NAME,
     username: config.DB_USER,
     password: config.DB_PASS

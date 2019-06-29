@@ -27,9 +27,9 @@ export const start = async () => {
   bindAuth(app);
 
   // routes
-  app.use('/flavor', flavor);
-  // app.use('/recipe', recipe);
-  // app.use('/vendor', vendor);
+  app.use('/api/flavor', flavor);
+  // app.use('/api/ecipe', recipe);
+  // app.use('/api/vendor', vendor);
 
   // start the server
   const { port } = config;

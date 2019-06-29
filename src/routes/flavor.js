@@ -38,14 +38,14 @@ router.get(
       );
 
       if (result[0].length === 0) {
-        return res.writeHead(204).end();
+        return res.status(204).end();
       }
 
       res.type('application/json');
       res.json(result.shift().shift());
     } catch (error) {
       log.error(error.message);
-      res.writeHead(500).end(error.message);
+      res.status(500).send(error.message);
     }
   }
 );

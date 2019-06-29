@@ -70,7 +70,6 @@ export default app => {
   passport.use(
     new BearerStrategy(async (token, done) => {
       try {
-        UserToken.belongsTo(User, { foreignKey: 'userId' });
         const result = await UserToken.findAll({
           where: {
             token

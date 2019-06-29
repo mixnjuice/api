@@ -2,12 +2,17 @@ import express from 'express';
 import request from 'supertest';
 
 import flavor from './flavor';
+import database from '../modules/database';
 
 /* eslint-disable camelcase */
 describe('flavor resource', () => {
   const app = express();
 
   app.use(flavor);
+
+  afterAll(() => {
+    database.sequelize.close();
+  });
 
   it('returns valid flavor', done => {
     request(app)

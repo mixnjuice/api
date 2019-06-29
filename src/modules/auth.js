@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import bcrypt from 'bcrypt';
+import nanoid from 'nanoid';
 import passport from 'passport';
 import oauth2orize from 'oauth2orize';
-import UidGenerator from 'uid-generator';
 import BearerStrategy from 'passport-http-bearer';
 
 import configs from './config';
@@ -12,13 +12,11 @@ import loggers from './logging';
 const log = loggers('auth');
 const { UserToken, User } = models;
 
-const tokenGenerator = new UidGenerator();
-
 const { web: webConfig } = configs;
-const { age: tokenAge } = webConfig.tokens;
+const { age: tokenAge, length: tokenLength } = webConfig.tokens;
 
-const generateToken = async () => {
-  return await tokenGenerator.generate();
+const generateToken = () => {
+  return nanoid(tokenLength);
 };
 
 const compareHashAndPassword = async (hash, password) => {

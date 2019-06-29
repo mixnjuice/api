@@ -16,6 +16,7 @@ export default {
       saltRounds: config.API_PASSWORD_SALT_ROUNDS
     },
     tokens: {
+      length: config.API_TOKEN_LENGTH,
       age: config.API_TOKEN_AGE
     }
   },

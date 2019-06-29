@@ -24,8 +24,6 @@ function Models(sequelize) {
     }
   });
 
-  db.sequelize = sequelize;
-
   return db;
 }
 

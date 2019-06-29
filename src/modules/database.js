@@ -12,6 +12,7 @@ const sequelize = new Sequelize(database, username, password, {
 
 var db = models(sequelize);
 
+db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 export default db;

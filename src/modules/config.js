@@ -12,9 +12,11 @@ export default {
   web: {
     hostname: config.API_HOST,
     port: config.API_PORT,
+    passwords: {
+      saltRounds: config.API_PASSWORD_SALT_ROUNDS
+    },
     tokens: {
-      age: config.API_TOKEN_AGE,
-      secret: config.API_TOKEN_SECRET
+      age: config.API_TOKEN_AGE
     }
   },
   database: {

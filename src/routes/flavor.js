@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { check, validationResult } from 'express-validator/check';
 
-import { sequelize } from '../modules/database';
+import database from '../modules/database';
 import loggers from '../modules/logging';
 
 const router = Router();
@@ -23,7 +23,7 @@ router.get(
 
     log.info(`request for ${req.params.id}`);
     try {
-      const result = await sequelize.query(
+      const result = await database.sequelize.query(
         `select
           v.code vendor_code,
           v.name vendor_name,
@@ -42,7 +42,7 @@ router.get(
       }
 
       res.type('application/json');
-      res.writeHead(200).end(JSON.stringify(result[0].shift()));
+      res.json(result.shift().shift());
     } catch (error) {
       log.error(error.message);
       res.writeHead(500).end(error.message);

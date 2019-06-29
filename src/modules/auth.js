@@ -11,7 +11,6 @@ passport.use(
     const { UserToken, User } = models;
 
     try {
-      UserToken.belongsTo(User, { foreignKey: 'userId' });
       const result = await UserToken.findAll({
         where: {
           token

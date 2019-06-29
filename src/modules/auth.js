@@ -28,6 +28,15 @@ const authServer = oauth2orize.createServer();
 authServer.exchange(
   oauth2orize.exchange.password(async (_, username, password, __, done) => {
     try {
+      if (!username.trim() || !password.trim()) {
+        return done(
+          new oauth2orize.AuthorizationError(
+            'Missing username or password!',
+            'invalid_request'
+          )
+        );
+      }
+
       const result = await User.findAll({
         where: {
           emailAddress: username
@@ -35,7 +44,12 @@ authServer.exchange(
       });
 
       if (!Array.isArray(result) || result.length === 0) {
-        return done(new Error('Authentication failed.'));
+        return done(
+          new oauth2orize.AuthorizationError(
+            'Authentication failed.',
+            'access_denied'
+          )
+        );
       }
 
       const user = result.shift();
@@ -57,7 +71,12 @@ authServer.exchange(
 
         done(null, accessToken, refreshToken, result);
       } else {
-        done(new Error('Authentication failed.'));
+        done(
+          new oauth2orize.AuthorizationError(
+            'Authentication failed.',
+            'access_denied'
+          )
+        );
       }
     } catch (error) {
       log.error(error.message);
@@ -70,6 +89,12 @@ export default app => {
   passport.use(
     new BearerStrategy(async (token, done) => {
       try {
+        if (!token.trim()) {
+          return done(
+            new oauth2orize.TokenError('Missing token!', 'invalid_request')
+          );
+        }
+
         const result = await UserToken.findAll({
           where: {
             token
@@ -83,14 +108,21 @@ export default app => {
         });
 
         if (!Array.isArray(result) || result.length === 0) {
-          return done(new Error('Authentication failed.'));
+          return done(
+            new oauth2orize.TokenError(
+              'Authentication failed.',
+              'invalid_grant'
+            )
+          );
         }
 
-        done(null, result[0].User, { scope: 'all' });
+        const user = result.shift().User;
+
+        done(null, user, { scope: 'all' });
       } catch (error) {
         log.error(error.message);
         log.error(error.stack);
-        done(error);
+        done(new oauth2orize.OAuth2Error(error));
       }
     })
   );

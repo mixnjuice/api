@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes, models) => {
         primaryKey: true
       },
       vendorId: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.INT,
         allowNull: false,
         references: {
           model: models.Vendor,
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: true
       },
       density: {
-        type: DataTypes.INT,
+        type: DataTypes.DECIMAL,
         allowNull: true
       }
     },

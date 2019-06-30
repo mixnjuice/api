@@ -2,10 +2,14 @@ module.exports = (sequelize, DataTypes, models) => {
   const Preparation = sequelize.define(
     'Preparation',
     {
+      id: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        primaryKey: true
+      },
       recipeId: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        primaryKey: true,
         references: {
           model: models.Recipe,
           key: 'id'
@@ -14,7 +18,6 @@ module.exports = (sequelize, DataTypes, models) => {
       userId: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        primaryKey: true,
         references: {
           model: models.User,
           key: 'id'
@@ -25,11 +28,11 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: false
       },
       nicotineMillipercent: {
-        type: DataTypes.INT,
+        type: DataTypes.DECIMAL,
         allowNull: false
       },
       created: {
-        type: DataTypes.DATE,
+        type: DataTypes.TIMESTAMP,
         allowNull: false
       },
       viewCount: {

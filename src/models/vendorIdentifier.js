@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: false,
         primaryKey: true,
         references: {
-          model: models.VendorIdentifier,
+          model: models.Vendor,
           key: 'id'
         }
       },
@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes, models) => {
   );
 
   VendorIdentifier.associate = function() {
-    this.belongsTo(models.VendorIdentifier, { foreignKey: 'vendorId' });
+    this.belongsTo(models.Vendor, { foreignKey: 'vendorId' });
     this.belongsTo(models.DataSupplier, { foreignKey: 'dataSupplierId' });
   };
 

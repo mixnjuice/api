@@ -21,8 +21,8 @@ module.exports = (sequelize, DataTypes, models) => {
         }
       },
       millipercent: {
-        type: DataTypes.INT,
-        allowNull: true
+        type: DataTypes.DECIMAL,
+        allowNull: false
       }
     },
     {

@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     'DataSupplier',
     {
       id: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.INT,
         allowNull: false,
         primaryKey: true
       },

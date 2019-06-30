@@ -21,15 +21,15 @@ module.exports = (sequelize, DataTypes, models) => {
         }
       },
       created: {
-        type: DataTypes.DATE,
+        type: DataTypes.TIMESTAMP,
         allowNull: false
       },
       minMillipercent: {
-        type: DataTypes.INT,
+        type: DataTypes.DECIMAL,
         allowNull: true
       },
       maxMillipercent: {
-        type: DataTypes.INT,
+        type: DataTypes.DECIMAL,
         allowNull: true
       }
     },

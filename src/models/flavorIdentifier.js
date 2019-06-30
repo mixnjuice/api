@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes, models) => {
         }
       },
       dataSupplierId: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.INT,
         allowNull: false,
         references: {
           model: models.DataSupplier,

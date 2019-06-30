@@ -20,8 +20,12 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: false
       },
       created: {
-        type: DataTypes.DATE,
+        type: DataTypes.TIMESTAMP,
         allowNull: false
+      },
+      notes: {
+        type: DataTypes.STRING,
+        allowNull: true
       },
       viewCount: {
         type: DataTypes.INT,

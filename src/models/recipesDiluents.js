@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes, models) => {
         }
       },
       diluentId: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.INT,
         allowNull: false,
         primaryKey: true,
         references: {
@@ -21,8 +21,8 @@ module.exports = (sequelize, DataTypes, models) => {
         }
       },
       millipercent: {
-        type: DataTypes.INT,
-        allowNull: true
+        type: DataTypes.DECIMAL,
+        allowNull: false
       }
     },
     {

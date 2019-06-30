@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     'Diluent',
     {
       id: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.INT,
         allowNull: false,
         primaryKey: true
       },
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       density: {
-        type: DataTypes.INT,
+        type: DataTypes.DECIMAL,
         allowNull: true
       }
     },

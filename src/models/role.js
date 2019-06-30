@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     'Role',
     {
       id: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.INT,
         allowNull: false,
         primaryKey: true
       },

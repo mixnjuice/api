@@ -66,7 +66,7 @@ authServer.exchange(
         UserToken.create({
           token: accessToken,
           userId: user.id,
-          expires: dayjs().add(tokenAge, 'minutes')
+          expires: dayjs().add(tokenAge, 'seconds')
         });
 
         done(null, accessToken, refreshToken, result);

@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes, models) => {
         primaryKey: true
       },
       vendorId: {
-        type: DataTypes.INT,
+        type: DataTypes.INTEGER,
         allowNull: false,
         references: {
           model: models.Vendor,

@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: false
       },
       viewCount: {
-        type: DataTypes.INT,
+        type: DataTypes.INTEGER,
         allowNull: false
       }
     },

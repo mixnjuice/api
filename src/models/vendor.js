@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     'Vendor',
     {
       id: {
-        type: DataTypes.INT,
+        type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true
       },

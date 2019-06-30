@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes, models) => {
+module.exports = (sequelize, DataTypes) => {
   const Flavor = sequelize.define(
     'Flavor',
     {
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes, models) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: models.Vendor,
+          model: sequelize.Vendor,
           key: 'id'
         }
       },
@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes, models) => {
     }
   );
 
-  Flavor.associate = function() {
+  Flavor.associate = function(models) {
     this.belongsTo(models.Vendor, { foreignKey: 'vendorId' });
   };
 

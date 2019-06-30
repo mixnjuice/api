@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes, models) => {
+module.exports = (sequelize, DataTypes) => {
   const UserToken = sequelize.define(
     'UserToken',
     {
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes, models) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: models.User,
+          model: sequelize.User,
           key: 'id'
         }
       },
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes, models) => {
     }
   );
 
-  UserToken.associate = function() {
+  UserToken.associate = function(models) {
     this.belongsTo(models.User, { foreignKey: 'userId' });
   };
   return UserToken;

@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes, models) => {
+module.exports = (sequelize, DataTypes) => {
   const FlavorIdentifier = sequelize.define(
     'FlavorIdentifier',
     {
@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: false,
         primaryKey: true,
         references: {
-          model: models.Flavor,
+          model: sequelize.Flavor,
           key: 'id'
         }
       },
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes, models) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: models.DataSupplier,
+          model: sequelize.DataSupplier,
           key: 'id'
         }
       },
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes, models) => {
     }
   );
 
-  FlavorIdentifier.associate = function() {
+  FlavorIdentifier.associate = function(models) {
     this.belongsTo(models.Flavor, { foreignKey: 'flavorId' });
     this.belongsTo(models.DataSupplier, { foreignKey: 'dataSupplierId' });
   };

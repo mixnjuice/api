@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes, models) => {
+module.exports = (sequelize, DataTypes) => {
   const Recipe = sequelize.define(
     'Recipe',
     {
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes, models) => {
         type: DataTypes.BIGINT,
         allowNull: false,
         references: {
-          model: models.User,
+          model: sequelize.User,
           key: 'id'
         }
       },
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes, models) => {
     }
   );
 
-  Recipe.associate = function() {
+  Recipe.associate = function(models) {
     this.belongsTo(models.User, { foreignKey: 'userId' });
   };
 

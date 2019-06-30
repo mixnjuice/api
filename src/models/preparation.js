@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes, models) => {
+module.exports = (sequelize, DataTypes) => {
   const Preparation = sequelize.define(
     'Preparation',
     {
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes, models) => {
         type: DataTypes.BIGINT,
         allowNull: false,
         references: {
-          model: models.Recipe,
+          model: sequelize.Recipe,
           key: 'id'
         }
       },
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes, models) => {
         type: DataTypes.BIGINT,
         allowNull: false,
         references: {
-          model: models.User,
+          model: sequelize.User,
           key: 'id'
         }
       },
@@ -32,11 +32,11 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: false
       },
       created: {
-        type: DataTypes.TIMESTAMP,
+        type: DataTypes.DATE,
         allowNull: false
       },
       viewCount: {
-        type: DataTypes.INT,
+        type: DataTypes.INTEGER,
         allowNull: false
       }
     },
@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes, models) => {
     }
   );
 
-  Preparation.associate = function() {
+  Preparation.associate = function(models) {
     this.belongsTo(models.Recipe, { foreignKey: 'recipeId' });
     this.belongsTo(models.User, { foreignKey: 'userId' });
   };

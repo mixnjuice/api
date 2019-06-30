@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes, models) => {
+module.exports = (sequelize, DataTypes) => {
   const UsersRoles = sequelize.define(
     'UsersRoles',
     {
@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: false,
         primaryKey: true,
         references: {
-          model: models.User,
+          model: sequelize.User,
           key: 'id'
         }
       },
@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: false,
         primaryKey: true,
         references: {
-          model: models.Role,
+          model: sequelize.Role,
           key: 'id'
         }
       },
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: false
       },
       created: {
-        type: DataTypes.TIMESTAMP,
+        type: DataTypes.DATE,
         allowNull: false
       }
     },
@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes, models) => {
     }
   );
 
-  UsersRoles.associate = function() {
+  UsersRoles.associate = function(models) {
     this.belongsTo(models.User, { foreignKey: 'UserId' });
     this.belongsTo(models.Role, { foreignKey: 'RoleId' });
   };

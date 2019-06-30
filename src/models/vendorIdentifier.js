@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes, models) => {
+module.exports = (sequelize, DataTypes) => {
   const VendorIdentifier = sequelize.define(
     'VendorIdentifier',
     {
@@ -7,16 +7,16 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: false,
         primaryKey: true,
         references: {
-          model: models.Vendor,
+          model: sequelize.Vendor,
           key: 'id'
         }
       },
       dataSupplierId: {
-        type: DataTypes.INT,
+        type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
         references: {
-          model: models.DataSupplier,
+          model: sequelize.DataSupplier,
           key: 'id'
         }
       },
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes, models) => {
     }
   );
 
-  VendorIdentifier.associate = function() {
+  VendorIdentifier.associate = function(models) {
     this.belongsTo(models.Vendor, { foreignKey: 'vendorId' });
     this.belongsTo(models.DataSupplier, { foreignKey: 'dataSupplierId' });
   };

@@ -1,4 +1,4 @@
-module.exports = (sequelize, DataTypes, models) => {
+module.exports = (sequelize, DataTypes) => {
   const UsersFlavors = sequelize.define(
     'UsersFlavors',
     {
@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: false,
         primaryKey: true,
         references: {
-          model: models.User,
+          model: sequelize.User,
           key: 'id'
         }
       },
@@ -16,12 +16,12 @@ module.exports = (sequelize, DataTypes, models) => {
         allowNull: false,
         primaryKey: true,
         references: {
-          model: models.Flavor,
+          model: sequelize.Flavor,
           key: 'id'
         }
       },
       created: {
-        type: DataTypes.TIMESTAMP,
+        type: DataTypes.DATE,
         allowNull: false
       },
       minMillipercent: {
@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes, models) => {
     }
   );
 
-  UsersFlavors.associate = function() {
+  UsersFlavors.associate = function(models) {
     this.belongsTo(models.User, { foreignKey: 'UserId' });
     this.belongsTo(models.Flavor, { foreignKey: 'FlavorId' });
   };

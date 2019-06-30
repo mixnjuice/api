@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
       created: {
-        type: DataTypes.TIMESTAMP,
+        type: DataTypes.DATE,
         allowNull: false
       },
       minMillipercent: {

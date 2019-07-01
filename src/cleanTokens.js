@@ -1,14 +1,21 @@
+import dayjs from 'dayjs';
+
 import loggers from './modules/logging';
-import database from './modules/database';
+import models from './modules/database';
 
 const log = loggers('token-clean');
+const { Op } = models.Sequelize;
+const { UserToken } = models;
 
 // remove all tokens that have been expired for more than three hours
-database.sequelize
-  .query("DELETE FROM user_token WHERE expires < now() - interval '3' hour")
-  .then(results => {
-    const { rowCount } = results.pop();
-
+UserToken.destroy({
+  where: {
+    expires: {
+      [Op.lt]: dayjs().add(-3, 'hour')
+    }
+  }
+})
+  .then(rowCount => {
     log.info(`Successfully purged ${rowCount} expired tokens!`);
   })
   .catch(error => {
@@ -17,5 +24,5 @@ database.sequelize
     log.error(error.stack);
   })
   .finally(() => {
-    database.sequelize.close();
+    models.sequelize.close();
   });

@@ -10,6 +10,7 @@ import bindAuth from './modules/auth';
 import flavor from './routes/flavor';
 // import recipe from './routes/recipe';
 // import vendor from './routes/vendor';
+import register from './routes/register';
 
 // extract web config and create express app
 const { web: config } = configs;
@@ -28,8 +29,9 @@ export const start = async () => {
 
   // routes
   app.use('/api/flavor', flavor);
-  // app.use('/api/ecipe', recipe);
+  // app.use('/api/recipe', recipe);
   // app.use('/api/vendor', vendor);
+  app.use('/api/register', register);
 
   // start the server
   const { port } = config;

@@ -20,7 +20,7 @@ const {
   validate: validateTokens
 } = webConfig.tokens;
 
-const generateToken = () => {
+export const generateToken = () => {
   return nanoid(tokenLength);
 };
 

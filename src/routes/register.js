@@ -14,7 +14,7 @@ const { email: emailConfig } = configs;
 const emailer = new Email(emailConfig);
 
 router.post(
-  '/register',
+  '/',
   [
     check('username').isLength(4, 64),
     check('emailAddress')

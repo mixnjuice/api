@@ -21,10 +21,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       created: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: DataTypes.NOW
       },
       notes: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true
       },
       viewCount: {

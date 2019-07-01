@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       emailAddress: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       password: {
         type: DataTypes.STRING,
@@ -17,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       created: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: DataTypes.NOW
       },
       activationCode: {
         type: DataTypes.STRING

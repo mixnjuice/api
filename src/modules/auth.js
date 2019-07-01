@@ -87,7 +87,8 @@ authServer.exchange(
 
       const result = await User.findAll({
         where: {
-          emailAddress: username
+          emailAddress: username,
+          activationCode: null
         }
       });
 

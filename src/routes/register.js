@@ -5,22 +5,28 @@ import Email from '../modules/email';
 import models from '../modules/database';
 import loggers from '../modules/logging';
 import configs from '../modules/config';
-import { generateToken } from '../modules/auth';
+import { hashPassword, generateToken } from '../modules/auth';
 
 const router = Router();
 const log = loggers('register');
 const { User, UserProfile } = models;
-const { email: emailConfig } = configs;
+const { email: emailConfig, web: webConfig } = configs;
 const emailer = new Email(emailConfig);
 
 router.post(
   '/',
   [
-    check('username').isLength(4, 64),
+    check('username')
+      .isLength(4, 64)
+      .withMessage('length'),
     check('emailAddress')
       .isEmail()
-      .isLength(0, 200),
-    check('password').isLength(8)
+      .withMessage('email')
+      .isLength(0, 200)
+      .withMessage('length'),
+    check('password')
+      .isLength(8)
+      .withMessage('length')
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -31,8 +37,9 @@ router.post(
 
     try {
       log.info('Starting user registration');
-      const { emailAddress, password, username } = req.body;
+      const { emailAddress, password: rawPassword, username } = req.body;
       const activationCode = generateToken();
+      const password = await hashPassword(rawPassword);
 
       await models.sequelize.transaction(async transaction => {
         const newUser = await User.create(
@@ -53,7 +60,20 @@ router.post(
         );
       });
 
-      await emailer.createActivationMessage();
+      // build activation URL
+      const { hostname, port } = webConfig;
+
+      let url = `https://${hostname}`;
+
+      if (port !== 443) {
+        url += `:${port}`;
+      }
+
+      url += `/register/activate?code=${activationCode}`;
+
+      await emailer.sendActivationEmail(emailAddress, url);
+
+      res.status(200).end();
     } catch (error) {
       log.error(error.message);
       log.error(error.stack);

@@ -15,11 +15,17 @@ export default class Email {
     this.api = new AWS.SES({ apiVersion: '2010-12-01' });
     this.fromAddress = fromAddress;
 
-    this.createActivationMessage = this.createActivationMessage.bind(this);
+    this.sendActivationEmail = this.sendActivationEmail.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
   }
 
-  createActivationMessage(destination, code) {
+  /**
+   * Send an email to the specified destination with the specified link.
+   *
+   * @param {string} destination To: email address
+   * @param {string} url URL to link to for activation
+   */
+  sendActivationEmail(destination, url) {
     return {
       Destination: {
         ToAddresses: [destination]
@@ -32,7 +38,7 @@ export default class Email {
         Body: {
           Text: {
             Charset: 'UTF-8',
-            Data: `Your activation code is ${code}`
+            Data: `Please go to ${url} to confirm your account.`
           }
         }
       },

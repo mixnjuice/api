@@ -28,10 +28,10 @@ export const start = async () => {
   bindAuth(app);
 
   // routes
+  app.use('/register', register);
   app.use('/api/flavor', flavor);
   // app.use('/api/recipe', recipe);
   // app.use('/api/vendor', vendor);
-  app.use('/api/register', register);
 
   // start the server
   const { port } = config;

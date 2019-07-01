@@ -15,6 +15,9 @@ const { UserToken, User } = models;
 
 const { web: webConfig } = configs;
 const {
+  passwords: { saltRounds }
+} = webConfig;
+const {
   age: tokenAge,
   length: tokenLength,
   validate: validateTokens
@@ -22,6 +25,10 @@ const {
 
 export const generateToken = () => {
   return nanoid(tokenLength);
+};
+
+export const hashPassword = async password => {
+  return await bcrypt.hash(password, saltRounds);
 };
 
 const compareHashAndPassword = async (hash, password) => {

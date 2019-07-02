@@ -12,8 +12,8 @@ import flavor from './routes/flavor';
 // import vendor from './routes/vendor';
 import register from './routes/register';
 
-// extract web config and create express app
-const { web: config } = configs;
+// extract API config and create express app
+const { api: config } = configs;
 const log = loggers('app');
 
 export const app = express();

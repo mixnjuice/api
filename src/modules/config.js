@@ -10,6 +10,11 @@ const { env: config } = process;
 
 export default {
   web: {
+    hostname: config.WEB_HOSTNAME,
+    port: parseInt(config.WEB_PORT, 10),
+    useTls: /true/i.test(config.WEB_USE_TLS)
+  },
+  api: {
     hostname: config.API_HOST,
     port: parseInt(config.API_PORT, 10),
     passwords: {

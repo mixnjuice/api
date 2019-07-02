@@ -39,7 +39,7 @@ router.get(
         { bind: [req.params.id] }
       );
 
-      if (result[0].length === 0) {
+      if (!Array.isArray(result[0]) || result[0].length === 0) {
         return res.status(204).end();
       }
 

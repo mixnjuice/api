@@ -15,17 +15,18 @@ export default class Email {
     this.api = new AWS.SES({ apiVersion: '2010-12-01' });
     this.fromAddress = fromAddress;
 
-    this.sendActivationEmail = this.sendActivationEmail.bind(this);
+    this.createActivationEmail = this.createActivationEmail.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
   }
 
   /**
-   * Send an email to the specified destination with the specified link.
+   * Create an email message intended for the specified destination
+   * with the specified link.
    *
    * @param {string} destination To: email address
    * @param {string} url URL to link to for activation
    */
-  sendActivationEmail(destination, url) {
+  createActivationEmail(destination, url) {
     return {
       Destination: {
         ToAddresses: [destination]
@@ -46,6 +47,11 @@ export default class Email {
     };
   }
 
+  /**
+   * Send an email message.
+   *
+   * @param {object} message Message object (see AWS SDK)
+   */
   async sendMessage(message) {
     try {
       const send = this.api.sendEmail(message).promise();

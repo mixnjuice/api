@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { check, query, validationResult } from 'express-validator/check';
+import { body, query, validationResult } from 'express-validator';
 
 import Email from '../modules/email';
 import models, { handleError } from '../modules/database';
@@ -19,15 +19,15 @@ const emailer = new Email(emailConfig);
 router.post(
   '/',
   [
-    check('username')
+    body('username')
       .isLength(4, 64)
       .withMessage('length'),
-    check('emailAddress')
+    body('emailAddress')
       .isEmail()
       .withMessage('email')
       .isLength(0, 200)
       .withMessage('length'),
-    check('password')
+    body('password')
       .isLength(8)
       .withMessage('length')
   ],

@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       underscored: true,
-      tableName: 'Recipe',
+      tableName: 'recipe',
       createdAt: 'created',
       updatedAt: false
     }
@@ -43,6 +43,12 @@ module.exports = (sequelize, DataTypes) => {
 
   Recipe.associate = function(models) {
     this.belongsTo(models.User, { foreignKey: 'userId' });
+    this.hasMany(models.RecipesFlavors, {
+      foreignKey: 'recipeId'
+    });
+    this.hasMany(models.RecipesDiluents, {
+      foreignKey: 'recipeId'
+    });
   };
 
   return Recipe;

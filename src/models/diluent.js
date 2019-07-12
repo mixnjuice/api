@@ -32,8 +32,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  /* Diluent.associate = function(models) {
-    // associations can be defined here
-  };*/
+  Diluent.associate = function(models) {
+    this.hasMany(models.RecipesDiluents, {
+      foreignKey: 'diluentId'
+    });
+  };
   return Diluent;
 };

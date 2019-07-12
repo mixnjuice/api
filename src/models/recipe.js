@@ -49,6 +49,9 @@ module.exports = (sequelize, DataTypes) => {
     this.hasMany(models.RecipesDiluents, {
       foreignKey: 'recipeId'
     });
+    this.hasMany(models.Preparation, {
+      foreignKey: 'recipeId'
+    });
   };
 
   return Recipe;

@@ -29,8 +29,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Vendor.associate = function() {
-    //
+  Vendor.associate = function(models) {
+    this.hasOne(models.VendorIdentifier, { foreignKey: 'flavorId' });
+    this.hasMany(models.Flavors, { foreignKey: 'vendorId' });
   };
 
   return Vendor;

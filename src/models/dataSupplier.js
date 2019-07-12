@@ -24,8 +24,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  /* DataSupplier.associate = function(models) {
-    // associations can be defined here
-  };*/
+  DataSupplier.associate = function(models) {
+    this.hasMany(models.FlavorIdentifier, {
+      foreignKey: 'dataSupplierId'
+    });
+    this.hasMany(models.VendorIdentifier, {
+      foreignKey: 'dataSupplierId'
+    });
+  };
   return DataSupplier;
 };

@@ -32,8 +32,26 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  /* User.associate = function(models) {
-    // associations can be defined here
-  };*/
+  User.associate = function(models) {
+    this.hasMany(models.Recipe, {
+      foreignKey: 'userId'
+    });
+    this.hasMany(models.Preparation, {
+      foreignKey: 'userId'
+    });
+    this.hasMany(models.UsersFlavors, {
+      foreignKey: 'userId'
+    });
+    this.hasMany(models.UsersRoles, {
+      foreignKey: 'userId'
+    });
+    this.hasOne(models.UserProfile, {
+      foreignKey: 'userId'
+    });
+    this.hasOne(models.UserToken, {
+      foreignKey: 'userId'
+    });
+  };
+
   return User;
 };

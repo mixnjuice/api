@@ -17,7 +17,9 @@ export default {
     },
     tokens: {
       length: parseInt(config.API_TOKEN_LENGTH, 10),
-      age: parseInt(config.API_TOKEN_AGE, 10)
+      age: parseInt(config.API_TOKEN_AGE, 10),
+      validate:
+        !config.API_TOKEN_VALIDATE || /^true$/i.test(config.API_TOKEN_VALIDATE)
     }
   },
   database: {

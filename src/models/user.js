@@ -33,6 +33,9 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.associate = function(models) {
+    this.hasOne(models.UserProfile, {
+      foreignKey: 'userId'
+    });
     this.hasMany(models.Recipe, {
       foreignKey: 'userId'
     });
@@ -45,10 +48,7 @@ module.exports = (sequelize, DataTypes) => {
     this.hasMany(models.UsersRoles, {
       foreignKey: 'userId'
     });
-    this.hasOne(models.UserProfile, {
-      foreignKey: 'userId'
-    });
-    this.hasOne(models.UserToken, {
+    this.hasMany(models.UserToken, {
       foreignKey: 'userId'
     });
   };

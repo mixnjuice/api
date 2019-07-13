@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Flavor.associate = function(models) {
     this.belongsTo(models.Vendor, { foreignKey: 'vendorId' });
-    this.hasOne(models.FlavorIdentifier, { foreignKey: 'flavorId' });
+    this.hasMany(models.FlavorIdentifier, { foreignKey: 'flavorId' });
     this.hasMany(models.RecipesFlavors, { foreignKey: 'flavorId' });
     this.hasMany(models.UsersFlavors, { foreignKey: 'flavorId' });
   };

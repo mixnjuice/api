@@ -10,9 +10,10 @@ export default class Email {
    *
    * @param {Object} options Object containing region and fromAddress properties
    */
-  constructor({ region, fromAddress }) {
+  constructor({ region, fromAddress, simulate = false }) {
     AWS.config.update({ region });
     this.api = new AWS.SES({ apiVersion: '2010-12-01' });
+    this.simulate = simulate;
     this.fromAddress = fromAddress;
 
     this.createActivationEmail = this.createActivationEmail.bind(this);
@@ -54,9 +55,11 @@ export default class Email {
    */
   async sendMessage(message) {
     try {
-      const send = this.api.sendEmail(message).promise();
-
-      return await send;
+      if (this.simulate) {
+        log.info('Simulated email message sent!');
+      } else {
+        return await this.api.sendEmail(message).promise();
+      }
     } catch (error) {
       log.error(error);
     }

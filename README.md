@@ -39,6 +39,10 @@ npm start
 
 You can use `npm run migrate 0` to revert all database migrations, or `npm run migrate X` to migrate to version X.
 
+## authentication
+
+Some requests require a bearer token by default. If you start the server with the `API_TOKEN_VALIDATE` environment variable set to `false` the token check will be bypassed. For convience you can run `npm run start-mock` to start the API up with anonymous auth enabled.
+
 ## docker
 
 Simply run `docker-compose up` from the source root. Use the `--no-start` option to create the containers without starting them in interactive mode.

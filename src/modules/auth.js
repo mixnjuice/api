@@ -1,6 +1,4 @@
 import dayjs from 'dayjs';
-import bcrypt from 'bcrypt';
-import nanoid from 'nanoid';
 import passport from 'passport';
 import oauth2orize from 'oauth2orize';
 import BearerStrategy from 'passport-http-bearer';
@@ -9,24 +7,13 @@ import AnonymousStrategy from 'passport-anonymous';
 import configs from './config';
 import models from './database';
 import loggers from './logging';
+import { compareHashAndPassword, generateToken } from './util';
 
 const log = loggers('auth');
 const { UserToken, User } = models;
 
-const { web: webConfig } = configs;
-const {
-  age: tokenAge,
-  length: tokenLength,
-  validate: validateTokens
-} = webConfig.tokens;
-
-const generateToken = () => {
-  return nanoid(tokenLength);
-};
-
-const compareHashAndPassword = async (hash, password) => {
-  return await bcrypt.compare(password, hash);
-};
+const { api: webConfig } = configs;
+const { age: tokenAge, validate: validateTokens } = webConfig.tokens;
 
 const authorize = async (token, done) => {
   try {
@@ -54,7 +41,7 @@ const authorize = async (token, done) => {
       );
     }
 
-    const user = result.shift().User;
+    const [{ User: user }] = result;
 
     done(null, user, { scope: 'all' });
   } catch (error) {
@@ -80,7 +67,8 @@ authServer.exchange(
 
       const result = await User.findAll({
         where: {
-          emailAddress: username
+          emailAddress: username,
+          activationCode: null
         }
       });
 
@@ -93,7 +81,7 @@ authServer.exchange(
         );
       }
 
-      const user = result.shift();
+      const [user] = result;
       const valid = await compareHashAndPassword(
         user.get('password'),
         password

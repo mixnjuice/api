@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { check, validationResult } from 'express-validator/check';
+import { param, validationResult } from 'express-validator';
 
 import { authenticate } from '../modules/auth';
 import loggers from '../modules/logging';
@@ -12,7 +12,7 @@ router.get(
   '/:id',
   authenticate(),
   [
-    check('id')
+    param('id')
       .isNumeric()
       .toInt()
   ],
@@ -39,7 +39,7 @@ router.get(
         { bind: [req.params.id] }
       );
 
-      if (result[0].length === 0) {
+      if (!Array.isArray(result[0]) || result[0].length === 0) {
         return res.status(204).end();
       }
 

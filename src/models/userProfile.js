@@ -13,19 +13,20 @@ module.exports = (sequelize, DataTypes) => {
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       location: {
         type: DataTypes.STRING,
-        allowNull: true
+        defaultValue: null
       },
       bio: {
         type: DataTypes.TEXT,
-        allowNull: true
+        defaultValue: null
       },
       url: {
         type: DataTypes.STRING,
-        allowNull: true
+        defaultValue: null
       }
     },
     {

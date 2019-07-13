@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         type: DataTypes.BIGINT,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
       },
       userId: {
         type: DataTypes.BIGINT,
@@ -21,10 +22,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       created: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        defaultValue: DataTypes.NOW
       },
       notes: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true
       },
       viewCount: {

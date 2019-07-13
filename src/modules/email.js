@@ -10,16 +10,24 @@ export default class Email {
    *
    * @param {Object} options Object containing region and fromAddress properties
    */
-  constructor({ region, fromAddress }) {
+  constructor({ region, fromAddress, simulate = false }) {
     AWS.config.update({ region });
     this.api = new AWS.SES({ apiVersion: '2010-12-01' });
+    this.simulate = simulate;
     this.fromAddress = fromAddress;
 
-    this.createActivationMessage = this.createActivationMessage.bind(this);
+    this.createActivationEmail = this.createActivationEmail.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
   }
 
-  createActivationMessage(destination, code) {
+  /**
+   * Create an email message intended for the specified destination
+   * with the specified link.
+   *
+   * @param {string} destination To: email address
+   * @param {string} url URL to link to for activation
+   */
+  createActivationEmail(destination, url) {
     return {
       Destination: {
         ToAddresses: [destination]
@@ -32,7 +40,7 @@ export default class Email {
         Body: {
           Text: {
             Charset: 'UTF-8',
-            Data: `Your activation code is ${code}`
+            Data: `Please go to ${url} to confirm your account.`
           }
         }
       },
@@ -40,11 +48,18 @@ export default class Email {
     };
   }
 
+  /**
+   * Send an email message.
+   *
+   * @param {object} message Message object (see AWS SDK)
+   */
   async sendMessage(message) {
     try {
-      const send = this.api.sendEmail(message).promise();
-
-      return await send;
+      if (this.simulate) {
+        log.info('Simulated email message sent!');
+      } else {
+        return await this.api.sendEmail(message).promise();
+      }
     } catch (error) {
       log.error(error);
     }

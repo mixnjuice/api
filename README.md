@@ -52,3 +52,19 @@ You can manually migrate the database using
 ```sh
 docker-compose run --rm api npm run migrate
 ```
+
+## misc.
+
+To send email using Amazon SES, install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html). Then run
+
+```sh
+aws configure
+```
+
+Alternatively, configure the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables in `.env`.
+
+You can clean out tokens that have expired more than three hours ago using
+
+```sh
+node lib/cleanTokens.js
+```

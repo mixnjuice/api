@@ -1,12 +1,12 @@
 # Gusta API
 
-This repository is a proof-of-concept of a simple REST API written using Node.js.
+This repository contains the express-based API that powers the Gusta Project frontend.
 
 ## libraries
 
 - [Express](https://expressjs.com/)
-- JWT-based authentication provided by [passport-jwt](https://www.npmjs.com/package/passport-jwt)
-- [pg](https://github.com/brianc/node-postgres) as a PostgreSQL client
+- [Sequelize](http://docs.sequelizejs.com/)
+- [passport-http-bearer](https://github.com/jaredhanson/passport-http-bearer)
 - [postgrator](https://github.com/rickbergfalk/postgrator) to handle SQL migrations
 
 ## usage
@@ -27,10 +27,10 @@ Now, in a shell:
 
 ```sh
 npm install
-cp .flavorrc.default.yml .flavorrc.yml
+cp .env.default .env
 ```
 
-Configuration resides in `.flavorrc.yml`. Edit this file and supply your database information. Finally:
+Configuration resides in `.env`. Edit this file and supply your database information. Finally:
 
 ```sh
 npm run migrate
@@ -38,6 +38,10 @@ npm start
 ```
 
 You can use `npm run migrate 0` to revert all database migrations, or `npm run migrate X` to migrate to version X.
+
+## authentication
+
+Some requests require a bearer token by default. If you start the server with the `API_TOKEN_VALIDATE` environment variable set to `false` the token check will be bypassed. For convience you can run `npm run start-mock` to start the API up with anonymous auth enabled.
 
 ## docker
 

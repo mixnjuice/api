@@ -1,14 +1,16 @@
 import { Router } from 'express';
 import { check, validationResult } from 'express-validator/check';
 
-import database from '../modules/database';
+import { authenticate } from '../modules/auth';
 import loggers from '../modules/logging';
+import database from '../modules/database';
 
 const router = Router();
 const log = loggers('flavor');
 
 router.get(
   '/:id',
+  authenticate(),
   [
     check('id')
       .isNumeric()

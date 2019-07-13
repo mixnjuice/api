@@ -129,12 +129,17 @@ authServer.exchange(
 /**
  * Provide a wrapper around passport.authenticate with the appropriate strategies selected.
  */
-export const authenticate = () => [
-  passport.initialize(),
-  passport.authenticate(validateTokens ? 'bearer' : 'anonymous', {
-    session: false
-  })
-];
+export const authenticate = () => {
+  const { NODE_ENV: environment } = process.env;
+  const useBearerStrategy = environment !== 'test' && validateTokens;
+
+  return [
+    passport.initialize(),
+    passport.authenticate(useBearerStrategy ? 'bearer' : 'anonymous', {
+      session: false
+    })
+  ];
+};
 
 export default app => {
   passport.use(

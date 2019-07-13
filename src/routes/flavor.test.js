@@ -1,5 +1,7 @@
 import express from 'express';
 import request from 'supertest';
+import passport from 'passport';
+import AnonymousStrategy from 'passport-anonymous';
 
 import flavor from './flavor';
 import database from '../modules/database';
@@ -8,6 +10,7 @@ import database from '../modules/database';
 describe('flavor resource', () => {
   const app = express();
 
+  passport.use(new AnonymousStrategy());
   app.use(flavor);
 
   afterAll(() => {

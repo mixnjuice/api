@@ -8,6 +8,7 @@
     "develop": "gulp watch",
     "start": "gulp && node lib/index.js",
     "migrate": "gulp && node lib/migrate.js",
+    "start-mock": "gulp && API_TOKEN_VALIDATE=false node lib/index.js",
     "test": "jest"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "globby": "^9.2.0",
     "nanoid": "^2.0.3",
     "passport": "^0.4.0",
+    "passport-anonymous": "^1.0.1",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
     "postgrator": "^3.10.1",

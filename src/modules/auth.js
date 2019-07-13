@@ -131,7 +131,7 @@ authServer.exchange(
  */
 export const authenticate = () => [
   passport.initialize(),
-  passport.authenticate(validateTokens ? 'bearer' : ['bearer', 'anonymous'], {
+  passport.authenticate(validateTokens ? 'bearer' : 'anonymous', {
     session: false
   })
 ];

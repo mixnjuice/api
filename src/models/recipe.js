@@ -25,10 +25,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: DataTypes.NOW
       },
+      /*
       notes: {
         type: DataTypes.TEXT,
         allowNull: true
-      },
+      },*/
       viewCount: {
         type: DataTypes.INTEGER,
         allowNull: false
@@ -45,6 +46,10 @@ module.exports = (sequelize, DataTypes) => {
 
   Recipe.associate = function(models) {
     this.belongsTo(models.User, { foreignKey: 'userId' });
+    this.belongsTo(models.UserProfile, {
+      foreignKey: 'userId',
+      sourceKey: 'userId'
+    });
     this.hasMany(models.RecipesFlavors, {
       foreignKey: 'recipeId'
     });

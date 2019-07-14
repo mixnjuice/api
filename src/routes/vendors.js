@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { param, validationResult } from 'express-validator';
+import { query, validationResult } from 'express-validator';
 
 import { authenticate } from '../modules/auth';
 import models from '../modules/database';
@@ -14,12 +14,16 @@ const { Vendor } = models;
  * @param page int
  */
 router.get(
-  '/:page',
+  '/',
   authenticate(),
   [
-    param('page')
+    query('offset')
+      .optional()
       .isNumeric()
-      .isInt({ min: 1 })
+      .toInt(),
+    query('limit')
+      .optional()
+      .isNumeric()
       .toInt()
   ],
   async (req, res) => {
@@ -28,15 +32,15 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const limit = 20; // Make this configurable
+    const limit = req.query.limit || 20;
 
-    let offset = 0;
+    let offset = req.query.offset || 1;
 
     log.info(`request for page ${req.params.page}`);
     try {
       // const rows = Recipe.findAndCountAll();
       // const pages = Math.ceil(rows.count / limit);
-      offset = limit * (req.params.page - 1);
+      offset--;
 
       const result = await Vendor.findAll({
         limit: limit,

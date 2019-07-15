@@ -36,7 +36,7 @@ router.get(
         }
       });
 
-      if (result.length === 0) {
+      if (!result || result.length === 0) {
         return res.status(204).end();
       }
 

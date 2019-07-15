@@ -7,7 +7,7 @@ import recipe from './recipe';
 import database from '../modules/database';
 
 /* eslint-disable camelcase */
-describe('recipe resource', () => {
+describe('recipe route resource', () => {
   const app = express();
 
   passport.use(new AnonymousStrategy());

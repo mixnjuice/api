@@ -7,7 +7,7 @@ import vendor from './vendor';
 import database from '../modules/database';
 
 /* eslint-disable camelcase */
-describe('vendor resource', () => {
+describe('vendor route resource', () => {
   const app = express();
 
   passport.use(new AnonymousStrategy());

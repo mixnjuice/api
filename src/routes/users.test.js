@@ -7,7 +7,7 @@ import users from './users';
 import database from '../modules/database';
 
 /* eslint-disable camelcase */
-describe('flavor resource', () => {
+describe('users route resource', () => {
   const app = express();
 
   passport.use(new AnonymousStrategy());
@@ -35,19 +35,19 @@ describe('flavor resource', () => {
       .expect(400, done);
   });
 
-  it('returns valid list of 2 users', done => {
+  it('returns valid list of 2 user accounts', done => {
     request(app)
       .get('/accounts/?limit=2')
       .expect(200, done);
   });
 
-  it('returns 204 for missing user list', done => {
+  it('returns 204 for missing user accounts list', done => {
     request(app)
       .get('/accounts/?offset=9000000')
       .expect(204, done);
   });
 
-  it('returns 400 for invalid user list', done => {
+  it('returns 400 for invalid user accounts list', done => {
     request(app)
       .get('/accounts/?limit=stop')
       .expect(400, done);

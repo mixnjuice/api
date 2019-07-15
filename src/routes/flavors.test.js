@@ -7,7 +7,7 @@ import flavors from './flavors';
 import database from '../modules/database';
 
 /* eslint-disable camelcase */
-describe('flavors resource', () => {
+describe('flavors route resource', () => {
   const app = express();
 
   passport.use(new AnonymousStrategy());
@@ -44,13 +44,13 @@ describe('flavors resource', () => {
       );
   });
 
-  it('returns 204 for missing flavor', done => {
+  it('returns 204 for missing flavors list', done => {
     request(app)
       .get('/?offset=800000')
       .expect(204, done);
   });
 
-  it('returns 400 for invalid flavor', done => {
+  it('returns 400 for invalid flavor list', done => {
     request(app)
       .get('/?limit=stop')
       .expect(400, done);

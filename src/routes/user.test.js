@@ -7,7 +7,7 @@ import user from './user';
 import database from '../modules/database';
 
 /* eslint-disable camelcase */
-describe('flavor resource', () => {
+describe('user route resource', () => {
   const app = express();
 
   passport.use(new AnonymousStrategy());
@@ -19,7 +19,7 @@ describe('flavor resource', () => {
 
   it('returns valid user', done => {
     request(app)
-      .get('/1')
+      .get('/3')
       .expect(200, done);
   });
 

@@ -7,7 +7,7 @@ import register from './register';
 import database from '../modules/database';
 
 /* eslint-disable camelcase */
-describe('register resource', () => {
+describe('register route resource', () => {
   const app = express();
 
   passport.use(new AnonymousStrategy());
@@ -17,13 +17,13 @@ describe('register resource', () => {
     database.sequelize.close();
   });
 
-  it('returns 400 for token error', done => {
+  it('returns 400 for token error (invalid token)', done => {
     request(app)
       .get('/activate/?code=123456')
       .expect(400, done);
   });
 
-  it('returns 400 for token error', done => {
+  it('returns 400 for token error (missing token)', done => {
     request(app)
       .get('/activate')
       .expect(400, done);

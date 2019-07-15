@@ -7,7 +7,7 @@ import flavor from './flavor';
 import database from '../modules/database';
 
 /* eslint-disable camelcase */
-describe('flavor resource', () => {
+describe('flavor route resource', () => {
   const app = express();
 
   passport.use(new AnonymousStrategy());

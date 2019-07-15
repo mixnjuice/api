@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { param, validationResult } from 'express-validator';
+import { body, param, validationResult } from 'express-validator';
 
 import { authenticate } from '../modules/auth';
 import models from '../modules/database';
@@ -7,7 +7,16 @@ import loggers from '../modules/logging';
 
 const router = Router();
 const log = loggers('user');
-const { Flavor, Recipe, User, UsersFlavors, UserProfile, Vendor } = models;
+const {
+  Flavor,
+  Recipe,
+  Role,
+  User,
+  UsersFlavors,
+  UserProfile,
+  UsersRoles,
+  Vendor
+} = models;
 
 /**
  * GET User Info
@@ -302,7 +311,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`create flavor stash for user ${req.params.id}`);
+    log.info(`create flavor stash for user ${req.params.userid}`);
     try {
       const result = await UsersFlavors.create({
         userId: req.params.userid,
@@ -400,6 +409,239 @@ router.delete(
         where: {
           userId: req.params.userid,
           flavorId: req.params.flavorid
+        }
+      });
+
+      if (result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
+/**
+ * GET User Roles
+ * @param userid int
+ */
+router.get(
+  '/:userid(\\d+)/roles',
+  authenticate(),
+  [
+    param('userid')
+      .isNumeric()
+      .toInt()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    log.info(`request roles for user ${req.params.userid}`);
+    try {
+      const result = await UsersRoles.findAll({
+        where: {
+          userId: req.params.userid
+        },
+        include: [
+          {
+            model: Role,
+            required: true
+          }
+        ]
+      });
+
+      if (result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
+/**
+ * GET A User Role
+ * @param userid int
+ * @param roleid int
+ */
+router.get(
+  '/:userid(\\d+)/role/:roleid(\\d+)',
+  authenticate(),
+  [
+    param('userid')
+      .isNumeric()
+      .toInt(),
+    param('roleid')
+      .isNumeric()
+      .toInt()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    log.info(
+      `request role id ${req.params.roleid} for user ${req.params.userid}`
+    );
+    try {
+      const result = await UsersRoles.findAll({
+        where: {
+          userId: req.params.userid,
+          roleId: req.params.roleid
+        },
+        include: [
+          {
+            model: Role,
+            required: true
+          }
+        ]
+      });
+
+      if (result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
+/**
+ * POST Add Role to User's Roles
+ * @param userid int - User ID
+ */
+router.post(
+  '/:userid(\\d+)/role',
+  authenticate(),
+  [
+    param('userid')
+      .isNumeric()
+      .toInt(),
+    body('roleid')
+      .isNumeric()
+      .toInt(),
+    body('active').isBoolean()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    log.info(`add role to user ${req.params.userid}`);
+    try {
+      const result = await UsersRoles.create({
+        userId: req.params.userid,
+        roleId: req.body.roleid,
+        active: req.body.active || true
+      });
+
+      if (result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
+/**
+ * PUT Update User's Role
+ */
+router.put(
+  '/:userid(\\d+)/role/:roleid(\\d+)',
+  authenticate(),
+  [
+    param('userid')
+      .isNumeric()
+      .toInt(),
+    param('roleid')
+      .isNumeric()
+      .toInt(),
+    body('active').isBoolean()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    log.info(`update user ${req.params.userid} role ${req.params.roleid}`);
+    try {
+      const result = await UsersRoles.update(
+        {
+          active: req.body.active
+        },
+        {
+          where: {
+            userId: req.params.userid,
+            roleId: req.params.roleid
+          }
+        }
+      );
+
+      if (result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
+
+/**
+ * DELETE Remove User's Role
+ */
+router.delete(
+  '/:userid(\\d+)/role/:roleid(\\d+)',
+  authenticate(),
+  [
+    param('userid')
+      .isNumeric()
+      .toInt(),
+    param('roleid')
+      .isNumeric()
+      .toInt()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    log.info(
+      `delete from role ${req.params.roleid} from user ${req.params.userid}`
+    );
+    try {
+      const result = await UsersRoles.destroy({
+        where: {
+          userId: req.params.userid,
+          roleId: req.params.roleid
         }
       });
 

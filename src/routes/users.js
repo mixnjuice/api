@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { query, validationResult } from 'express-validator';
+import { query, param, validationResult } from 'express-validator';
 
 import { authenticate } from '../modules/auth';
 import models from '../modules/database';
@@ -7,7 +7,7 @@ import loggers from '../modules/logging';
 
 const router = Router();
 const log = loggers('users');
-const { User, UserProfile } = models;
+const { Role, User, UserProfile, UsersRoles } = models;
 
 /**
  * GET Users' Profiles
@@ -101,6 +101,69 @@ router.get(
       });
 
       if (result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
+/**
+ * GET Role Users
+ * @param roleid int
+ */
+router.get(
+  '/role/:roleid(\\d+)',
+  authenticate(),
+  [
+    param('roleid')
+      .isNumeric()
+      .toInt(),
+    query('offset')
+      .optional()
+      .isNumeric()
+      .toInt(),
+    query('limit')
+      .optional()
+      .isNumeric()
+      .toInt()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const limit = req.query.limit || 20;
+
+    let offset = req.query.offset || 1;
+
+    log.info(`request for all users with role id ${req.params.roleid}`);
+    try {
+      offset--;
+      const result = await UsersRoles.findAll({
+        where: {
+          roleId: req.params.roleid
+        },
+        include: [
+          {
+            model: Role,
+            required: true
+          },
+          {
+            model: User,
+            required: true
+          }
+        ],
+        limit: limit,
+        offset: offset
+      });
+
+      if (!result || result.length === 0) {
         return res.status(204).end();
       }
 

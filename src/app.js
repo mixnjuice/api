@@ -12,6 +12,8 @@ import flavors from './routes/flavors';
 import recipe from './routes/recipe';
 import recipes from './routes/recipes';
 import register from './routes/register';
+import role from './routes/role';
+import roles from './routes/roles';
 import user from './routes/user';
 import users from './routes/users';
 import vendor from './routes/vendor';
@@ -37,11 +39,13 @@ export const start = async () => {
   app.use('/api/flavors', flavors);
   app.use('/api/recipe', recipe);
   app.use('/api/recipes', recipes);
-  app.use('/register', register);
+  app.use('/api/role', role);
+  app.use('/api/roles', roles);
   app.use('/api/user', user);
   app.use('/api/users', users);
   app.use('/api/vendor', vendor);
   app.use('/api/vendors', vendors);
+  app.use('/register', register);
 
   // start the server
   const { port } = config;

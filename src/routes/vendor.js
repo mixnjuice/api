@@ -14,7 +14,7 @@ const { Vendor } = models;
  * @param id int
  */
 router.get(
-  '/:id(\\d+)',
+  '/:id',
   authenticate(),
   [
     param('id')

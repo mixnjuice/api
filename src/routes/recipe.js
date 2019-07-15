@@ -56,7 +56,7 @@ router.get(
       }
 
       res.type('application/json');
-      res.json(result.shift().shift());
+      res.json(result);
     } catch (error) {
       log.error(error.message);
       res.status(500).send(error.message);
@@ -111,12 +111,12 @@ router.post(
         ]
       });
 
-      if (result[0].length === 0) {
+      if (result.length === 0) {
         return res.status(204).end();
       }
 
       res.type('application/json');
-      res.json(result.shift().shift());
+      res.json(result);
     } catch (error) {
       log.error(error.message);
       res.status(500).send(error.message);

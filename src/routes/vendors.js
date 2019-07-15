@@ -11,7 +11,8 @@ const { Vendor } = models;
 
 /**
  * GET Vendors
- * @param page int
+ * @query offset int
+ * @query limit int
  */
 router.get(
   '/',
@@ -36,9 +37,9 @@ router.get(
 
     let offset = req.query.offset || 1;
 
-    log.info(`request for page ${req.params.page}`);
+    log.info(`request for vendors ${limit}`);
     try {
-      // const rows = Recipe.findAndCountAll();
+      // const rows = Vendor.findAndCountAll();
       // const pages = Math.ceil(rows.count / limit);
       offset--;
 

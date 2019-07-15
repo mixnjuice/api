@@ -11,7 +11,8 @@ const { User, UserProfile } = models;
 
 /**
  * GET Users' Profiles
- * @param page int
+ * @query offset int
+ * @query limit int
  */
 router.get(
   '/',
@@ -38,7 +39,7 @@ router.get(
 
     log.info(`request for user profiles ${limit}`);
     try {
-      // const rows = Recipe.findAndCountAll();
+      // const rows = UserProfile.findAndCountAll();
       // const pages = Math.ceil(rows.count / limit);
       offset--;
 
@@ -47,7 +48,7 @@ router.get(
         offset: offset
       });
 
-      if (result[0].length === 0) {
+      if (result.length === 0) {
         return res.status(204).end();
       }
 
@@ -62,7 +63,8 @@ router.get(
 
 /**
  * GET Users' Accounts
- * @param page int
+ * @query offset int
+ * @query limit int
  */
 router.get(
   '/accounts',
@@ -89,7 +91,7 @@ router.get(
 
     log.info(`request for user accounts ${limit}`);
     try {
-      // const rows = Recipe.findAndCountAll();
+      // const rows = User.findAndCountAll();
       // const pages = Math.ceil(rows.count / limit);
       offset--;
 
@@ -98,7 +100,7 @@ router.get(
         offset: offset
       });
 
-      if (result[0].length === 0) {
+      if (result.length === 0) {
         return res.status(204).end();
       }
 

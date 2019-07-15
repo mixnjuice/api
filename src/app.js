@@ -8,6 +8,7 @@ import loggers from './modules/logging';
 import bindAuth from './modules/auth';
 
 import flavor from './routes/flavor';
+import flavors from './routes/flavors';
 import recipe from './routes/recipe';
 import recipes from './routes/recipes';
 import register from './routes/register';
@@ -32,10 +33,11 @@ export const start = async () => {
   bindAuth(app);
 
   // routes
-  app.use('/register', register);
   app.use('/api/flavor', flavor);
+  app.use('/api/flavors', flavors);
   app.use('/api/recipe', recipe);
   app.use('/api/recipes', recipes);
+  app.use('/register', register);
   app.use('/api/user', user);
   app.use('/api/users', users);
   app.use('/api/vendor', vendor);

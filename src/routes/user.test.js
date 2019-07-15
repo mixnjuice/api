@@ -3,39 +3,36 @@ import request from 'supertest';
 import passport from 'passport';
 import AnonymousStrategy from 'passport-anonymous';
 
-import vendor from './vendor';
+import user from './user';
 import database from '../modules/database';
 
 /* eslint-disable camelcase */
-describe('vendor resource', () => {
+describe('flavor resource', () => {
   const app = express();
 
   passport.use(new AnonymousStrategy());
-  app.use(vendor);
+  app.use(user);
 
   afterAll(() => {
     database.sequelize.close();
   });
 
-  it('returns valid vendor', done => {
+  it('returns valid user', done => {
     request(app)
       .get('/1')
-      .expect(
-        200,
-        { id: 1, name: 'Baker Flavors', slug: 'baker-flavors', code: 'BF' },
-        done
-      );
+      .expect(200, done);
   });
 
-  it('returns 204 for missing vendor', done => {
+  it('returns 204 for missing user', done => {
     request(app)
-      .get('/20000')
+      .get('/100000000')
       .expect(204, done);
   });
-
-  it('returns 400 for invalid vendor', done => {
+  /* This test is nullified by using id(\\+d)
+  it('returns 400 for invalid user', done => {
     request(app)
       .get('/ham')
       .expect(400, done);
   });
+  */
 });

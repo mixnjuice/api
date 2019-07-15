@@ -19,7 +19,7 @@ describe('vendors resource', () => {
 
   it('returns valid vendors', done => {
     request(app)
-      .get('/1')
+      .get('/?limit=20')
       .expect(
         200,
         [
@@ -80,19 +80,19 @@ describe('vendors resource', () => {
 
   it('returns 204 for missing vendors', done => {
     request(app)
-      .get('/100000')
+      .get('/?offset=1000000')
       .expect(204, done);
   });
 
   it('returns 400 for invalid vendors', done => {
     request(app)
-      .get('/0')
+      .get('/?offset=stop')
       .expect(400, done);
   });
 
   it('returns 400 for invalid vendors', done => {
     request(app)
-      .get('/ham')
+      .get('/?offset=stop')
       .expect(400, done);
   });
 });

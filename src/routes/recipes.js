@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { check, validationResult } from 'express-validator/check';
+import { query, validationResult } from 'express-validator';
 
+import { authenticate } from '../modules/auth';
 import models from '../modules/database';
 import loggers from '../modules/logging';
 
@@ -10,12 +11,19 @@ const { Recipe } = models;
 
 /**
  * GET Recipes
- * @param page int
+ * @query offset int
+ * @query limit int
  */
 router.get(
-  '/:page(d+)',
+  '/',
+  authenticate(),
   [
-    check('page')
+    query('offset')
+      .optional()
+      .isNumeric()
+      .toInt(),
+    query('limit')
+      .optional()
       .isNumeric()
       .toInt()
   ],
@@ -25,27 +33,27 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const limit = 20; // Make this configurable
+    const limit = req.query.limit || 20;
 
-    let offset = 0;
+    let offset = req.query.offset || 1;
 
-    log.info(`request for page ${req.params.page}`);
+    log.info(`request for recipes ${limit}`);
     try {
       // const rows = Recipe.findAndCountAll();
       // const pages = Math.ceil(rows.count / limit);
-      offset = limit * (req.params.page - 1);
+      offset--;
 
       const result = await Recipe.findAll({
         limit: limit,
         offset: offset
       });
 
-      if (result[0].length === 0) {
+      if (result.length === 0) {
         return res.status(204).end();
       }
 
       res.type('application/json');
-      res.json(result.shift().shift());
+      res.json(result);
     } catch (error) {
       log.error(error.message);
       res.status(500).send(error.message);

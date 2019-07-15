@@ -1,5 +1,5 @@
 import express from 'express';
-// import request from 'supertest';
+import request from 'supertest';
 import passport from 'passport';
 import AnonymousStrategy from 'passport-anonymous';
 
@@ -15,5 +15,17 @@ describe('register resource', () => {
 
   afterAll(() => {
     database.sequelize.close();
+  });
+
+  it('returns 400 for token error', done => {
+    request(app)
+      .get('/activate/?code=123456')
+      .expect(400, done);
+  });
+
+  it('returns 400 for token error', done => {
+    request(app)
+      .get('/activate')
+      .expect(400, done);
   });
 });

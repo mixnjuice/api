@@ -6,11 +6,11 @@ import models from '../modules/database';
 import loggers from '../modules/logging';
 
 const router = Router();
-const log = loggers('flavors');
-const { Flavor, Vendor } = models;
+const log = loggers('diluents');
+const { Diluent } = models;
 
 /**
- * GET Flavors
+ * GET Diluents
  * @query offset int
  * @query limit int
  */
@@ -37,21 +37,15 @@ router.get(
 
     let offset = req.query.offset || 1;
 
-    log.info(`request for flavors ${limit}`);
+    log.info(`request for diluents ${limit}`);
     try {
       // const rows = Recipe.findAndCountAll();
       // const pages = Math.ceil(rows.count / limit);
       offset--;
 
-      const result = await Flavor.findAll({
+      const result = await Diluent.findAll({
         limit: limit,
-        offset: offset,
-        include: [
-          {
-            model: Vendor,
-            require: true
-          }
-        ]
+        offset: offset
       });
 
       if (result.length === 0) {

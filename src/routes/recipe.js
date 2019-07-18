@@ -155,6 +155,90 @@ router.post(
 );
 /**
  * PUT Update Recipe
+ * @param id int
+ * @body userid int
+ * @body name string
+ * @body notes string
+ * @body flavors array
+ * @body diluents array
  */
+router.put(
+  '/:id',
+  authenticate(),
+  [
+    param('id')
+      .isNumeric()
+      .toInt(),
+    body('userid')
+      .isNumeric()
+      .toInt(),
+    body('name')
+      .isString()
+      .isLength({ min: 1 })
+      .withMessage('length'),
+    body('notes').isString(),
+    body('flavors')
+      .isArray()
+      .withMessage('array'),
+    body('diluents')
+      .isArray()
+      .withMessage('array')
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    log.info(`update recipe id ${req.params.id}`);
+    try {
+      const result = await Recipe.update(
+        {
+          userId: req.body.userid,
+          name: req.body.name,
+          notes: req.body.notes,
+          RecipesFlavors: req.body.flavors, // Array of flavors
+          RecipesDiluents: req.body.diluents // Array of diluents
+        },
+        {
+          where: {
+            id: req.params.id
+          }
+        },
+        {
+          include: [
+            {
+              model: RecipesFlavors,
+              required: true,
+              where: {
+                receipeId: req.params.id,
+                flavorId: 'flavorId'
+              }
+            },
+            {
+              model: RecipesDiluents,
+              required: true,
+              where: {
+                receipeId: req.params.id,
+                flavorId: 'diluentId'
+              }
+            }
+          ]
+        }
+      );
+
+      if (result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
 
 export default router;

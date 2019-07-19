@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  mattermost-notify: bulletlogic/mattermost-notify@0.0.2
+  mattermost-notify: bulletlogic/mattermost-notify@0.0.4
 
 jobs:
   build:
@@ -19,16 +19,12 @@ jobs:
       - image: byrnedo/alpine-curl:latest
     steps:
       - mattermost-notify/notify_on_success:
-          branches: '*'
-          reponame: 'gusta-project/api'
           webhook: '$MATTERMOST_WEBHOOK_API'
   notify_failure:
     docker:
       - image: byrnedo/alpine-curl:latest
     steps:
       - mattermost-notify/notify_on_failure:
-          branches: '*'
-          reponame: 'gusta-project/api'
           webhook: '$MATTERMOST_WEBHOOK_API'
 
 workflows:

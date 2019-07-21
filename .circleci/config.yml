@@ -1,4 +1,8 @@
-version: 2
+version: 2.1
+
+orbs:
+  mattermost-notify: bulletlogic/mattermost-notify@0.0.4
+
 jobs:
   build:
     machine: true
@@ -10,3 +14,29 @@ jobs:
       - store_artifacts:
           path: coverage
           prefix: coverage
+  notify_success:
+    docker:
+      - image: byrnedo/alpine-curl:latest
+    steps:
+      - mattermost-notify/notify_on_success:
+          webhook: '$MATTERMOST_WEBHOOK_API'
+  notify_failure:
+    docker:
+      - image: byrnedo/alpine-curl:latest
+    steps:
+      - mattermost-notify/notify_on_failure:
+          webhook: '$MATTERMOST_WEBHOOK_API'
+
+workflows:
+  version: 2
+  main_workflow:
+    jobs:
+      - build
+      - notify_success:
+          context: webhooks
+          requires:
+            - build
+      - notify_failure:
+          context: webhooks
+          requires:
+            - build

@@ -193,40 +193,139 @@ router.put(
 
     log.info(`update recipe id ${req.params.id}`);
     try {
-      const result = await Recipe.update(
+      const recipeResult = await Recipe.update(
         {
           userId: req.body.userid,
           name: req.body.name,
-          notes: req.body.notes,
-          RecipesFlavors: req.body.flavors, // Array of flavors
-          RecipesDiluents: req.body.diluents // Array of diluents
+          notes: req.body.notes
         },
         {
           where: {
             id: req.params.id
           }
-        },
-        {
-          include: [
-            {
-              model: RecipesFlavors,
-              required: true,
-              where: {
-                receipeId: req.params.id,
-                flavorId: 'flavorId'
-              }
-            },
-            {
-              model: RecipesDiluents,
-              required: true,
-              where: {
-                receipeId: req.params.id,
-                flavorId: 'diluentId'
-              }
-            }
-          ]
         }
       );
+
+      const diluentResult = [];
+
+      for (const diluent of req.body.diluents) {
+        if (diluent.millipercent === null) {
+          // delete
+          diluentResult[diluent.diluentId] = await RecipesDiluents.destroy({
+            where: {
+              recipeId: diluent.recipeId,
+              diluentId: diluent.diluentId
+            }
+          });
+        } else {
+          diluentResult[diluent.diluentId] = await RecipesDiluents.findOne({
+            where: {
+              recipeId: diluent.recipeId,
+              diluentId: diluent.diluentId
+            }
+          }).then(function(obj) {
+            if (obj) {
+              // update
+              return obj.update({ millipercent: diluent.millipercent });
+            } else {
+              // insert
+              return RecipesDiluents.create({
+                recipeId: diluent.recipeId,
+                diluentId: diluent.diluentId,
+                millipercent: diluent.millipercent
+              });
+            }
+          });
+        }
+      }
+
+      const flavorResult = [];
+
+      for (const flavor of req.body.flavors) {
+        if (flavor.millipercent === null) {
+          // delete
+          flavorResult[flavor.flavorId] = await RecipesFlavors.destroy({
+            where: {
+              recipeId: flavor.recipeId,
+              flavorId: flavor.flavorId
+            }
+          });
+        } else {
+          flavorResult[flavor.flavorId] = await RecipesFlavors.findOne({
+            where: {
+              recipeId: flavor.recipeId,
+              flavorId: flavor.flavorId
+            }
+          }).then(function(obj) {
+            if (obj) {
+              // update
+              return obj.update({ millipercent: flavor.millipercent });
+            } else {
+              // insert
+              return RecipesFlavors.create({
+                recipeId: flavor.recipeId,
+                flavorId: flavor.flavorId,
+                millipercent: flavor.millipercent
+              });
+            }
+          });
+        }
+      }
+
+      const result = { recipeResult, diluentResult, flavorResult };
+
+      if (result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
+/**
+ * DELETE Recipe
+ * @param id int
+ */
+router.delete(
+  '/:id',
+  authenticate(),
+  [
+    param('id')
+      .isNumeric()
+      .toInt()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    log.info(`delete recipe id ${req.params.id}`);
+    try {
+      const diluentResult = await RecipesDiluents.destroy({
+        where: {
+          recipeId: req.params.id
+        }
+      });
+
+      const flavorResult = await RecipesFlavors.destroy({
+        where: {
+          recipeId: req.params.id
+        }
+      });
+
+      const recipeResult = await Recipe.destroy({
+        where: {
+          id: req.params.id
+        }
+      });
+
+      const result = { recipeResult, diluentResult, flavorResult };
 
       if (result.length === 0) {
         return res.status(204).end();

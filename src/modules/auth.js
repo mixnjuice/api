@@ -110,6 +110,7 @@ authServer.exchange(
     } catch (error) {
       log.error(error.message);
       log.error(error.stack);
+      done(error);
     }
   })
 );

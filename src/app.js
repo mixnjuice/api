@@ -29,7 +29,7 @@ export const start = async () => {
 
   // routes
   app.use('/register', register);
-  app.use('/api/flavor', flavor);
+  app.use('/flavor', flavor);
   // app.use('/api/recipe', recipe);
   // app.use('/api/vendor', vendor);
 

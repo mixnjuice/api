@@ -1,5 +1,5 @@
+import cors from 'cors';
 import express from 'express';
-// import passport from 'passport';
 import bodyParser from 'body-parser';
 import responseTime from 'response-time';
 
@@ -20,6 +20,7 @@ export const app = express();
 
 export const start = async () => {
   // common middleware
+  app.use(cors());
   app.use(responseTime());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));

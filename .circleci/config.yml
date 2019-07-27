@@ -17,7 +17,7 @@ jobs:
       - run: docker-compose up -d
       - run: docker-compose exec api npm run migrate
       - run: docker-compose exec api npm test
-      - run: docker-compose exec api "CODECOV_TOKEN=$CODECOV_TOKEN_API npx codecov"
+      - run: docker-compose exec api bash "CODECOV_TOKEN=$CODECOV_TOKEN_API npx codecov"
   notify_success:
     docker:
       - image: byrnedo/alpine-curl:latest

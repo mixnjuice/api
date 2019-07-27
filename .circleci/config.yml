@@ -9,9 +9,15 @@ jobs:
     working_directory: ~/gusta-api
     steps:
       - checkout
+      - run:
+          name: Set environment variables
+          command: |
+            echo 'export CODECOV_TOKEN="$CODECOV_TOKEN_API"' >> $BASH_ENV
+            source $BASH_ENV
       - run: docker-compose up -d
       - run: docker-compose exec api npm run migrate
       - run: docker-compose exec api npm test
+      - run: docker-compose exec api "CODECOV_TOKEN=$CODECOV_TOKEN npx codecov"
       - store_artifacts:
           path: coverage
           prefix: coverage

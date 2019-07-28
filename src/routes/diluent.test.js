@@ -82,7 +82,7 @@ describe('diluent route resource', () => {
           .expect(400, done);
       });
 
-      it('GET returns 400 for invalid diluent', done => {
+      it('GET returns 400 for invalid diluent #2', done => {
         request(app)
           .get('/ham')
           .expect(400, done);

@@ -105,7 +105,7 @@ describe('recipe route resource', () => {
           .expect(400, done);
       });
 
-      it('GET returns 400 for invalid recipe', done => {
+      it('GET returns 400 for invalid recipe #2', done => {
         request(app)
           .get('/ham')
           .expect(400, done);

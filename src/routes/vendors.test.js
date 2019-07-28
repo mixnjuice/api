@@ -90,7 +90,7 @@ describe('vendors route resource', () => {
       .expect(400, done);
   });
 
-  it('returns 400 for invalid vendors', done => {
+  it('returns 400 for invalid vendors #2', done => {
     request(app)
       .get('/?offset=stop')
       .expect(400, done);

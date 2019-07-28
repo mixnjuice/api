@@ -20,8 +20,10 @@ describe('diluent route resource', () => {
     database.sequelize.close();
   });
 
+  const date = new Date();
+
   let mockData = {
-    name: 'Grosser Stuff',
+    name: 'Grosser Stuff' + date,
     slug: 'gs',
     code: 'GS',
     density: '1.2610'
@@ -55,7 +57,7 @@ describe('diluent route resource', () => {
             }
             // Update our data for the next tests...
             mockData = res.body;
-            mockData.name = 'Gross Stuff';
+            mockData.name = 'Gross Stuff' + date;
             done();
           });
       });

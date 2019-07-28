@@ -20,9 +20,11 @@ describe('recipe route resource', () => {
     database.sequelize.close();
   });
 
+  const date = new Date();
+
   let mockData = {
     userId: 4,
-    name: 'flavflav',
+    name: 'Random' + date,
     notes: 'A strawberry mint lemonade cheesecake concoction',
     RecipesFlavors: [
       {
@@ -78,7 +80,7 @@ describe('recipe route resource', () => {
             }
             // Update our data for the next tests...
             mockData = res.body;
-            mockData.name = 'blah blah blah';
+            mockData.name += 'blah blah blah';
             done();
           });
       });

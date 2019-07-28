@@ -20,8 +20,10 @@ describe('role route resource', () => {
     database.sequelize.close();
   });
 
+  const date = new Date();
+
   let mockData = {
-    name: 'Luser'
+    name: 'Luser' + date
   };
 
   describe('#1', () => {
@@ -52,7 +54,7 @@ describe('role route resource', () => {
             }
             // Update our data for the next tests...
             mockData = res.body;
-            mockData.name = 'Winner';
+            mockData.name = 'Winner' + date;
             done();
           });
       });

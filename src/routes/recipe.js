@@ -95,7 +95,7 @@ router.post(
   '/',
   authenticate(),
   [
-    body('userid')
+    body('userId')
       .isNumeric()
       .toInt(),
     body('name')
@@ -103,10 +103,10 @@ router.post(
       .isLength({ min: 1 })
       .withMessage('length'),
     body('notes').isString(),
-    body('flavors')
+    body('RecipesFlavors')
       .isArray()
       .withMessage('array'),
-    body('diluents')
+    body('RecipesDiluents')
       .isArray()
       .withMessage('array')
   ],
@@ -122,12 +122,12 @@ router.post(
       // Create the recipe, with associations
       const result = await Recipe.create(
         {
-          userId: req.body.userid,
+          userId: req.body.userId,
           name: req.body.name,
           viewCount: 0,
           notes: req.body.notes,
-          RecipesFlavors: req.body.flavors, // Array of flavors
-          RecipesDiluents: req.body.diluents // Array of diluents
+          RecipesFlavors: req.body.RecipesFlavors, // Array of flavors
+          RecipesDiluents: req.body.RecipesDiluents // Array of diluents
         },
         {
           include: [
@@ -171,7 +171,7 @@ router.put(
     param('id')
       .isNumeric()
       .toInt(),
-    body('userid')
+    body('userId')
       .isNumeric()
       .toInt(),
     body('name')
@@ -179,10 +179,10 @@ router.put(
       .isLength({ min: 1 })
       .withMessage('length'),
     body('notes').isString(),
-    body('flavors')
+    body('RecipesFlavors')
       .isArray()
       .withMessage('array'),
-    body('diluents')
+    body('RecipesDiluents')
       .isArray()
       .withMessage('array')
   ],
@@ -209,7 +209,7 @@ router.put(
       // Update the recipe
       const recipeResult = await Recipe.update(
         {
-          userId: req.body.userid,
+          userId: req.body.userId,
           name: req.body.name,
           notes: req.body.notes
         },
@@ -222,7 +222,7 @@ router.put(
 
       const diluentResult = [];
 
-      for (const diluent of req.body.diluents) {
+      for (const diluent of req.body.RecipesDiluents) {
         if (diluent.millipercent === null) {
           // delete
           diluentResult[diluent.diluentId] = await RecipesDiluents.destroy({
@@ -255,7 +255,7 @@ router.put(
 
       const flavorResult = [];
 
-      for (const flavor of req.body.flavors) {
+      for (const flavor of req.body.RecipesFlavors) {
         if (flavor.millipercent === null) {
           // delete
           flavorResult[flavor.flavorId] = await RecipesFlavors.destroy({

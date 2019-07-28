@@ -1,5 +1,5 @@
+import cors from 'cors';
 import express from 'express';
-// import passport from 'passport';
 import bodyParser from 'body-parser';
 import responseTime from 'response-time';
 
@@ -29,6 +29,7 @@ export const app = express();
 
 export const start = async () => {
   // common middleware
+  app.use(cors());
   app.use(responseTime());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -37,18 +38,18 @@ export const start = async () => {
   bindAuth(app);
 
   // routes
-  app.use('/api/diluent', diluent);
-  app.use('/api/diluents', diluents);
-  app.use('/api/flavor', flavor);
-  app.use('/api/flavors', flavors);
-  app.use('/api/recipe', recipe);
-  app.use('/api/recipes', recipes);
-  app.use('/api/role', role);
-  app.use('/api/roles', roles);
-  app.use('/api/user', user);
-  app.use('/api/users', users);
-  app.use('/api/vendor', vendor);
-  app.use('/api/vendors', vendors);
+  app.use('/diluent', diluent);
+  app.use('/diluents', diluents);
+  app.use('/flavor', flavor);
+  app.use('/flavors', flavors);
+  app.use('/recipe', recipe);
+  app.use('/recipes', recipes);
+  app.use('/role', role);
+  app.use('/roles', roles);
+  app.use('/user', user);
+  app.use('/users', users);
+  app.use('/vendor', vendor);
+  app.use('/vendors', vendors);
   app.use('/register', register);
 
   // start the server

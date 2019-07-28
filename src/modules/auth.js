@@ -98,7 +98,10 @@ authServer.exchange(
           expires: dayjs().add(tokenAge, 'seconds')
         });
 
-        done(null, accessToken, refreshToken, result);
+        done(null, accessToken, refreshToken, {
+          /* eslint-disable-next-line camelcase */
+          expires_in: tokenAge
+        });
       } else {
         done(
           new oauth2orize.AuthorizationError(
@@ -110,6 +113,7 @@ authServer.exchange(
     } catch (error) {
       log.error(error.message);
       log.error(error.stack);
+      done(error);
     }
   })
 );

@@ -20,13 +20,13 @@ const {
 
 /**
  * GET User Info
- * @param userid int
+ * @param userId int
  */
 router.get(
-  '/:userid(\\d+)',
+  '/:userId(\\d+)',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt()
   ],
@@ -37,11 +37,11 @@ router.get(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`request for user ${req.params.userid}`);
+    log.info(`request for user ${req.params.userId}`);
     try {
       const result = await User.findOne({
         where: {
-          id: req.params.userid
+          id: req.params.userId
         }
       });
 
@@ -57,18 +57,18 @@ router.get(
     }
   }
 );
-/* PUT /:userid - Update user info. - still trying to figure out the best approach here
+/* PUT /:userId - Update user info. - still trying to figure out the best approach here
  */
 
 /**
  * GET User Profile
- * @param userid int
+ * @param userId int
  */
 router.get(
-  '/:userid(\\d+)/profile',
+  '/:userId(\\d+)/profile',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt()
   ],
@@ -79,11 +79,11 @@ router.get(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`request for user profile ${req.params.userid}`);
+    log.info(`request for user profile ${req.params.userId}`);
     try {
       const result = await UserProfile.findOne({
         where: {
-          userId: req.params.userid
+          userId: req.params.userId
         }
       });
 
@@ -101,13 +101,13 @@ router.get(
 );
 /**
  * PUT Update User's Profile
- * @param userid int
+ * @param userId int
  */
 router.put(
-  '/:userid(\\d+)/profile',
+  '/:userId(\\d+)/profile',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt()
   ],
@@ -118,7 +118,7 @@ router.put(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`update user profile ${req.params.userid}`);
+    log.info(`update user profile ${req.params.userId}`);
     try {
       const result = await UserProfile.update(
         {
@@ -128,7 +128,7 @@ router.put(
         },
         {
           where: {
-            userId: req.params.userid
+            userId: req.params.userId
           }
         }
       );
@@ -147,13 +147,13 @@ router.put(
 );
 /**
  * GET User Recipes
- * @param userid int
+ * @param userId int
  */
 router.get(
-  '/:userid(\\d+)/recipes',
+  '/:userId(\\d+)/recipes',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt()
   ],
@@ -164,11 +164,11 @@ router.get(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`request for user recipes ${req.params.userid}`);
+    log.info(`request for user recipes ${req.params.userId}`);
     try {
       const result = await Recipe.findAll({
         where: {
-          userId: req.params.userid
+          userId: req.params.userId
         }
       });
 
@@ -187,13 +187,13 @@ router.get(
 
 /**
  * GET User Flavors
- * @param userid int
+ * @param userId int
  */
 router.get(
-  '/:userid(\\d+)/flavors',
+  '/:userId(\\d+)/flavors',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt()
   ],
@@ -204,11 +204,11 @@ router.get(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`request flavor stash for user ${req.params.userid}`);
+    log.info(`request flavor stash for user ${req.params.userId}`);
     try {
       const result = await UsersFlavors.findAll({
         where: {
-          userId: req.params.userid
+          userId: req.params.userId
         },
         include: [
           {
@@ -238,17 +238,17 @@ router.get(
 );
 /**
  * GET A User Flavor
- * @param userid int
- * @param flavorid int
+ * @param userId int
+ * @param flavorId int
  */
 router.get(
-  '/:userid(\\d+)/flavor/:flavorid(\\d+)',
+  '/:userId(\\d+)/flavor/:flavorId(\\d+)',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt(),
-    param('flavorid')
+    param('flavorId')
       .isNumeric()
       .toInt()
   ],
@@ -259,12 +259,14 @@ router.get(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`request flavor stash for user ${req.params.userid}`);
+    log.info(
+      `request flavor stash flavor id ${req.params.userId} for user ${req.params.userId}`
+    );
     try {
       const result = await UsersFlavors.findAll({
         where: {
-          userId: req.params.userid,
-          flavorId: req.params.flavorid
+          userId: req.params.userId,
+          flavorId: req.params.flavorId
         },
         include: [
           {
@@ -294,13 +296,13 @@ router.get(
 );
 /**
  * POST Add Flavor to User's Flavor Stash
- * @param userid int - User ID
+ * @param userId int - User ID
  */
 router.post(
-  '/:userid(\\d+)/flavor',
+  '/:userId(\\d+)/flavor',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt()
   ],
@@ -311,10 +313,10 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`create flavor stash for user ${req.params.userid}`);
+    log.info(`create flavor stash for user ${req.params.userId}`);
     try {
       const result = await UsersFlavors.create({
-        userId: req.params.userid,
+        userId: req.params.userId,
         flavorId: req.body.flavorId,
         created: req.body.created,
         minMillipercent: req.body.minMillipercent,
@@ -335,15 +337,17 @@ router.post(
 );
 /**
  * PUT Update User's Flavor Stash Entry
+ * @param userId int
+ * @param flavorId int
  */
 router.put(
-  '/:userid(\\d+)/flavor/:flavorid(\\d+)',
+  '/:userId(\\d+)/flavor/:flavorId(\\d+)',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt(),
-    param('flavorid')
+    param('flavorId')
       .isNumeric()
       .toInt()
   ],
@@ -354,7 +358,7 @@ router.put(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`update user ${req.params.userid} flavor ${req.params.flavorid}`);
+    log.info(`update user ${req.params.userId} flavor ${req.params.flavorId}`);
     try {
       const result = await UsersFlavors.update(
         {
@@ -363,8 +367,8 @@ router.put(
         },
         {
           where: {
-            userId: req.params.userid,
-            flavorId: req.params.flavorid
+            userId: req.params.userId,
+            flavorId: req.params.flavorId
           }
         }
       );
@@ -384,15 +388,17 @@ router.put(
 
 /**
  * DELETE Remove User's Flavor Stash Entry
+ * @param userId int
+ * @param flavorId int
  */
 router.delete(
-  '/:userid(\\d+)/flavor/:flavorid(\\d+)',
+  '/:userId(\\d+)/flavor/:flavorId(\\d+)',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt(),
-    param('flavorid')
+    param('flavorId')
       .isNumeric()
       .toInt()
   ],
@@ -403,12 +409,12 @@ router.delete(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`delete from flavor stash for ${req.params.flavorid}`);
+    log.info(`delete from flavor stash for ${req.params.flavorId}`);
     try {
       const result = await UsersFlavors.destroy({
         where: {
-          userId: req.params.userid,
-          flavorId: req.params.flavorid
+          userId: req.params.userId,
+          flavorId: req.params.flavorId
         }
       });
 
@@ -426,13 +432,13 @@ router.delete(
 );
 /**
  * GET User Roles
- * @param userid int
+ * @param userId int
  */
 router.get(
-  '/:userid(\\d+)/roles',
+  '/:userId(\\d+)/roles',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt()
   ],
@@ -443,11 +449,11 @@ router.get(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`request roles for user ${req.params.userid}`);
+    log.info(`request roles for user ${req.params.userId}`);
     try {
       const result = await UsersRoles.findAll({
         where: {
-          userId: req.params.userid
+          userId: req.params.userId
         },
         include: [
           {
@@ -471,17 +477,17 @@ router.get(
 );
 /**
  * GET A User Role
- * @param userid int
- * @param roleid int
+ * @param userId int
+ * @param roleId int
  */
 router.get(
-  '/:userid(\\d+)/role/:roleid(\\d+)',
+  '/:userId(\\d+)/role/:roleId(\\d+)',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt(),
-    param('roleid')
+    param('roleId')
       .isNumeric()
       .toInt()
   ],
@@ -493,13 +499,13 @@ router.get(
     }
 
     log.info(
-      `request role id ${req.params.roleid} for user ${req.params.userid}`
+      `request role id ${req.params.roleId} for user ${req.params.userId}`
     );
     try {
       const result = await UsersRoles.findAll({
         where: {
-          userId: req.params.userid,
-          roleId: req.params.roleid
+          userId: req.params.userId,
+          roleId: req.params.roleId
         },
         include: [
           {
@@ -523,16 +529,18 @@ router.get(
 );
 /**
  * POST Add Role to User's Roles
- * @param userid int - User ID
+ * @param userId int - User ID
+ * @body roleId int
+ * @body active boolean
  */
 router.post(
-  '/:userid(\\d+)/role',
+  '/:userId(\\d+)/role',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt(),
-    body('roleid')
+    body('roleId')
       .isNumeric()
       .toInt(),
     body('active').isBoolean()
@@ -544,11 +552,11 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`add role to user ${req.params.userid}`);
+    log.info(`add role to user ${req.params.userId}`);
     try {
       const result = await UsersRoles.create({
-        userId: req.params.userid,
-        roleId: req.body.roleid,
+        userId: req.params.userId,
+        roleId: req.body.roleId,
         active: req.body.active || true
       });
 
@@ -566,15 +574,18 @@ router.post(
 );
 /**
  * PUT Update User's Role
+ * @param userId int
+ * @param roleId int
+ * @body active boolean
  */
 router.put(
-  '/:userid(\\d+)/role/:roleid(\\d+)',
+  '/:userId(\\d+)/role/:roleId(\\d+)',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt(),
-    param('roleid')
+    param('roleId')
       .isNumeric()
       .toInt(),
     body('active').isBoolean()
@@ -586,7 +597,7 @@ router.put(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`update user ${req.params.userid} role ${req.params.roleid}`);
+    log.info(`update user ${req.params.userId} role ${req.params.roleId}`);
     try {
       const result = await UsersRoles.update(
         {
@@ -594,8 +605,8 @@ router.put(
         },
         {
           where: {
-            userId: req.params.userid,
-            roleId: req.params.roleid
+            userId: req.params.userId,
+            roleId: req.params.roleId
           }
         }
       );
@@ -615,15 +626,17 @@ router.put(
 
 /**
  * DELETE Remove User's Role
+ * @param userId int
+ * @param roleId int
  */
 router.delete(
-  '/:userid(\\d+)/role/:roleid(\\d+)',
+  '/:userId(\\d+)/role/:roleId(\\d+)',
   authenticate(),
   [
-    param('userid')
+    param('userId')
       .isNumeric()
       .toInt(),
-    param('roleid')
+    param('roleId')
       .isNumeric()
       .toInt()
   ],
@@ -635,13 +648,13 @@ router.delete(
     }
 
     log.info(
-      `delete from role ${req.params.roleid} from user ${req.params.userid}`
+      `delete from role ${req.params.roleId} from user ${req.params.userId}`
     );
     try {
       const result = await UsersRoles.destroy({
         where: {
-          userId: req.params.userid,
-          roleId: req.params.roleid
+          userId: req.params.userId,
+          roleId: req.params.roleId
         }
       });
 

@@ -11,13 +11,13 @@ const { Role } = models;
 
 /**
  * GET Role Info
- * @param roleid int
+ * @param roleId int
  */
 router.get(
-  '/:roleid(\\d+)',
+  '/:roleId(\\d+)',
   authenticate(),
   [
-    param('roleid')
+    param('roleId')
       .isNumeric()
       .toInt()
   ],
@@ -28,11 +28,11 @@ router.get(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`request for role id ${req.params.roleid}`);
+    log.info(`request for role id ${req.params.roleId}`);
     try {
       const result = await Role.findOne({
         where: {
-          id: req.params.roleid
+          id: req.params.roleId
         }
       });
 
@@ -50,13 +50,14 @@ router.get(
 );
 /**
  * PUT Update Role
- * @param roleid int
+ * @param roleId int
+ * @body name string
  */
 router.put(
-  '/:roleid(\\d+)',
+  '/:roleId(\\d+)',
   authenticate(),
   [
-    param('roleid')
+    param('roleId')
       .isNumeric()
       .toInt(),
     body('name').isString()
@@ -68,7 +69,7 @@ router.put(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`update role id ${req.params.roleid}`);
+    log.info(`update role id ${req.params.roleId}`);
     try {
       const result = await Role.update(
         {
@@ -76,7 +77,7 @@ router.put(
         },
         {
           where: {
-            id: req.params.roleid
+            id: req.params.roleId
           }
         }
       );
@@ -129,12 +130,13 @@ router.post(
 );
 /**
  * DELETE Role
+ * @param roleId int
  */
 router.delete(
-  '/:roleid(\\d+)',
+  '/:roleId(\\d+)',
   authenticate(),
   [
-    param('roleid')
+    param('roleId')
       .isNumeric()
       .toInt()
   ],
@@ -145,11 +147,11 @@ router.delete(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`delete role id ${req.params.roleid}`);
+    log.info(`delete role id ${req.params.roleId}`);
     try {
       const result = await Role.destroy({
         where: {
-          id: req.params.roleid
+          id: req.params.roleId
         }
       });
 

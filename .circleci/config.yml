@@ -6,6 +6,7 @@ jobs:
     steps:
       - checkout
       - run: docker-compose up -d
+      - run: docker-compose exec api npm run migrate
       - run: docker-compose exec api npm test
       - store_artifacts:
           path: coverage

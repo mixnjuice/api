@@ -1,30 +1,27 @@
 import express from 'express';
 import request from 'supertest';
 import passport from 'passport';
-import AnonymousStrategy from 'passport-anonymous';
 import bodyParser from 'body-parser';
+import AnonymousStrategy from 'passport-anonymous';
 
-import recipe from './recipe';
+import recipeRoute from './recipe';
 import database from '../modules/database';
 
-/* eslint-disable camelcase */
 describe('recipe route resource', () => {
   const app = express();
 
   passport.use(new AnonymousStrategy());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(recipe);
+  app.use(recipeRoute);
 
   afterAll(() => {
     database.sequelize.close();
   });
 
-  const date = new Date();
-
-  let mockData = {
+  const mockData = {
     userId: 4,
-    name: 'Random' + date,
+    name: 'Testing',
     notes: 'A strawberry mint lemonade cheesecake concoction',
     RecipesFlavors: [
       {
@@ -52,72 +49,47 @@ describe('recipe route resource', () => {
     ]
   };
 
-  describe('#1', () => {
-    it('POST returns 200 for creating recipe', done => {
-      request(app)
-        .post('/')
-        .send(mockData)
-        .expect('Content-type', /json/)
-        .expect(200)
-        .end(function(err, res) {
-          if (err) {
-            return done(err);
-          }
-          // Update our data for the next tests...
-          mockData.id = res.body.id;
-          done();
-        });
-    });
+  it('can create recipe', done => {
+    request(app)
+      .post('/')
+      .send(mockData)
+      .expect('Content-Type', /json/)
+      .expect(200, done);
+  });
 
-    describe('#2', () => {
-      it('GET returns 200 for valid recipe', done => {
-        request(app)
-          .get('/' + mockData.id)
-          .expect(200)
-          .end(function(err, res) {
-            if (err) {
-              return done(err);
-            }
-            // Update our data for the next tests...
-            mockData = res.body;
-            mockData.name += 'blah blah blah';
-            done();
-          });
-      });
+  it('can request valid recipe', done => {
+    request(app)
+      .get('/123')
+      .expect('Content-Type', /json/)
+      .expect(200, done);
+  });
 
-      it('PUT returns 200 for updating recipe', done => {
-        request(app)
-          .put('/' + mockData.id)
-          .send(mockData)
-          .expect('Content-type', /json/)
-          .expect(200)
-          .end(function(err, res) {
-            if (err) {
-              return done(res);
-            }
-            done();
-          });
-      });
+  it('can update existing recipe', done => {
+    request(app)
+      .put('/123')
+      .send(mockData)
+      .expect('Content-Type', /json/)
+      .expect(200, done);
+  });
 
-      it('GET returns 400 for invalid recipe', done => {
-        request(app)
-          .get('/0')
-          .expect(400, done);
-      });
+  it('can delete existing recipe', done => {
+    request(app)
+      .delete('/123')
+      .expect('Content-Type', /json/)
+      .expect(200, done);
+  });
 
-      it('GET returns 400 for invalid recipe', done => {
-        request(app)
-          .get('/ham')
-          .expect(400, done);
-      });
+  it('returns 400 for invalid number in GET request', done => {
+    request(app)
+      .get('/0')
+      .expect('Content-Type', /json/)
+      .expect(400, done);
+  });
 
-      describe('#3', () => {
-        it('DELETE returns 200 after deleting recipe', done => {
-          request(app)
-            .delete('/' + mockData.id)
-            .expect(200, done);
-        });
-      });
-    });
+  it('returns 400 for string in GET request', done => {
+    request(app)
+      .get('/ham')
+      .expect('Content-Type', /json/)
+      .expect(400, done);
   });
 });

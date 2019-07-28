@@ -19,22 +19,12 @@ const date = new Date();
 router.post('/mock/user', authenticate(), async (req, res) => {
   log.info(`create new test user`);
   try {
-    const result = await User.create(
-      {
-        emailAddress: 'example' + date.getTime() + '@example.com',
-        password: date.getTime(),
-        created: date,
-        activationCode: null
-      },
-      {
-        include: [
-          {
-            model: UserProfile,
-            required: true
-          }
-        ]
-      }
-    );
+    const result = await User.create({
+      emailAddress: 'example' + date.getTime() + '@example.com',
+      password: date.getTime(),
+      created: date,
+      activationCode: null
+    });
 
     if (result.length === 0) {
       return res.status(204).end();

@@ -100,7 +100,8 @@ authServer.exchange(
 
         done(null, accessToken, refreshToken, {
           /* eslint-disable-next-line camelcase */
-          expires_in: tokenAge
+          expires_in: tokenAge,
+          userId: user.id
         });
       } else {
         done(

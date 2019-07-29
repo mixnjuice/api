@@ -58,6 +58,7 @@
     "passport-http-bearer": "^1.0.1",
     "prettier": "^1.18.2",
     "prettier-eslint": "^9.0.0",
+    "sequelize-mock": "^0.10.2",
     "supertest": "^4.0.2"
   }
 }

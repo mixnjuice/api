@@ -2,6 +2,12 @@ module.exports = (sequelize, DataTypes) => {
   const Preparation = sequelize.define(
     'Preparation',
     {
+      id: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true
+      },
       recipeId: {
         type: DataTypes.BIGINT,
         primaryKey: true,
@@ -16,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
         references: {
-          model: sequelize.User,
+          model: sequelize.UserProfile,
           key: 'id'
         }
       },
@@ -49,7 +55,11 @@ module.exports = (sequelize, DataTypes) => {
 
   Preparation.associate = function(models) {
     this.belongsTo(models.Recipe, { foreignKey: 'recipeId' });
-    this.belongsTo(models.User, { foreignKey: 'userId' });
+    this.belongsTo(models.UserProfile, {
+      foreignKey: 'userId',
+      sourceKey: 'userId'
+    });
+    this.hasMany(models.PreparationsDiluents, { foreignKey: 'preparationId' });
   };
 
   return Preparation;

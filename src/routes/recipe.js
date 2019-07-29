@@ -85,11 +85,11 @@ router.get(
 );
 /**
  * POST Create a Recipe and associations
- * @body userid int
+ * @body userId int
  * @body name string
  * @body notes string
- * @body flavors array
- * @body diluents array
+ * @body RecipesFlavors array
+ * @body RecipesDiluents array
  */
 router.post(
   '/',
@@ -158,11 +158,11 @@ router.post(
 /**
  * PUT Update Recipe
  * @param id int
- * @body userid int
+ * @body userId int
  * @body name string
  * @body notes string
- * @body flavors array
- * @body diluents array
+ * @body RecipesFlavors array
+ * @body RecipesDiluents array
  */
 router.put(
   '/:id',

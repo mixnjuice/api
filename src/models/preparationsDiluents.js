@@ -2,12 +2,12 @@ module.exports = (sequelize, DataTypes) => {
   const PreparationsDiluents = sequelize.define(
     'PreparationsDiluents',
     {
-      recipeId: {
+      preparationId: {
         type: DataTypes.BIGINT,
         allowNull: false,
         primaryKey: true,
         references: {
-          model: sequelize.Recipe,
+          model: sequelize.Preparation,
           key: 'id'
         }
       },
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       underscored: true,
-      tableName: 'recipes_diluents',
+      tableName: 'preparations_diluents',
       createdAt: false,
       updatedAt: false
     }

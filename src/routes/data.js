@@ -9,6 +9,10 @@ const router = Router();
 const log = loggers('data');
 const { DataSupplier, SchemaVersion } = models;
 
+/**
+ * GET Data Supplier
+ * @param id int
+ */
 router.get(
   '/supplier/:id',
   authenticate(),
@@ -25,7 +29,7 @@ router.get(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`request for ${req.params.id}`);
+    log.info(`request for data supplier id ${req.params.id}`);
     try {
       const result = await DataSupplier.findOne({
         where: {
@@ -116,7 +120,7 @@ router.put(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`request to update data supplier ${req.params.id}`);
+    log.info(`request to update data supplier id ${req.params.id}`);
     try {
       const result = await DataSupplier.update(
         {
@@ -162,7 +166,7 @@ router.delete(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`request to delete data supplier ${req.params.id}`);
+    log.info(`request to delete data supplier id ${req.params.id}`);
     try {
       const result = await DataSupplier.destroy({
         where: {
@@ -182,7 +186,9 @@ router.delete(
     }
   }
 );
-
+/**
+ * GET Data Suppliers
+ */
 router.get('/suppliers', authenticate(), async (req, res) => {
   const errors = validationResult(req);
 
@@ -190,7 +196,7 @@ router.get('/suppliers', authenticate(), async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  log.info(`request for data supplier ${req.params.id}`);
+  log.info(`request for data suppliers`);
   try {
     const result = await DataSupplier.findAll();
 
@@ -205,7 +211,9 @@ router.get('/suppliers', authenticate(), async (req, res) => {
     res.status(500).send(error.message);
   }
 });
-
+/**
+ * GET Database Schema Version Info
+ */
 router.get('/version', authenticate(), async (req, res) => {
   const errors = validationResult(req);
 

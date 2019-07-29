@@ -26,25 +26,25 @@ describe('recipe route resource', () => {
     RecipesFlavors: [
       {
         flavorId: 1,
-        millipercent: '0.0010'
+        millipercent: 10
       },
       {
         flavorId: 22,
-        millipercent: '0.0100'
+        millipercent: 50
       },
       {
         flavorId: 99,
-        millipercent: '0.0200'
+        millipercent: 100
       }
     ],
     RecipesDiluents: [
       {
         diluentId: 1,
-        millipercent: '0.8000'
+        millipercent: 8000
       },
       {
         diluentId: 2,
-        millipercent: '0.1000'
+        millipercent: 1000
       }
     ]
   };

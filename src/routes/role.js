@@ -19,6 +19,7 @@ router.get(
   [
     param('roleId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {
@@ -59,6 +60,7 @@ router.put(
   [
     param('roleId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt(),
     body('name').isString()
   ],
@@ -138,6 +140,7 @@ router.delete(
   [
     param('roleId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {

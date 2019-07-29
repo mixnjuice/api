@@ -16,17 +16,17 @@ describe('recipes route resource', () => {
   afterAll(() => {
     database.sequelize.close();
   });
-  /*
+
   it('returns valid list of 2 recipes', done => {
     request(app)
       .get('/?limit=2')
-      .expect(200, {}, done);
-  }); */
+      .expect(200, done);
+  });
 
-  it('returns 204 for missing recipes list', done => {
+  it('returns 200 for recipes list', done => {
     request(app)
       .get('/?offset=9000000')
-      .expect(204, done);
+      .expect(200, done);
   });
 
   it('returns 400 for invalid recipes list', done => {

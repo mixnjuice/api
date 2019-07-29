@@ -23,10 +23,10 @@ describe('users route resource', () => {
       .expect(200, done);
   });
 
-  it('returns 204 for missing user list', done => {
+  it('returns 200 for user list', done => {
     request(app)
       .get('/?offset=9000000')
-      .expect(204, done);
+      .expect(200, done);
   });
 
   it('returns 400 for invalid user list', done => {
@@ -41,10 +41,10 @@ describe('users route resource', () => {
       .expect(200, done);
   });
 
-  it('returns 204 for missing user accounts list', done => {
+  it('returns 200 for user accounts list', done => {
     request(app)
       .get('/accounts/?offset=9000000')
-      .expect(204, done);
+      .expect(200, done);
   });
 
   it('returns 400 for invalid user accounts list', done => {

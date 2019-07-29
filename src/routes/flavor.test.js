@@ -20,21 +20,13 @@ describe('flavor route resource', () => {
   it('returns valid flavor', done => {
     request(app)
       .get('/123')
-      .expect(
-        200,
-        {
-          vendor_code: 'CAP',
-          vendor_name: 'Capella',
-          flavor_name: 'Pear'
-        },
-        done
-      );
+      .expect(200, done);
   });
 
-  it('returns 204 for missing flavor', done => {
+  it('returns 400 for missing flavor', done => {
     request(app)
       .get('/0')
-      .expect(204, done);
+      .expect(400, done);
   });
 
   it('returns 400 for invalid flavor', done => {

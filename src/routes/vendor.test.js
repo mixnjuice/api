@@ -20,17 +20,13 @@ describe('vendor route resource', () => {
   it('returns valid vendor', done => {
     request(app)
       .get('/1')
-      .expect(
-        200,
-        { id: 1, name: 'Baker Flavors', slug: 'baker-flavors', code: 'BF' },
-        done
-      );
+      .expect(200, done);
   });
 
-  it('returns 204 for missing vendor', done => {
+  it('returns 200 for vendor', done => {
     request(app)
       .get('/20000')
-      .expect(204, done);
+      .expect(200, done);
   });
 
   it('returns 400 for invalid vendor', done => {

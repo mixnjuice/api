@@ -23,10 +23,10 @@ describe('diluents route resource', () => {
       .expect(200, done);
   });
 
-  it('returns 204 for missing diluents list', done => {
+  it('returns 200 diluents list', done => {
     request(app)
       .get('/?offset=800000')
-      .expect(204, done);
+      .expect(200, done);
   });
 
   it('returns 400 for invalid diluents list', done => {

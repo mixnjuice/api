@@ -28,6 +28,7 @@ router.get(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {
@@ -70,6 +71,7 @@ router.get(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {
@@ -109,6 +111,7 @@ router.put(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {
@@ -155,6 +158,7 @@ router.get(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {
@@ -195,6 +199,7 @@ router.get(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {
@@ -247,9 +252,11 @@ router.get(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt(),
     param('flavorId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {
@@ -304,6 +311,7 @@ router.post(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {
@@ -346,9 +354,11 @@ router.put(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt(),
     param('flavorId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {
@@ -397,9 +407,11 @@ router.delete(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt(),
     param('flavorId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {
@@ -440,6 +452,7 @@ router.get(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {
@@ -486,9 +499,11 @@ router.get(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt(),
     param('roleId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {
@@ -539,9 +554,11 @@ router.post(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt(),
     body('roleId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt(),
     body('active').isBoolean()
   ],
@@ -584,9 +601,11 @@ router.put(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt(),
     param('roleId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt(),
     body('active').isBoolean()
   ],
@@ -635,9 +654,11 @@ router.delete(
   [
     param('userId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt(),
     param('roleId')
       .isNumeric()
+      .isInt({ min: 1 })
       .toInt()
   ],
   async (req, res) => {

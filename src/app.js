@@ -7,6 +7,7 @@ import configs from './modules/config';
 import loggers from './modules/logging';
 import bindAuth from './modules/auth';
 
+import data from './routes/data';
 import diluent from './routes/diluent';
 import diluents from './routes/diluents';
 import flavor from './routes/flavor';
@@ -40,6 +41,7 @@ export const start = async () => {
   bindAuth(app);
 
   // routes
+  app.use('/data', data);
   app.use('/diluent', diluent);
   app.use('/diluents', diluents);
   app.use('/flavor', flavor);

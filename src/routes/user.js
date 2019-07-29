@@ -517,7 +517,7 @@ router.get(
       `request role id ${req.params.roleId} for user ${req.params.userId}`
     );
     try {
-      const result = await UsersRoles.findAll({
+      const result = await UsersRoles.findOne({
         where: {
           userId: req.params.userId,
           roleId: req.params.roleId

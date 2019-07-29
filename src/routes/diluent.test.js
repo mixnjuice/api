@@ -36,6 +36,12 @@ describe('diluent route resource', () => {
       .expect(200, done);
   });
 
+  it('GET returns 404 for missing id', done => {
+    request(app)
+      .get('/')
+      .expect(404, done);
+  });
+
   it('GET returns 200 for valid diluent', done => {
     request(app)
       .get('/2')
@@ -48,6 +54,13 @@ describe('diluent route resource', () => {
       .send(mockData)
       .expect('Content-type', /json/)
       .expect(200, done);
+  });
+
+  it('PUT returns 404 for updating without an id', done => {
+    request(app)
+      .put('/')
+      .send(mockData)
+      .expect(404, done);
   });
 
   it('GET returns 400 for invalid diluent', done => {
@@ -66,5 +79,11 @@ describe('diluent route resource', () => {
     request(app)
       .delete('/4')
       .expect(200, done);
+  });
+
+  it('DELETE returns 404 for deleting without an id', done => {
+    request(app)
+      .delete('/')
+      .expect(404, done);
   });
 });

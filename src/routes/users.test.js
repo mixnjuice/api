@@ -52,4 +52,10 @@ describe('users route resource', () => {
       .get('/accounts/?limit=stop')
       .expect(400, done);
   });
+
+  it('returns 200 for roles users list', done => {
+    request(app)
+      .get('/role/1')
+      .expect(200, done);
+  });
 });

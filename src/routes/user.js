@@ -692,4 +692,14 @@ router.delete(
   }
 );
 
+router.get('/current', authenticate(), async (req, res) => {
+  try {
+    res.type('application/json');
+    res.json(req.user);
+  } catch (error) {
+    log.error(error.message);
+    res.status(500).send(error.message);
+  }
+});
+
 export default router;

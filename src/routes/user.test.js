@@ -142,4 +142,11 @@ describe('user route resource', () => {
       .get('/0')
       .expect(400, done);
   });
+
+  it('GET current user', done => {
+    request(app)
+      .get('/current')
+      .expect('Content-Type', /json/)
+      .expect(200, done);
+  });
 });

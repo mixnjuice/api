@@ -35,13 +35,14 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`request for ${req.params.id}`);
+    log.info(`request for ${id}`);
     try {
       // Get the recipe, with associations
       const result = await Recipe.findOne({
         where: {
-          id: req.params.id
+          id
         },
         include: [
           {
@@ -120,12 +121,13 @@ router.post(
     log.info(`request for NEW RECIPE`);
     try {
       // Create the recipe, with associations
+      const { userId, name, notes } = req.body;
       const result = await Recipe.create(
         {
-          userId: req.body.userId,
-          name: req.body.name,
+          userId,
+          name,
           viewCount: 0,
-          notes: req.body.notes,
+          notes,
           RecipesFlavors: req.body.RecipesFlavors, // Array of flavors
           RecipesDiluents: req.body.RecipesDiluents // Array of diluents
         },
@@ -192,13 +194,14 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`update recipe id ${req.params.id}`);
+    log.info(`update recipe id ${id}`);
     try {
       // Check recipe exists
       const recipeCheck = await Recipe.findOne({
         where: {
-          id: req.params.id
+          id
         }
       });
 
@@ -207,11 +210,12 @@ router.put(
         return res.status(204).end();
       }
       // Update the recipe
+      const { userId, name, notes } = req.body;
       const recipeResult = await Recipe.update(
         {
-          userId: req.body.userId,
-          name: req.body.name,
-          notes: req.body.notes
+          userId,
+          name,
+          notes
         },
         {
           where: {
@@ -318,26 +322,27 @@ router.delete(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`delete recipe id ${req.params.id}`);
+    log.info(`delete recipe id ${id}`);
     try {
       // Diluents and Flavors must be deleted first
       // Delete Diluents
       const diluentResult = await RecipesDiluents.destroy({
         where: {
-          recipeId: req.params.id
+          recipeId: id
         }
       });
       // Delete Flavors
       const flavorResult = await RecipesFlavors.destroy({
         where: {
-          recipeId: req.params.id
+          recipeId: id
         }
       });
       // Once all constraints are deleted, delete recipe
       const recipeResult = await Recipe.destroy({
         where: {
-          id: req.params.id
+          id
         }
       });
 

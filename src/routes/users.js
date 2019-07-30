@@ -35,17 +35,13 @@ router.get(
     }
     const limit = req.query.limit || 20;
 
-    let offset = req.query.offset || 1;
+    const offset = req.query.offset - 1 || 0;
 
     log.info(`request for user profiles ${limit}`);
     try {
-      // const rows = UserProfile.findAndCountAll();
-      // const pages = Math.ceil(rows.count / limit);
-      offset--;
-
       const result = await UserProfile.findAll({
-        limit: limit,
-        offset: offset
+        limit,
+        offset
       });
 
       if (result.length === 0) {
@@ -87,17 +83,13 @@ router.get(
     }
     const limit = req.query.limit || 20;
 
-    let offset = req.query.offset || 1;
+    const offset = req.query.offset - 1 || 0;
 
     log.info(`request for user accounts ${limit}`);
     try {
-      // const rows = User.findAndCountAll();
-      // const pages = Math.ceil(rows.count / limit);
-      offset--;
-
       const result = await User.findAll({
-        limit: limit,
-        offset: offset
+        limit,
+        offset
       });
 
       if (result.length === 0) {
@@ -117,10 +109,10 @@ router.get(
  * @param roleid int
  */
 router.get(
-  '/role/:roleid(\\d+)',
+  '/role/:roleId(\\d+)',
   authenticate(),
   [
-    param('roleid')
+    param('roleId')
       .isNumeric()
       .toInt(),
     query('offset')
@@ -139,15 +131,14 @@ router.get(
       return res.status(400).json({ errors: errors.array() });
     }
     const limit = req.query.limit || 20;
+    const offset = req.query.offset - 1 || 0;
+    const { roleId } = req.params;
 
-    let offset = req.query.offset || 1;
-
-    log.info(`request for all users with role id ${req.params.roleid}`);
+    log.info(`request for all users with role id ${roleId}`);
     try {
-      offset--;
       const result = await UsersRoles.findAll({
         where: {
-          roleId: req.params.roleid
+          roleId
         },
         include: [
           {
@@ -159,8 +150,8 @@ router.get(
             required: true
           }
         ],
-        limit: limit,
-        offset: offset
+        limit,
+        offset
       });
 
       if (!result || result.length === 0) {

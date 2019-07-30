@@ -14,10 +14,10 @@ const { Role } = models;
  * @param roleId int
  */
 router.get(
-  '/:roleId(\\d+)',
+  '/:id(\\d+)',
   authenticate(),
   [
-    param('roleId')
+    param('id')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt()
@@ -28,12 +28,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`request for role id ${req.params.roleId}`);
+    log.info(`request for role id ${id}`);
     try {
       const result = await Role.findOne({
         where: {
-          id: req.params.roleId
+          id
         }
       });
 
@@ -55,10 +56,10 @@ router.get(
  * @body name string
  */
 router.put(
-  '/:roleId(\\d+)',
+  '/:id(\\d+)',
   authenticate(),
   [
-    param('roleId')
+    param('id')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt(),
@@ -70,16 +71,18 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
+    const { name } = req.body;
 
-    log.info(`update role id ${req.params.roleId}`);
+    log.info(`update role id ${id}`);
     try {
       const result = await Role.update(
         {
-          name: req.body.name
+          name
         },
         {
           where: {
-            id: req.params.roleId
+            id
           }
         }
       );
@@ -111,11 +114,12 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { name } = req.body;
 
     log.info(`create new role`);
     try {
       const result = await Role.create({
-        name: req.body.name
+        name
       });
 
       if (result.length === 0) {
@@ -135,10 +139,10 @@ router.post(
  * @param roleId int
  */
 router.delete(
-  '/:roleId(\\d+)',
+  '/:id(\\d+)',
   authenticate(),
   [
-    param('roleId')
+    param('id')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt()
@@ -149,12 +153,13 @@ router.delete(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`delete role id ${req.params.roleId}`);
+    log.info(`delete role id ${id}`);
     try {
       const result = await Role.destroy({
         where: {
-          id: req.params.roleId
+          id
         }
       });
 

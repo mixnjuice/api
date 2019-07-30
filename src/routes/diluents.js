@@ -35,17 +35,13 @@ router.get(
     }
     const limit = req.query.limit || 20;
 
-    let offset = req.query.offset || 1;
+    const offset = req.query.offset - 1 || 0;
 
     log.info(`request for diluents ${limit}`);
     try {
-      // const rows = Recipe.findAndCountAll();
-      // const pages = Math.ceil(rows.count / limit);
-      offset--;
-
       const result = await Diluent.findAll({
-        limit: limit,
-        offset: offset
+        limit,
+        offset
       });
 
       if (result.length === 0) {

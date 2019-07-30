@@ -28,12 +28,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`request for ${req.params.id}`);
+    log.info(`request for ${id}`);
     try {
       const result = await Flavor.findOne({
         where: {
-          id: req.params.id
+          id
         },
         include: [
           {
@@ -86,14 +87,15 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { vendorId, name, slug, density } = req.body;
 
     log.info(`request for new flavor`);
     try {
       const result = await Flavor.create({
-        vendorId: req.body.vendorId,
-        name: req.body.name,
-        slug: req.body.slug,
-        density: req.body.density
+        vendorId,
+        name,
+        slug,
+        density
       });
 
       if (result.length === 0) {
@@ -144,19 +146,21 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
+    const { vendorId, name, slug, density } = req.body;
 
-    log.info(`request to update flavor id ${req.params.id}`);
+    log.info(`request to update flavor id ${id}`);
     try {
       const result = await Flavor.update(
         {
-          vendorId: req.body.vendorId,
-          name: req.body.name,
-          slug: req.body.slug,
-          density: req.body.density
+          vendorId,
+          name,
+          slug,
+          density
         },
         {
           where: {
-            id: req.params.id
+            id
           }
         }
       );
@@ -192,12 +196,13 @@ router.delete(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`request to delete flavor id ${req.params.id}`);
+    log.info(`request to delete flavor id ${id}`);
     try {
       const result = await Flavor.destroy({
         where: {
-          id: req.params.id
+          id
         }
       });
 
@@ -218,10 +223,10 @@ router.delete(
  * @param id int
  */
 router.get(
-  '/:id/identifiers',
+  '/:flavorId/identifiers',
   authenticate(),
   [
-    param('id')
+    param('flavorId')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt()
@@ -232,12 +237,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { flavorId } = req.params;
 
-    log.info(`request for flavor id ${req.params.id} identifiers`);
+    log.info(`request for flavor id ${flavorId} identifiers`);
     try {
       const result = await FlavorIdentifier.findAll({
         where: {
-          flavorId: req.params.id
+          flavorId
         },
         include: [
           {
@@ -283,15 +289,16 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { flavorId, dataSupplierId } = req.params;
 
     log.info(
-      `request for flavor id ${req.params.flavorId} data supplier id ${req.params.dataSupplierId} identifer`
+      `request for flavor id ${flavorId} data supplier id ${dataSupplierId} identifer`
     );
     try {
       const result = await FlavorIdentifier.findOne({
         where: {
-          flavorId: req.params.flavorId,
-          dataSupplierId: req.params.dataSupplierId
+          flavorId,
+          dataSupplierId
         },
         include: [
           {
@@ -320,10 +327,10 @@ router.get(
  * @body identifier string
  */
 router.post(
-  '/:id/identifier',
+  '/:flavorId/identifier',
   authenticate(),
   [
-    param('id')
+    param('flavorId')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt(),
@@ -342,15 +349,15 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { flavorId } = req.params;
+    const { dataSupplierId, identifier } = req.body;
 
-    log.info(
-      `request for new flavor identifier for flavor id ${req.params.id}`
-    );
+    log.info(`request for new flavor identifier for flavor id ${flavorId}`);
     try {
       const result = await FlavorIdentifier.create({
-        flavorId: req.params.id,
-        dataSupplierId: req.body.dataSupplierId,
-        identifier: req.body.identifier
+        flavorId,
+        dataSupplierId,
+        identifier
       });
 
       if (result.length === 0) {
@@ -394,19 +401,21 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { flavorId, dataSupplierId } = req.params;
+    const { identifier } = req.body;
 
     log.info(
-      `request to update flavor id ${req.params.flavorId} identifier id ${req.params.dataSupplierId}`
+      `request to update flavor id ${flavorId} identifier id ${dataSupplierId}`
     );
     try {
       const result = await FlavorIdentifier.update(
         {
-          identifier: req.body.identifier
+          identifier
         },
         {
           where: {
-            flavorId: req.params.flavorId,
-            dataSupplierId: req.params.dataSupplierId
+            flavorId,
+            dataSupplierId
           }
         }
       );
@@ -447,15 +456,16 @@ router.delete(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { flavorId, dataSupplierId } = req.params;
 
     log.info(
-      `request to delete flavor id ${req.params.flavorId} identifier id ${req.params.dataSupplierId}`
+      `request to delete flavor id ${flavorId} identifier id ${dataSupplierId}`
     );
     try {
       const result = await FlavorIdentifier.destroy({
         where: {
-          flavorId: req.params.flavorId,
-          dataSupplierId: req.params.dataSupplierId
+          flavorId,
+          dataSupplierId
         }
       });
 

@@ -28,12 +28,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`request for diluent id ${req.params.id}`);
+    log.info(`request for diluent id ${id}`);
     try {
       const result = await Diluent.findOne({
         where: {
-          id: req.params.id
+          id
         }
       });
 
@@ -73,11 +74,12 @@ router.post(
 
     log.info(`request for new diluent`);
     try {
+      const { name, slug, code, density } = req.body;
       const result = await Diluent.create({
-        name: req.body.name,
-        slug: req.body.slug,
-        code: req.body.code,
-        density: req.body.density
+        name,
+        slug,
+        code,
+        density
       });
 
       if (result.length === 0) {
@@ -122,15 +124,17 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
+    const { name, slug, code, density } = req.body;
 
-    log.info(`request to update diluent ${req.params.id}`);
+    log.info(`request to update diluent ${id}`);
     try {
       const result = await Diluent.update(
         {
-          name: req.body.name,
-          slug: req.body.slug,
-          code: req.body.code,
-          density: req.body.density
+          name,
+          slug,
+          code,
+          density
         },
         {
           where: {
@@ -170,12 +174,13 @@ router.delete(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`request to delete diluent id ${req.params.id}`);
+    log.info(`request to delete diluent id ${id}`);
     try {
       const result = await Diluent.destroy({
         where: {
-          id: req.params.id
+          id
         }
       });
 

@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       recipeId: {
         type: DataTypes.BIGINT,
-        primaryKey: true,
         allowNull: false,
         references: {
           model: sequelize.Recipe,
@@ -19,7 +18,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       userId: {
         type: DataTypes.BIGINT,
-        primaryKey: true,
         allowNull: false,
         references: {
           model: sequelize.UserProfile,
@@ -55,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Preparation.associate = function(models) {
     this.belongsTo(models.Recipe, { foreignKey: 'recipeId' });
+    this.belongsTo(models.User, { foreignKey: 'userId' });
     this.belongsTo(models.UserProfile, {
       foreignKey: 'userId',
       sourceKey: 'userId'

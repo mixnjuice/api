@@ -10,7 +10,7 @@ const log = loggers('data');
 const { DataSupplier, SchemaVersion } = models;
 
 /**
- * GET Data Supplier
+ * GET a Data Supplier
  * @param id int
  */
 router.get(
@@ -28,12 +28,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`request for data supplier id ${req.params.id}`);
+    log.info(`request for data supplier id ${id}`);
     try {
       const result = await DataSupplier.findOne({
         where: {
-          id: req.params.id
+          id
         }
       });
 
@@ -74,9 +75,10 @@ router.post(
 
     log.info(`request for new data supplier`);
     try {
+      const { name, code } = req.body;
       const result = await DataSupplier.create({
-        name: req.body.name,
-        code: req.body.code
+        name,
+        code
       });
 
       if (result.length === 0) {
@@ -92,7 +94,7 @@ router.post(
   }
 );
 /**
- * PUT Update a Diluent
+ * PUT Update a Data Supplier
  * @param id int
  * @body name string
  * @body slug string
@@ -119,17 +121,19 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
+    const { name, code } = req.body;
 
-    log.info(`request to update data supplier id ${req.params.id}`);
+    log.info(`request to update data supplier id ${id}`);
     try {
       const result = await DataSupplier.update(
         {
-          name: req.body.name,
-          code: req.body.code
+          name,
+          code
         },
         {
           where: {
-            id: req.params.id
+            id
           }
         }
       );
@@ -147,7 +151,7 @@ router.put(
   }
 );
 /**
- * Delete Diluent
+ * Delete a Data Supplier
  * @param id int
  */
 router.delete(
@@ -165,12 +169,13 @@ router.delete(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`request to delete data supplier id ${req.params.id}`);
+    log.info(`request to delete data supplier id ${id}`);
     try {
       const result = await DataSupplier.destroy({
         where: {
-          id: req.params.id
+          id
         }
       });
 

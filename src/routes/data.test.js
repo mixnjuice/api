@@ -100,14 +100,4 @@ describe('data route resource', () => {
       .get('/version')
       .expect(200, done);
   });
-
-  /*
-  it('PUT returns 200 for updating diluent', done => {
-    request(app)
-      .put('/3')
-      .send(mockData)
-      .expect('Content-type', /json/)
-      .expect(200, done);
-  });
-  */
 });

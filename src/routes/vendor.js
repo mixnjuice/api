@@ -28,12 +28,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
     log.info(`request for vendor ${req.params.id}`);
     try {
       const result = await Vendor.findOne({
         where: {
-          id: req.params.id
+          id
         }
       });
 
@@ -81,10 +82,11 @@ router.post(
 
     log.info(`request for new vendor`);
     try {
+      const { name, slug, code } = req.body;
       const result = await Vendor.create({
-        name: req.body.name,
-        slug: req.body.slug,
-        code: req.body.code
+        name,
+        slug,
+        code
       });
 
       if (result.length === 0) {
@@ -134,18 +136,20 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
+    const { name, slug, code } = req.body;
 
-    log.info(`request to update vendor id ${req.params.id}`);
+    log.info(`request to update vendor id ${id}`);
     try {
       const result = await Vendor.update(
         {
-          name: req.body.name,
-          slug: req.body.slug,
-          code: req.body.code
+          name,
+          slug,
+          code
         },
         {
           where: {
-            id: req.params.id
+            id
           }
         }
       );
@@ -181,12 +185,13 @@ router.delete(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`request to delete vendor id ${req.params.id}`);
+    log.info(`request to delete vendor id ${id}`);
     try {
       const result = await Vendor.destroy({
         where: {
-          id: req.params.id
+          id
         }
       });
 
@@ -207,10 +212,10 @@ router.delete(
  * @param id int
  */
 router.get(
-  '/:id/identifiers',
+  '/:vendorId/identifiers',
   authenticate(),
   [
-    param('id')
+    param('vendorId')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt()
@@ -221,12 +226,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { vendorId } = req.params;
 
-    log.info(`request for vendor id ${req.params.id} identifiers`);
+    log.info(`request for vendor id ${vendorId} identifiers`);
     try {
       const result = await VendorIdentifier.findAll({
         where: {
-          vendorId: req.params.id
+          vendorId
         },
         include: [
           {
@@ -272,15 +278,16 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { vendorId, dataSupplierId } = req.params;
 
     log.info(
-      `request for vendor id ${req.params.vendorId} data supplier id ${req.params.dataSupplierId} identifer`
+      `request for vendor id ${vendorId} data supplier id ${dataSupplierId} identifer`
     );
     try {
       const result = await VendorIdentifier.findOne({
         where: {
-          vendorId: req.params.vendorId,
-          dataSupplierId: req.params.dataSupplierId
+          vendorId,
+          dataSupplierId
         },
         include: [
           {
@@ -309,10 +316,10 @@ router.get(
  * @body identifier string
  */
 router.post(
-  '/:id/identifier',
+  '/:vendorId/identifier',
   authenticate(),
   [
-    param('id')
+    param('vendorId')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt(),
@@ -331,15 +338,15 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { vendorId } = req.params;
+    const { dataSupplierId, identifier } = req.body;
 
-    log.info(
-      `request for new vendor identifier for vendor id ${req.params.id}`
-    );
+    log.info(`request for new vendor identifier for vendor id ${vendorId}`);
     try {
       const result = await VendorIdentifier.create({
-        vendorId: req.params.id,
-        dataSupplierId: req.body.dataSupplierId,
-        identifier: req.body.identifier
+        vendorId,
+        dataSupplierId,
+        identifier
       });
 
       if (result.length === 0) {
@@ -383,19 +390,21 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { identifier } = req.body;
+    const { vendorId, dataSupplierId } = req.params;
 
     log.info(
-      `request to update vendor id ${req.params.vendorId} identifier id ${req.params.dataSupplierId}`
+      `request to update vendor id ${vendorId} identifier id ${dataSupplierId}`
     );
     try {
       const result = await VendorIdentifier.update(
         {
-          identifier: req.body.identifier
+          identifier
         },
         {
           where: {
-            vendorId: req.params.vendorId,
-            dataSupplierId: req.params.dataSupplierId
+            vendorId,
+            dataSupplierId
           }
         }
       );
@@ -436,15 +445,16 @@ router.delete(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { vendorId, dataSupplierId } = req.params;
 
     log.info(
-      `request to delete vendor id ${req.params.vendorId} identifier id ${req.params.dataSupplierId}`
+      `request to delete vendor id ${vendorId} identifier id ${dataSupplierId}`
     );
     try {
       const result = await VendorIdentifier.destroy({
         where: {
-          vendorId: req.params.vendorId,
-          dataSupplierId: req.params.dataSupplierId
+          vendorId,
+          dataSupplierId
         }
       });
 

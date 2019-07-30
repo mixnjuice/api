@@ -37,13 +37,14 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`request for preparation ${req.params.id}`);
+    log.info(`request for preparation ${id}`);
     try {
       // Get the preparation, with associations
       const result = await Preparation.findOne({
         where: {
-          id: req.params.id
+          id
         },
         include: [
           {
@@ -133,6 +134,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { recipeId, userId, volumeMl, nicotineMillipercent } = req.body;
 
     log.info(`request for NEW PREPARATION`);
     try {
@@ -151,10 +153,10 @@ router.post(
       // Create the preparation, with associations
       const result = await Preparation.create(
         {
-          recipeId: req.body.recipeId,
-          userId: req.body.userId,
-          volumeMl: req.body.volumeMl,
-          nicotineMillipercent: req.body.nicotineMillipercent,
+          recipeId,
+          userId,
+          volumeMl,
+          nicotineMillipercent,
           viewCount: 0,
           PreparationsDiluents: req.body.PreparationsDiluents // Array of diluents
         },
@@ -209,13 +211,14 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`update preparation id ${req.params.id}`);
+    log.info(`update preparation id ${id}`);
     try {
       // Check Preparation exists
       const preparationCheck = await Preparation.findOne({
         where: {
-          id: req.params.id
+          id
         }
       });
 
@@ -225,10 +228,11 @@ router.put(
         return res.status(204).end();
       }
       // Update the preparation
+      const { volumeMl, nicotineMillipercent } = req.body;
       const preparationResult = await Preparation.update(
         {
-          volumeMl: req.body.volumeMl,
-          nicotineMillipercent: req.body.nicotineMillipercent
+          volumeMl,
+          nicotineMillipercent
         },
         {
           where: {
@@ -310,8 +314,9 @@ router.delete(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`delete preparation id ${req.params.id}`);
+    log.info(`delete preparation id ${id}`);
     try {
       // Delete Diluents First
       const diluentResult = await PreparationsDiluents.destroy({
@@ -322,7 +327,7 @@ router.delete(
       // Once all constraints are deleted, delete recipe
       const preparationResult = await Preparation.destroy({
         where: {
-          id: req.params.id
+          id
         }
       });
 

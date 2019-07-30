@@ -23,10 +23,10 @@ const {
  * @param userId int
  */
 router.get(
-  '/:userId(\\d+)',
+  '/:id(\\d+)',
   authenticate(),
   [
-    param('userId')
+    param('id')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt()
@@ -37,12 +37,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { id } = req.params;
 
-    log.info(`request for user ${req.params.userId}`);
+    log.info(`request for user ${id}`);
     try {
       const result = await User.findOne({
         where: {
-          id: req.params.userId
+          id
         }
       });
 
@@ -80,12 +81,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { userId } = req.params;
 
-    log.info(`request for user profile ${req.params.userId}`);
+    log.info(`request for user profile ${userId}`);
     try {
       const result = await UserProfile.findOne({
         where: {
-          userId: req.params.userId
+          userId
         }
       });
 
@@ -120,18 +122,20 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { userId } = req.params;
+    const { location, bio, url } = req.body;
 
-    log.info(`update user profile ${req.params.userId}`);
+    log.info(`update user profile ${userId}`);
     try {
       const result = await UserProfile.update(
         {
-          location: req.body.location,
-          bio: req.body.bio,
-          url: req.body.url
+          location,
+          bio,
+          url
         },
         {
           where: {
-            userId: req.params.userId
+            userId
           }
         }
       );
@@ -167,12 +171,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { userId } = req.params;
 
-    log.info(`request for user recipes ${req.params.userId}`);
+    log.info(`request for user recipes ${userId}`);
     try {
       const result = await Recipe.findAll({
         where: {
-          userId: req.params.userId
+          userId
         }
       });
 
@@ -208,12 +213,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { userId } = req.params;
 
-    log.info(`request flavor stash for user ${req.params.userId}`);
+    log.info(`request flavor stash for user ${userId}`);
     try {
       const result = await UsersFlavors.findAll({
         where: {
-          userId: req.params.userId
+          userId
         },
         include: [
           {
@@ -270,10 +276,11 @@ router.get(
       `request flavor stash flavor id ${req.params.userId} for user ${req.params.userId}`
     );
     try {
+      const { userId, flavorId } = req.params;
       const result = await UsersFlavors.findAll({
         where: {
-          userId: req.params.userId,
-          flavorId: req.params.flavorId
+          userId,
+          flavorId
         },
         include: [
           {
@@ -320,15 +327,17 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { userId } = req.params;
+    const { flavorId, created, minMillipercent, maxMillipercent } = req.body;
 
-    log.info(`create flavor stash for user ${req.params.userId}`);
+    log.info(`create flavor stash for user ${userId}`);
     try {
       const result = await UsersFlavors.create({
-        userId: req.params.userId,
-        flavorId: req.body.flavorId,
-        created: req.body.created,
-        minMillipercent: req.body.minMillipercent,
-        maxMillipercent: req.body.maxMillipercent
+        userId,
+        flavorId,
+        created,
+        minMillipercent,
+        maxMillipercent
       });
 
       if (result.length === 0) {
@@ -367,18 +376,20 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { minMillipercent, maxMillipercent } = req.body;
+    const { userId, flavorId } = req.params;
 
-    log.info(`update user ${req.params.userId} flavor ${req.params.flavorId}`);
+    log.info(`update user ${userId} flavor ${flavorId}`);
     try {
       const result = await UsersFlavors.update(
         {
-          minMillipercent: req.body.minMillipercent,
-          maxMillipercent: req.body.maxMillipercent
+          minMillipercent,
+          maxMillipercent
         },
         {
           where: {
-            userId: req.params.userId,
-            flavorId: req.params.flavorId
+            userId,
+            flavorId
           }
         }
       );
@@ -420,13 +431,14 @@ router.delete(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { userId, flavorId } = req.params;
 
-    log.info(`delete from flavor stash for ${req.params.flavorId}`);
+    log.info(`delete from flavor stash for ${flavorId}`);
     try {
       const result = await UsersFlavors.destroy({
         where: {
-          userId: req.params.userId,
-          flavorId: req.params.flavorId
+          userId,
+          flavorId
         }
       });
 
@@ -461,12 +473,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { userId } = req.params;
 
-    log.info(`request roles for user ${req.params.userId}`);
+    log.info(`request roles for user ${userId}`);
     try {
       const result = await UsersRoles.findAll({
         where: {
-          userId: req.params.userId
+          userId
         },
         include: [
           {
@@ -512,15 +525,14 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { userId, roleId } = req.params;
 
-    log.info(
-      `request role id ${req.params.roleId} for user ${req.params.userId}`
-    );
+    log.info(`request role id ${roleId} for user ${userId}`);
     try {
       const result = await UsersRoles.findOne({
         where: {
-          userId: req.params.userId,
-          roleId: req.params.roleId
+          userId,
+          roleId
         },
         include: [
           {
@@ -568,13 +580,15 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { userId } = req.params;
+    const { roleId, active } = req.body;
 
-    log.info(`add role to user ${req.params.userId}`);
+    log.info(`add role to user ${userId}`);
     try {
       const result = await UsersRoles.create({
-        userId: req.params.userId,
-        roleId: req.body.roleId,
-        active: req.body.active || true
+        userId,
+        roleId,
+        active: active || true
       });
 
       if (result.length === 0) {
@@ -615,17 +629,19 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { userId, roleId } = req.params;
+    const { active } = req.body;
 
-    log.info(`update user ${req.params.userId} role ${req.params.roleId}`);
+    log.info(`update user ${userId} role ${roleId}`);
     try {
       const result = await UsersRoles.update(
         {
-          active: req.body.active
+          active
         },
         {
           where: {
-            userId: req.params.userId,
-            roleId: req.params.roleId
+            userId,
+            roleId
           }
         }
       );
@@ -667,15 +683,14 @@ router.delete(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    const { userId, roleId } = req.params;
 
-    log.info(
-      `delete from role ${req.params.roleId} from user ${req.params.userId}`
-    );
+    log.info(`delete from role ${roleId} from user ${userId}`);
     try {
       const result = await UsersRoles.destroy({
         where: {
-          userId: req.params.userId,
-          roleId: req.params.roleId
+          userId,
+          roleId
         }
       });
 

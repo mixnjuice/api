@@ -114,7 +114,7 @@ router.put(
       .withMessage('length'),
     body('slug').isString(),
     body('code').isString(),
-    body('density').isNumeric()
+    body('density').isDecimal()
   ],
   async (req, res) => {
     const errors = validationResult(req);

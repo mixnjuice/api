@@ -26,6 +26,36 @@ describe('flavor route resource', () => {
       .expect(200, done);
   });
 
+  it('POST creates flavor', done => {
+    request(app)
+      .post('/')
+      .send({
+        vendorId: 3,
+        name: 'Juicy Sludge',
+        slug: 'capella_juicy_sludge',
+        density: '1.0300'
+      })
+      .expect(200, done);
+  });
+
+  it('PUT updates flavor', done => {
+    request(app)
+      .put('/801')
+      .send({
+        vendorId: 3,
+        name: 'Juicy Sludge',
+        slug: 'capella_juicy_sludge',
+        density: '1.0320'
+      })
+      .expect(200, done);
+  });
+
+  it('DELETE deletes flavor', done => {
+    request(app)
+      .delete('/801')
+      .expect(200, done);
+  });
+
   it('GET returns valid flavor identifiers', done => {
     request(app)
       .get('/1/identifiers')

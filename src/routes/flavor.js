@@ -56,6 +56,164 @@ router.get(
   }
 );
 /**
+ * POST Create a Flavor
+ * @body vendorId int
+ * @body name string
+ * @body slug string
+ * @body density decimal
+ */
+router.post(
+  '/',
+  authenticate(),
+  [
+    body('vendorId')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt(),
+    body('name')
+      .isString()
+      .isLength({ min: 1 })
+      .withMessage('length'),
+    body('slug')
+      .isString()
+      .isLength({ min: 1 })
+      .withMessage('length'),
+    body('density').isDecimal()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    log.info(`request for new flavor`);
+    try {
+      const result = await Flavor.create({
+        vendorId: req.body.vendorId,
+        name: req.body.name,
+        slug: req.body.slug,
+        density: req.body.density
+      });
+
+      if (result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
+/**
+ * PUT Updates a Flavor
+ * @param id int
+ * @body vendorId int
+ * @body name string
+ * @body slug string
+ * @body density decimal
+ */
+router.put(
+  '/:id',
+  authenticate(),
+  [
+    param('id')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt(),
+    body('vendorId')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt(),
+    body('name')
+      .isString()
+      .isLength({ min: 1 })
+      .withMessage('length'),
+    body('slug')
+      .isString()
+      .isLength({ min: 1 })
+      .withMessage('length'),
+    body('density').isDecimal()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    log.info(`request to update flavor id ${req.params.id}`);
+    try {
+      const result = await Flavor.update(
+        {
+          vendorId: req.body.vendorId,
+          name: req.body.name,
+          slug: req.body.slug,
+          density: req.body.density
+        },
+        {
+          where: {
+            id: req.params.id
+          }
+        }
+      );
+
+      if (result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
+/**
+ * DELETE Deletes a Flavor
+ * @param id int
+ */
+router.delete(
+  '/:id',
+  authenticate(),
+  [
+    param('id')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    log.info(`request to delete flavor id ${req.params.id}`);
+    try {
+      const result = await Flavor.destroy({
+        where: {
+          id: req.params.id
+        }
+      });
+
+      if (result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
+/**
  * GET Flavor Data Supplier Identifiers
  * @param id int
  */

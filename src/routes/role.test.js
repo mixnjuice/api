@@ -20,10 +20,8 @@ describe('role route resource', () => {
     database.sequelize.close();
   });
 
-  const date = new Date();
-
   const mockData = {
-    name: 'Luser' + date
+    name: 'Luser'
   };
 
   it('POST returns 200 for creating role', done => {

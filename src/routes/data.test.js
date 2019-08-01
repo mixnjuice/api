@@ -19,10 +19,8 @@ describe('data route resource', () => {
     database.sequelize.close();
   });
 
-  const date = new Date();
-
   const mockData = {
-    name: 'Grosser Stuff' + date,
+    name: 'Grosser Stuff',
     slug: 'gs',
     code: 'GS',
     density: '1.2610'

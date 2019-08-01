@@ -16,8 +16,6 @@ describe('user route resource', () => {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(user);
 
-  const date = new Date();
-
   afterAll(() => {
     database.sequelize.close();
   });
@@ -56,8 +54,7 @@ describe('user route resource', () => {
     request(app)
       .post('/9/flavor')
       .send({
-        flavorId: 20,
-        created: date
+        flavorId: 20
       })
       .expect('Content-type', /json/)
       .expect(200, done);

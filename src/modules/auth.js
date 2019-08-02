@@ -11,6 +11,7 @@ import { compareHashAndPassword, generateToken } from './util';
 
 const log = loggers('auth');
 const { UserToken, User } = models;
+const { Op } = models.Sequelize;
 
 const { api: webConfig } = configs;
 const { age: tokenAge, validate: validateTokens } = webConfig.tokens;
@@ -25,7 +26,10 @@ const authorize = async (token, done) => {
 
     const result = await UserToken.findAll({
       where: {
-        token
+        token,
+        expires: {
+          [Op.gt]: Date.now()
+        }
       },
       include: [
         {

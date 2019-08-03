@@ -58,7 +58,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       sourceKey: 'userId'
     });
-    this.hasMany(models.PreparationsDiluents, { foreignKey: 'preparationId' });
+    this.belongsToMany(models.Diluent, {
+      as: 'Diluents',
+      through: models.PreparationsDiluents,
+      foreignKey: 'preparationId'
+    });
   };
 
   return Preparation;

@@ -27,6 +27,10 @@ export default {
       age: parseInt(config.API_TOKEN_AGE, 10),
       validate:
         !config.API_TOKEN_VALIDATE || boolean.test(config.API_TOKEN_VALIDATE)
+    },
+    roles: {
+      validate:
+        !config.API_ROLE_VALIDATE || boolean.test(config.API_ROLE_VALIDATE)
     }
   },
   email: {

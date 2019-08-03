@@ -168,8 +168,7 @@ export const ensureRole = name => async (req, res, next) => {
       throw new Error('User lacks required role!');
     }
 
-    res.type('application/json');
-    res.send(role);
+    next(null);
   } catch (error) {
     next(error);
   }

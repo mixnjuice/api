@@ -4,7 +4,6 @@ import { hash as create, compare } from 'bcrypt';
 import configs from './config';
 
 const { api: apiConfig, web: webConfig } = configs;
-const { useTls, hostname, port } = webConfig;
 const {
   passwords: { saltRounds },
   tokens: { length: tokenLength }
@@ -23,6 +22,7 @@ export const compareHashAndPassword = async (hash, password) => {
 };
 
 export const buildWebUrl = path => {
+  const { useTls, hostname, port } = webConfig;
   const needsPort = (!useTls && port !== 80) || (useTls && port !== 443);
   const needsSlash = !path.startsWith('/');
 

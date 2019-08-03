@@ -52,12 +52,14 @@ module.exports = (sequelize, DataTypes) => {
     this.belongsToMany(models.Flavor, {
       as: 'Flavors',
       through: models.RecipesFlavors,
-      foreignKey: 'recipeId'
+      foreignKey: 'recipeId',
+      otherKey: 'flavorId'
     });
     this.belongsToMany(models.Diluent, {
       as: 'Diluents',
       through: models.RecipesDiluents,
-      foreignKey: 'recipeId'
+      foreignKey: 'recipeId',
+      otherKey: 'diluentId'
     });
     this.hasMany(models.Preparation, {
       foreignKey: 'recipeId'

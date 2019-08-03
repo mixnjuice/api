@@ -61,7 +61,8 @@ module.exports = (sequelize, DataTypes) => {
     this.belongsToMany(models.Diluent, {
       as: 'Diluents',
       through: models.PreparationsDiluents,
-      foreignKey: 'preparationId'
+      foreignKey: 'preparationId',
+      otherKey: 'diluentId'
     });
   };
 

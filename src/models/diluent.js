@@ -37,7 +37,8 @@ module.exports = (sequelize, DataTypes) => {
     this.belongsToMany(models.Recipe, {
       as: 'Recipes',
       through: models.RecipesDiluents,
-      foreignKey: 'diluentId'
+      foreignKey: 'diluentId',
+      otherKey: 'recipeId'
     });
   };
   return Diluent;

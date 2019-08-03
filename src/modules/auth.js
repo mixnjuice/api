@@ -7,7 +7,11 @@ import AnonymousStrategy from 'passport-anonymous';
 import configs from './config';
 import models from './database';
 import loggers from './logging';
-import { compareHashAndPassword, generateToken } from './util';
+import {
+  compareHashAndPassword,
+  generateToken,
+  isTestEnvironment
+} from './util';
 
 const log = loggers('auth');
 const { Op } = models.Sequelize;
@@ -15,6 +19,7 @@ const { UserToken, User, Role } = models;
 
 const { api: webConfig } = configs;
 const { age: tokenAge, validate: validateTokens } = webConfig.tokens;
+const { validate: validateRoles } = webConfig.roles;
 
 const authorize = async (token, done) => {
   try {
@@ -127,8 +132,7 @@ authServer.exchange(
  * Provide a wrapper around passport.authenticate with the appropriate strategies selected.
  */
 export const authenticate = () => {
-  const { NODE_ENV: environment } = process.env;
-  const useBearerStrategy = environment !== 'test' && validateTokens;
+  const useBearerStrategy = !isTestEnvironment() && validateTokens;
 
   return [
     passport.initialize(),
@@ -138,7 +142,11 @@ export const authenticate = () => {
   ];
 };
 
-export const ensureRole = name => async (req, res, next) => {
+export const ensureRole = name => async (req, _, next) => {
+  if (isTestEnvironment() || !validateRoles) {
+    return next(null);
+  }
+
   try {
     const { user } = req;
 

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param, validationResult } from 'express-validator';
 
-import { authenticate } from '../modules/auth';
+import { authenticate, ensureRole } from '../modules/auth';
 import models from '../modules/database';
 import loggers from '../modules/logging';
 
@@ -219,27 +219,32 @@ router.get('/suppliers', authenticate(), async (req, res) => {
 /**
  * GET Database Schema Version Info
  */
-router.get('/version', authenticate(), async (req, res) => {
-  const errors = validationResult(req);
+router.get(
+  '/version',
+  authenticate(),
+  ensureRole('Administrator'),
+  async (req, res) => {
+    const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  log.info(`request for Schema Version`);
-  try {
-    const result = await SchemaVersion.findAll();
-
-    if (!result || result.length === 0) {
-      return res.status(204).end();
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    res.type('application/json');
-    res.json(result);
-  } catch (error) {
-    log.error(error.message);
-    res.status(500).send(error.message);
+    log.info(`request for Schema Version`);
+    try {
+      const result = await SchemaVersion.findAll();
+
+      if (!result || result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
   }
-});
+);
 
 export default router;

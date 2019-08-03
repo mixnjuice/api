@@ -10,8 +10,8 @@ import loggers from './logging';
 import { compareHashAndPassword, generateToken } from './util';
 
 const log = loggers('auth');
-const { UserToken, User } = models;
 const { Op } = models.Sequelize;
+const { UserToken, User, Role } = models;
 
 const { api: webConfig } = configs;
 const { age: tokenAge, validate: validateTokens } = webConfig.tokens;
@@ -136,6 +136,43 @@ export const authenticate = () => {
       session: false
     })
   ];
+};
+
+export const ensureRole = name => async (req, res, next) => {
+  try {
+    const { user } = req;
+
+    if (!user) {
+      throw new Error('No user found!');
+    }
+
+    const id = parseInt(user.id, 10);
+
+    const role = await Role.findOne({
+      where: {
+        name
+      },
+      include: [
+        {
+          as: 'Users',
+          model: User,
+          required: true,
+          through: {
+            where: { userId: id }
+          }
+        }
+      ]
+    });
+
+    if (!role) {
+      throw new Error('User lacks required role!');
+    }
+
+    res.type('application/json');
+    res.send(role);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export default app => {

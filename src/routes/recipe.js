@@ -241,13 +241,13 @@ router.put(
               recipeId: diluent.recipeId,
               diluentId: diluent.diluentId
             }
-          }).then(function(obj) {
+          }).then(async function(obj) {
             if (obj) {
               // update
-              return obj.update({ millipercent: diluent.millipercent });
+              return await obj.update({ millipercent: diluent.millipercent });
             } else {
               // insert
-              return RecipesDiluents.create({
+              return await RecipesDiluents.create({
                 recipeId: diluent.recipeId,
                 diluentId: diluent.diluentId,
                 millipercent: diluent.millipercent
@@ -274,13 +274,13 @@ router.put(
               recipeId: flavor.recipeId,
               flavorId: flavor.flavorId
             }
-          }).then(function(obj) {
+          }).then(async function(obj) {
             if (obj) {
               // update
-              return obj.update({ millipercent: flavor.millipercent });
+              return await obj.update({ millipercent: flavor.millipercent });
             } else {
               // insert
-              return RecipesFlavors.create({
+              return await RecipesFlavors.create({
                 recipeId: flavor.recipeId,
                 flavorId: flavor.flavorId,
                 millipercent: flavor.millipercent

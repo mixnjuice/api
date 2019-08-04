@@ -23,7 +23,7 @@ describe('diluent route resource', () => {
     name: 'Grosser Stuff',
     slug: 'gs',
     code: 'GS',
-    density: '1.2610'
+    density: 1.2611
   };
 
   it('POST returns 200 for creating diluent', done => {

@@ -37,7 +37,7 @@ router.get(
 
     const offset = req.query.offset - 1 || 0;
 
-    log.info(`request for recipes ${limit}`);
+    log.info(`Request for ${limit} recipes starting from ${offset}`);
     try {
       const result = await Recipe.findAll({
         limit,

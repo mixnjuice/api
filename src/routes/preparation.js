@@ -147,7 +147,6 @@ router.post(
 
       if (recipeCheck.length === 0) {
         // Recipe doesn't exist
-        res.statusMessage = `Recipe ID ${req.body.recipeId} Requested for Preparation Does Not Exist`;
         return res.status(204).end();
       }
       // Create the preparation, with associations
@@ -224,7 +223,6 @@ router.put(
 
       if (preparationCheck.length === 0) {
         // Preparation doesn't exist
-        res.statusMessage = `Preparation ID ${req.params.id} Does Not Exist`;
         return res.status(204).end();
       }
       // Update the preparation
@@ -262,16 +260,16 @@ router.put(
                 diluentId: diluent.diluentId
               }
             }
-          ).then(function(obj) {
+          ).then(async function(obj) {
             if (obj) {
               // update
-              return obj.update({
+              return await obj.update({
                 millipercent: diluent.millipercent,
                 nicotineConcentration: diluent.nicotineConcentration
               });
             } else {
               // insert
-              return PreparationsDiluents.create({
+              return await PreparationsDiluents.create({
                 preparationId: diluent.preparationId,
                 diluentId: diluent.diluentId,
                 millipercent: diluent.millipercent,

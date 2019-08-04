@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param, validationResult } from 'express-validator';
 
-import { authenticate } from '../modules/auth';
+import { authenticate, ensureRole } from '../modules/auth';
 import models from '../modules/database';
 import loggers from '../modules/logging';
 
@@ -57,6 +57,7 @@ router.get(
  */
 router.put(
   '/:id(\\d+)',
+  ensureRole('Administrator'),
   authenticate(),
   [
     param('id')
@@ -107,6 +108,7 @@ router.put(
 router.post(
   '/',
   authenticate(),
+  ensureRole('Administrator'),
   [body('name').isString()],
   async (req, res) => {
     const errors = validationResult(req);
@@ -141,6 +143,7 @@ router.post(
 router.delete(
   '/:id(\\d+)',
   authenticate(),
+  ensureRole('Administrator'),
   [
     param('id')
       .isNumeric()

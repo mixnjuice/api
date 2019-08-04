@@ -26,9 +26,10 @@ create table tags_flavors (
   created timestamp not null default now(),
   creator_id bigint not null,
 
-  constraint pk_tags_flavors primary key (tag_id, flavor_id),
+  constraint pk_tags_flavors primary key (tag_id, flavor_id, creator_id),
   constraint fk1_tags_flavors foreign key (tag_id) references tag (id),
-  constraint fk2_tags_flavors foreign key (flavor_id) references flavor (id)
+  constraint fk2_tags_flavors foreign key (flavor_id) references flavor (id),
+  constraint fk3_tags_flavors foreign key (creator_id) references "user" (id)
 );
 
 create table tags_recipes (
@@ -37,7 +38,8 @@ create table tags_recipes (
   created timestamp not null default now(),
   creator_id bigint not null,
 
-  constraint pk_tags_recipes primary key (tag_id, recipe_id),
+  constraint pk_tags_recipes primary key (tag_id, recipe_id, creator_id),
   constraint fk1_tags_recipes foreign key (tag_id) references tag (id),
-  constraint fk2_tags_recipes foreign key (recipe_id) references tag (id)
+  constraint fk2_tags_recipes foreign key (recipe_id) references tag (id),
+  constraint fk3_tags_recipes foreign key (creator_id) references "user" (id)
 );

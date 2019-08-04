@@ -45,11 +45,21 @@ module.exports = (sequelize, DataTypes) => {
 
   Recipe.associate = function(models) {
     this.belongsTo(models.User, { foreignKey: 'userId' });
-    this.hasMany(models.RecipesFlavors, {
-      foreignKey: 'recipeId'
+    this.belongsTo(models.UserProfile, {
+      foreignKey: 'userId',
+      sourceKey: 'userId'
     });
-    this.hasMany(models.RecipesDiluents, {
-      foreignKey: 'recipeId'
+    this.belongsToMany(models.Flavor, {
+      as: 'Flavors',
+      through: models.RecipesFlavors,
+      foreignKey: 'recipeId',
+      otherKey: 'flavorId'
+    });
+    this.belongsToMany(models.Diluent, {
+      as: 'Diluents',
+      through: models.RecipesDiluents,
+      foreignKey: 'recipeId',
+      otherKey: 'diluentId'
     });
     this.hasMany(models.Preparation, {
       foreignKey: 'recipeId'

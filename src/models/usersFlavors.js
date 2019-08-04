@@ -45,7 +45,8 @@ module.exports = (sequelize, DataTypes) => {
 
   UsersFlavors.associate = function(models) {
     this.belongsTo(models.User, { foreignKey: 'UserId' });
-    this.belongsTo(models.Flavor, { foreignKey: 'FlavorId' });
+    this.belongsTo(models.UserProfile, { foreignKey: 'userId' });
+    this.hasOne(models.Flavor, { foreignKey: 'id', sourceKey: 'flavorId' });
   };
 
   return UsersFlavors;

@@ -1,19 +1,23 @@
 import pick from 'lodash/pick';
+import SequelizeMock from 'sequelize-mock';
 import Sequelize, { ValidationError, DatabaseError } from 'sequelize';
 
 import logging from './logging';
 import configs from './config';
 import models from '../models';
+import { isTestEnvironment } from './util';
 
 const log = logging('database');
 const { host, port, password, username, database } = configs.database;
 const validationProps = ['message', 'type', 'path', 'value'];
 
-const sequelize = new Sequelize(database, username, password, {
-  host,
-  port,
-  dialect: 'postgres'
-});
+const sequelize = isTestEnvironment()
+  ? new SequelizeMock()
+  : new Sequelize(database, username, password, {
+      host,
+      port,
+      dialect: 'postgres'
+    });
 
 export const handleError = (error, res = {}) => {
   log.error(error.message);

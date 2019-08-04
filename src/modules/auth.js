@@ -7,13 +7,19 @@ import AnonymousStrategy from 'passport-anonymous';
 import configs from './config';
 import models from './database';
 import loggers from './logging';
-import { compareHashAndPassword, generateToken } from './util';
+import {
+  compareHashAndPassword,
+  generateToken,
+  isTestEnvironment
+} from './util';
 
 const log = loggers('auth');
-const { UserToken, User } = models;
+const { Op } = models.Sequelize;
+const { UserToken, User, Role } = models;
 
 const { api: webConfig } = configs;
 const { age: tokenAge, validate: validateTokens } = webConfig.tokens;
+const { validate: validateRoles } = webConfig.roles;
 
 const authorize = async (token, done) => {
   try {
@@ -25,7 +31,10 @@ const authorize = async (token, done) => {
 
     const result = await UserToken.findAll({
       where: {
-        token
+        token,
+        expires: {
+          [Op.gt]: Date.now()
+        }
       },
       include: [
         {
@@ -123,8 +132,7 @@ authServer.exchange(
  * Provide a wrapper around passport.authenticate with the appropriate strategies selected.
  */
 export const authenticate = () => {
-  const { NODE_ENV: environment } = process.env;
-  const useBearerStrategy = environment !== 'test' && validateTokens;
+  const useBearerStrategy = !isTestEnvironment() && validateTokens;
 
   return [
     passport.initialize(),
@@ -132,6 +140,46 @@ export const authenticate = () => {
       session: false
     })
   ];
+};
+
+export const ensureRole = name => async (req, _, next) => {
+  if (isTestEnvironment() || !validateRoles) {
+    return next(null);
+  }
+
+  try {
+    const { user } = req;
+
+    if (!user) {
+      throw new Error('No user found!');
+    }
+
+    const id = parseInt(user.id, 10);
+
+    const role = await Role.findOne({
+      where: {
+        name
+      },
+      include: [
+        {
+          as: 'Users',
+          model: User,
+          required: true,
+          through: {
+            where: { userId: id }
+          }
+        }
+      ]
+    });
+
+    if (!role) {
+      throw new Error('User lacks required role!');
+    }
+
+    next(null);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export default app => {

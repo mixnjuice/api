@@ -6,11 +6,11 @@ import models from '../modules/database';
 import loggers from '../modules/logging';
 
 const router = Router();
-const log = loggers('flavor');
-const { DataSupplier, Flavor, FlavorIdentifier, Vendor } = models;
+const log = loggers('vendor');
+const { DataSupplier, Vendor, VendorIdentifier } = models;
 
 /**
- * GET Flavor by ID
+ * GET Vendor
  * @param id int
  */
 router.get(
@@ -30,21 +30,15 @@ router.get(
     }
     const { id } = req.params;
 
-    log.info(`request for ${id}`);
+    log.info(`request for vendor ${req.params.id}`);
     try {
-      const result = await Flavor.findOne({
+      const result = await Vendor.findOne({
         where: {
           id
-        },
-        include: [
-          {
-            model: Vendor,
-            require: true
-          }
-        ]
+        }
       });
 
-      if (!result || result.length === 0) {
+      if (!result) {
         return res.status(204).end();
       }
 
@@ -57,20 +51,15 @@ router.get(
   }
 );
 /**
- * POST Create a Flavor
- * @body vendorId int
+ * POST Create a Vendor
  * @body name string
  * @body slug string
- * @body density decimal
+ * @body code string
  */
 router.post(
   '/',
   authenticate(),
   [
-    body('vendorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
     body('name')
       .isString()
       .isLength({ min: 1 })
@@ -79,7 +68,10 @@ router.post(
       .isString()
       .isLength({ min: 1 })
       .withMessage('length'),
-    body('density').isDecimal()
+    body('code')
+      .isString()
+      .isLength({ min: 1 })
+      .withMessage('length')
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -87,15 +79,14 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { vendorId, name, slug, density } = req.body;
 
-    log.info(`request for new flavor`);
+    log.info(`request for new vendor`);
     try {
-      const result = await Flavor.create({
-        vendorId,
+      const { name, slug, code } = req.body;
+      const result = await Vendor.create({
         name,
         slug,
-        density
+        code
       });
 
       if (result.length === 0) {
@@ -111,22 +102,18 @@ router.post(
   }
 );
 /**
- * PUT Updates a Flavor
+ * PUT Updates a Vendor
  * @param id int
  * @body vendorId int
  * @body name string
  * @body slug string
- * @body density decimal
+ * @body code string
  */
 router.put(
   '/:id',
   authenticate(),
   [
     param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    body('vendorId')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt(),
@@ -138,7 +125,10 @@ router.put(
       .isString()
       .isLength({ min: 1 })
       .withMessage('length'),
-    body('density').isDecimal()
+    body('code')
+      .isString()
+      .isLength({ min: 1 })
+      .withMessage('length')
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -147,16 +137,15 @@ router.put(
       return res.status(400).json({ errors: errors.array() });
     }
     const { id } = req.params;
-    const { vendorId, name, slug, density } = req.body;
+    const { name, slug, code } = req.body;
 
-    log.info(`request to update flavor id ${id}`);
+    log.info(`request to update vendor id ${id}`);
     try {
-      const result = await Flavor.update(
+      const result = await Vendor.update(
         {
-          vendorId,
           name,
           slug,
-          density
+          code
         },
         {
           where: {
@@ -178,7 +167,7 @@ router.put(
   }
 );
 /**
- * DELETE Deletes a Flavor
+ * DELETE Deletes a Vendor
  * @param id int
  */
 router.delete(
@@ -198,9 +187,9 @@ router.delete(
     }
     const { id } = req.params;
 
-    log.info(`request to delete flavor id ${id}`);
+    log.info(`request to delete vendor id ${id}`);
     try {
-      const result = await Flavor.destroy({
+      const result = await Vendor.destroy({
         where: {
           id
         }
@@ -219,14 +208,14 @@ router.delete(
   }
 );
 /**
- * GET Flavor Data Supplier Identifiers
+ * GET Vendor Data Supplier Identifiers
  * @param id int
  */
 router.get(
-  '/:flavorId/identifiers',
+  '/:vendorId/identifiers',
   authenticate(),
   [
-    param('flavorId')
+    param('vendorId')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt()
@@ -237,13 +226,13 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { flavorId } = req.params;
+    const { vendorId } = req.params;
 
-    log.info(`request for flavor id ${flavorId} identifiers`);
+    log.info(`request for vendor id ${vendorId} identifiers`);
     try {
-      const result = await FlavorIdentifier.findAll({
+      const result = await VendorIdentifier.findAll({
         where: {
-          flavorId
+          vendorId
         },
         include: [
           {
@@ -266,15 +255,15 @@ router.get(
   }
 );
 /**
- * GET Flavor Data Supplier Identifier
- * @param flavorId int
+ * GET Vendor Data Supplier Identifier
+ * @param vendorId int
  * @param dataSupplierId int
  */
 router.get(
-  '/:flavorId/identifier/:dataSupplierId',
+  '/:vendorId/identifier/:dataSupplierId',
   authenticate(),
   [
-    param('flavorId')
+    param('vendorId')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt(),
@@ -289,15 +278,15 @@ router.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { flavorId, dataSupplierId } = req.params;
+    const { vendorId, dataSupplierId } = req.params;
 
     log.info(
-      `request for flavor id ${flavorId} data supplier id ${dataSupplierId} identifer`
+      `request for vendor id ${vendorId} data supplier id ${dataSupplierId} identifer`
     );
     try {
-      const result = await FlavorIdentifier.findOne({
+      const result = await VendorIdentifier.findOne({
         where: {
-          flavorId,
+          vendorId,
           dataSupplierId
         },
         include: [
@@ -321,16 +310,16 @@ router.get(
   }
 );
 /**
- * POST Create a Flavor Identifier
+ * POST Create a Vendor Identifier
  * @param id int
  * @param dataSupplierId int
  * @body identifier string
  */
 router.post(
-  '/:flavorId/identifier',
+  '/:vendorId/identifier',
   authenticate(),
   [
-    param('flavorId')
+    param('vendorId')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt(),
@@ -349,13 +338,13 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { flavorId } = req.params;
+    const { vendorId } = req.params;
     const { dataSupplierId, identifier } = req.body;
 
-    log.info(`request for new flavor identifier for flavor id ${flavorId}`);
+    log.info(`request for new vendor identifier for vendor id ${vendorId}`);
     try {
-      const result = await FlavorIdentifier.create({
-        flavorId,
+      const result = await VendorIdentifier.create({
+        vendorId,
         dataSupplierId,
         identifier
       });
@@ -373,16 +362,16 @@ router.post(
   }
 );
 /**
- * PUT Update a Flavor Identifier
- * @param flavorId int
+ * PUT Update a Vendor Identifier
+ * @param vendorId int
  * @param dataSupplierId int
  * @body identifier string
  */
 router.put(
-  '/:flavorId/identifier/:dataSupplierId',
+  '/:vendorId/identifier/:dataSupplierId',
   authenticate(),
   [
-    param('flavorId')
+    param('vendorId')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt(),
@@ -401,20 +390,20 @@ router.put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { flavorId, dataSupplierId } = req.params;
     const { identifier } = req.body;
+    const { vendorId, dataSupplierId } = req.params;
 
     log.info(
-      `request to update flavor id ${flavorId} identifier id ${dataSupplierId}`
+      `request to update vendor id ${vendorId} identifier id ${dataSupplierId}`
     );
     try {
-      const result = await FlavorIdentifier.update(
+      const result = await VendorIdentifier.update(
         {
           identifier
         },
         {
           where: {
-            flavorId,
+            vendorId,
             dataSupplierId
           }
         }
@@ -434,14 +423,14 @@ router.put(
 );
 /**
  * Delete Diluent
- * @param flavorId int
+ * @param vendorId int
  * @param dataSupplierId int
  */
 router.delete(
-  '/:flavorId/identifier/:dataSupplierId',
+  '/:vendorId/identifier/:dataSupplierId',
   authenticate(),
   [
-    param('flavorId')
+    param('vendorId')
       .isNumeric()
       .isInt({ min: 1 })
       .toInt(),
@@ -456,15 +445,15 @@ router.delete(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { flavorId, dataSupplierId } = req.params;
+    const { vendorId, dataSupplierId } = req.params;
 
     log.info(
-      `request to delete flavor id ${flavorId} identifier id ${dataSupplierId}`
+      `request to delete vendor id ${vendorId} identifier id ${dataSupplierId}`
     );
     try {
-      const result = await FlavorIdentifier.destroy({
+      const result = await VendorIdentifier.destroy({
         where: {
-          flavorId,
+          vendorId,
           dataSupplierId
         }
       });

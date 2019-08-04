@@ -41,8 +41,18 @@ module.exports = (sequelize, DataTypes) => {
   Flavor.associate = function(models) {
     this.belongsTo(models.Vendor, { foreignKey: 'vendorId' });
     this.hasMany(models.FlavorIdentifier, { foreignKey: 'flavorId' });
-    this.hasMany(models.RecipesFlavors, { foreignKey: 'flavorId' });
-    this.hasMany(models.UsersFlavors, { foreignKey: 'flavorId' });
+    this.belongsToMany(models.Recipe, {
+      as: 'Recipes',
+      through: models.RecipesFlavors,
+      foreignKey: 'flavorId',
+      otherKey: 'recipeId'
+    });
+    this.belongsToMany(models.User, {
+      as: 'Owners',
+      through: models.UsersFlavors,
+      foreignKey: 'flavorId',
+      otherKey: 'userId'
+    });
   };
 
   return Flavor;

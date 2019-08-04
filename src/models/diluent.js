@@ -34,8 +34,11 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Diluent.associate = function(models) {
-    this.hasMany(models.RecipesDiluents, {
-      foreignKey: 'diluentId'
+    this.belongsToMany(models.Recipe, {
+      as: 'Recipes',
+      through: models.RecipesDiluents,
+      foreignKey: 'diluentId',
+      otherKey: 'recipeId'
     });
   };
   return Diluent;

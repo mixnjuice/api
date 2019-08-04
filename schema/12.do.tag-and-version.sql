@@ -1,3 +1,5 @@
+alter table recipe rename user_id to creator_id;
+
 alter table recipe
   add version int default 1,
   add parent_id bigint default null,

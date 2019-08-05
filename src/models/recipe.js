@@ -8,7 +8,23 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true
       },
-      userId: {
+      parentId: {
+        type: DataTypes.BIGINT,
+        allowNull: true,
+        references: {
+          model: sequelize.Recipe,
+          key: 'id'
+        }
+      },
+      adaptedId: {
+        type: DataTypes.BIGINT,
+        allowNull: true,
+        references: {
+          model: sequelize.Recipe,
+          key: 'id'
+        }
+      },
+      creatorId: {
         type: DataTypes.BIGINT,
         allowNull: false,
         references: {
@@ -44,6 +60,8 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Recipe.associate = function(models) {
+    this.hasOne(models.Recipe, { as: 'Parent', foreignKey: 'parentId' });
+    this.hasOne(models.Recipe, { as: 'AdaptedFrom', foreignKey: 'adaptedId' });
     this.belongsTo(models.User, { foreignKey: 'userId' });
     this.belongsTo(models.UserProfile, {
       foreignKey: 'userId',

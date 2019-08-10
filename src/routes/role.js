@@ -57,8 +57,8 @@ router.get(
  */
 router.put(
   '/:id(\\d+)',
-  ensureRole('Administrator'),
   authenticate(),
+  ensureRole('Administrator'),
   [
     param('id')
       .isNumeric()

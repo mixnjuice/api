@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'userId'
     });
     this.hasMany(models.Recipe, {
-      foreignKey: 'userId'
+      foreignKey: 'creatorId'
     });
     this.hasMany(models.Preparation, {
       foreignKey: 'userId'

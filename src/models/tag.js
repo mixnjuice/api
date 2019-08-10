@@ -37,7 +37,8 @@ module.exports = (sequelize, DataTypes) => {
 
   Tag.associate = function(models) {
     this.hasOne(models.User, {
-      foreignKey: 'creatorId'
+      foreignKey: 'id',
+      sourceKey: 'creatorId'
     });
     this.belongsToMany(models.TagsFlavors, {
       as: 'Flavors',

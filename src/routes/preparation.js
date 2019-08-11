@@ -90,7 +90,7 @@ router.get(
         ]
       });
 
-      if (result.length === 0) {
+      if (!result) {
         return res.status(204).end();
       }
 
@@ -145,7 +145,7 @@ router.post(
         }
       });
 
-      if (recipeCheck.length === 0) {
+      if (!recipeCheck) {
         // Recipe doesn't exist
         return res.status(204).end();
       }
@@ -221,7 +221,7 @@ router.put(
         }
       });
 
-      if (preparationCheck.length === 0) {
+      if (!preparationCheck) {
         // Preparation doesn't exist
         return res.status(204).end();
       }
@@ -282,10 +282,6 @@ router.put(
 
       const result = { preparationResult, diluentResult };
 
-      if (result.length === 0) {
-        return res.status(204).end();
-      }
-
       res.type('application/json');
       res.json(result);
     } catch (error) {
@@ -330,10 +326,6 @@ router.delete(
       });
 
       const result = { preparationResult, diluentResult };
-
-      if (result.length === 0) {
-        return res.status(204).end();
-      }
 
       res.type('application/json');
       res.json(result);

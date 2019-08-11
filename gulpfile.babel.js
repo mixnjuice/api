@@ -26,6 +26,7 @@ const build = gulp.series(clean, lint, compile);
 const start = done => {
   nodemon({
     script: './lib/index.js',
+    tasks: ['compile'],
     watch: './src/',
     ext: 'js',
     done
@@ -36,4 +37,5 @@ gulp.task('lint', lint);
 gulp.task('clean', clean);
 gulp.task('start', start);
 gulp.task('default', build);
+gulp.task('compile', compile);
 gulp.task('watch', gulp.series(build, start));

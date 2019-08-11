@@ -2,6 +2,7 @@ import del from 'del';
 import gulp from 'gulp';
 import babel from 'gulp-babel';
 import eslint from 'gulp-eslint';
+import nodemon from 'gulp-nodemon';
 
 const src = './src/**/*.js';
 const dst = './lib/';
@@ -21,9 +22,18 @@ const compile = () =>
 
 const clean = () => del(dst);
 const build = gulp.series(clean, lint, compile);
-const watch = () => gulp.watch(src, build);
+
+const start = done => {
+  nodemon({
+    script: 'lib/index.js',
+    watch: 'src',
+    ext: 'js',
+    done
+  });
+};
 
 gulp.task('lint', lint);
 gulp.task('clean', clean);
+gulp.task('start', start);
 gulp.task('default', build);
-gulp.task('watch', gulp.series(build, watch));
+gulp.task('watch', gulp.series(build, start));

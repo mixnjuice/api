@@ -40,15 +40,15 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id',
       sourceKey: 'creatorId'
     });
-    this.belongsToMany(models.TagsFlavors, {
+    this.belongsToMany(models.Flavor, {
       as: 'Flavors',
-      through: models.Flavor,
+      through: models.TagsFlavors,
       foreignKey: 'tagId',
       otherKey: 'flavorId'
     });
-    this.belongsToMany(models.TagsRecipes, {
+    this.belongsToMany(models.Recipe, {
       as: 'Recipes',
-      through: models.Recipe,
+      through: models.TagsRecipes,
       foreignKey: 'tagId',
       otherKey: 'recipeId'
     });

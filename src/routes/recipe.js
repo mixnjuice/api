@@ -50,29 +50,17 @@ router.get(
             required: true
           },
           {
-            model: RecipesFlavors,
-            required: true,
-            include: [
-              {
-                model: Flavor,
-                required: true
-              }
-            ]
+            model: Flavor,
+            as: 'Flavors'
           },
           {
-            model: RecipesDiluents,
-            required: true,
-            include: [
-              {
-                model: Diluent,
-                required: true
-              }
-            ]
+            model: Diluent,
+            as: 'Diluents'
           }
         ]
       });
 
-      if (result.length === 0) {
+      if (!result) {
         return res.status(204).end();
       }
 
@@ -205,7 +193,7 @@ router.put(
         }
       });
 
-      if (recipeCheck.length === 0) {
+      if (!recipeCheck) {
         // Recipe doesn't exist
         return res.status(204).end();
       }
@@ -292,10 +280,6 @@ router.put(
 
       const result = { recipeResult, diluentResult, flavorResult };
 
-      if (result.length === 0) {
-        return res.status(204).end();
-      }
-
       res.type('application/json');
       res.json(result);
     } catch (error) {
@@ -347,10 +331,6 @@ router.delete(
       });
 
       const result = { recipeResult, diluentResult, flavorResult };
-
-      if (result.length === 0) {
-        return res.status(204).end();
-      }
 
       res.type('application/json');
       res.json(result);

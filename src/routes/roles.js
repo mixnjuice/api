@@ -16,7 +16,7 @@ router.get('/', authenticate(), async (req, res) => {
   try {
     const result = await Role.findAll();
 
-    if (!result || result.length === 0) {
+    if (!Array.isArray(result) || result.length === 0) {
       return res.status(204).end();
     }
 

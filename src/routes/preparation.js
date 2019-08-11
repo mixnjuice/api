@@ -13,8 +13,6 @@ const {
   Preparation,
   PreparationsDiluents,
   Recipe,
-  RecipesDiluents,
-  RecipesFlavors,
   UserProfile
 } = models;
 
@@ -56,41 +54,23 @@ router.get(
             required: true,
             include: [
               {
-                model: RecipesFlavors,
-                required: true,
-                include: [
-                  {
-                    model: Flavor,
-                    required: true
-                  }
-                ]
+                model: Flavor,
+                as: 'Flavors'
               },
               {
-                model: RecipesDiluents,
-                required: true,
-                include: [
-                  {
-                    model: Diluent,
-                    required: true
-                  }
-                ]
+                model: Diluent,
+                as: 'Diluents'
               }
             ]
           },
           {
-            model: PreparationsDiluents,
-            required: true,
-            include: [
-              {
-                model: Diluent,
-                required: true
-              }
-            ]
+            model: Diluent,
+            as: 'Diluents'
           }
         ]
       });
 
-      if (result.length === 0) {
+      if (!result) {
         return res.status(204).end();
       }
 
@@ -145,7 +125,7 @@ router.post(
         }
       });
 
-      if (recipeCheck.length === 0) {
+      if (!recipeCheck) {
         // Recipe doesn't exist
         return res.status(204).end();
       }
@@ -221,7 +201,7 @@ router.put(
         }
       });
 
-      if (preparationCheck.length === 0) {
+      if (!preparationCheck) {
         // Preparation doesn't exist
         return res.status(204).end();
       }
@@ -282,10 +262,6 @@ router.put(
 
       const result = { preparationResult, diluentResult };
 
-      if (result.length === 0) {
-        return res.status(204).end();
-      }
-
       res.type('application/json');
       res.json(result);
     } catch (error) {
@@ -330,10 +306,6 @@ router.delete(
       });
 
       const result = { preparationResult, diluentResult };
-
-      if (result.length === 0) {
-        return res.status(204).end();
-      }
 
       res.type('application/json');
       res.json(result);

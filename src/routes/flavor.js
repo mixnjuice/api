@@ -44,7 +44,7 @@ router.get(
         ]
       });
 
-      if (!result || result.length === 0) {
+      if (!result) {
         return res.status(204).end();
       }
 
@@ -253,7 +253,7 @@ router.get(
         ]
       });
 
-      if (!result || result.length === 0) {
+      if (!Array.isArray(result) || result.length === 0) {
         return res.status(204).end();
       }
 
@@ -308,7 +308,7 @@ router.get(
         ]
       });
 
-      if (!result || result.length === 0) {
+      if (!result) {
         return res.status(204).end();
       }
 

@@ -68,7 +68,7 @@ module.exports = (sequelize, DataTypes) => {
     this.hasOne(models.Recipe, { as: 'AdaptedFrom', foreignKey: 'adaptedId' });
     this.belongsTo(models.User, { foreignKey: 'creatorId' });
     this.belongsTo(models.UserProfile, {
-      foreignKey: 'userId',
+      foreignKey: 'creatorId',
       sourceKey: 'userId'
     });
     this.belongsToMany(models.Flavor, {

@@ -25,8 +25,8 @@ const build = gulp.series(clean, lint, compile);
 
 const start = done => {
   nodemon({
-    script: 'lib/index.js',
-    watch: 'src',
+    script: './lib/index.js',
+    watch: './src/',
     ext: 'js',
     done
   });

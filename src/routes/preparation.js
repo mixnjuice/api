@@ -13,8 +13,6 @@ const {
   Preparation,
   PreparationsDiluents,
   Recipe,
-  RecipesDiluents,
-  RecipesFlavors,
   UserProfile
 } = models;
 
@@ -56,36 +54,18 @@ router.get(
             required: true,
             include: [
               {
-                model: RecipesFlavors,
-                required: true,
-                include: [
-                  {
-                    model: Flavor,
-                    required: true
-                  }
-                ]
+                model: Flavor,
+                as: 'Flavors'
               },
               {
-                model: RecipesDiluents,
-                required: true,
-                include: [
-                  {
-                    model: Diluent,
-                    required: true
-                  }
-                ]
+                model: Diluent,
+                as: 'Diluents'
               }
             ]
           },
           {
-            model: PreparationsDiluents,
-            required: true,
-            include: [
-              {
-                model: Diluent,
-                required: true
-              }
-            ]
+            model: Diluent,
+            as: 'Diluents'
           }
         ]
       });

@@ -50,24 +50,12 @@ router.get(
             required: true
           },
           {
-            model: RecipesFlavors,
-            required: true,
-            include: [
-              {
-                model: Flavor,
-                required: true
-              }
-            ]
+            model: Flavor,
+            as: 'Flavors'
           },
           {
-            model: RecipesDiluents,
-            required: true,
-            include: [
-              {
-                model: Diluent,
-                required: true
-              }
-            ]
+            model: Diluent,
+            as: 'Diluents'
           }
         ]
       });

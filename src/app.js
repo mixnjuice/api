@@ -19,6 +19,7 @@ import recipes from './routes/recipes';
 import register from './routes/register';
 import role from './routes/role';
 import roles from './routes/roles';
+import stats from './routes/stats';
 import user from './routes/user';
 import users from './routes/users';
 import vendor from './routes/vendor';
@@ -52,6 +53,7 @@ export const start = async () => {
   app.use('/recipes', recipes);
   app.use('/role', role);
   app.use('/roles', roles);
+  app.use('/stats', stats);
   app.use('/user', user);
   app.use('/users', users);
   app.use('/vendor', vendor);

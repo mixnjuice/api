@@ -17,7 +17,7 @@ const {
 } = models;
 
 /**
- * GET Roles
+ * GET Stats
  */
 router.get(
   '/dashboard',
@@ -28,11 +28,9 @@ router.get(
     try {
       // User Stats
       const users = await User.count();
-
       const activatedUsers = await User.count({
         where: { activationCode: null }
       });
-
       const userTokens = await UserToken.count();
       // Vendor Stats
       const vendors = await Vendor.count();

@@ -4,7 +4,7 @@ import models from '../modules/database';
 import loggers from '../modules/logging';
 
 const router = Router();
-const log = loggers('roles');
+const log = loggers('stats');
 const {
   Flavor,
   Recipe,

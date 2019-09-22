@@ -1,5 +1,5 @@
 import pick from 'lodash/pick';
-import SequelizeMock from '@gusta/sequelize-mock';
+import SequelizeMock from '@mixnjuice/sequelize-mock';
 import Sequelize, { ValidationError, DatabaseError } from 'sequelize';
 
 import logging from './logging';

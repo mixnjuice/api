@@ -63,4 +63,21 @@ router.get(
   }
 );
 
+/**
+ * GET Flavor Stats
+ */
+router.get('/count', authenticate(), async (req, res) => {
+  log.info(`request for flavor stats`);
+  try {
+    // Flavor Stats
+    const result = await Flavor.count();
+
+    res.type('application/json');
+    res.json(result);
+  } catch (error) {
+    log.error(error.message);
+    res.status(500).send(error.message);
+  }
+});
+
 export default router;

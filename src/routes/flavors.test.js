@@ -34,4 +34,10 @@ describe('flavors route resource', () => {
       .get('/?limit=stop')
       .expect(400, done);
   });
+
+  it('returns valid stats', done => {
+    request(app)
+      .get('/count')
+      .expect(200, done);
+  });
 });

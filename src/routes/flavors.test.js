@@ -29,4 +29,10 @@ describe('flavors route resource', () => {
   it('returns 400 for invalid flavor list', done => {
     request.get('/?limit=stop').expect(400, done);
   });
+
+  it('returns valid stats', done => {
+    request(app)
+      .get('/count')
+      .expect(200, done);
+  });
 });

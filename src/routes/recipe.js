@@ -114,7 +114,6 @@ router.post(
         {
           userId,
           name,
-          viewCount: 0,
           notes,
           RecipesFlavors: req.body.RecipesFlavors, // Array of flavors
           RecipesDiluents: req.body.RecipesDiluents // Array of diluents

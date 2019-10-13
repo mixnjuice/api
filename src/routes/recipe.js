@@ -11,9 +11,11 @@ const {
   Diluent,
   Flavor,
   Recipe,
+  Preparation,
   UserProfile,
   RecipesFlavors,
-  RecipesDiluents
+  RecipesDiluents,
+  PreparationsDiluents
 } = models;
 
 /**
@@ -84,18 +86,24 @@ router.post(
   '/',
   authenticate(),
   [
-    body('userId')
-      .isNumeric()
-      .toInt(),
     body('name')
       .isString()
       .isLength({ min: 1 })
       .withMessage('length'),
+    body('volumeMl')
+      .isNumeric()
+      .toInt(),
     body('notes').isString(),
-    body('RecipesFlavors')
+    body('version')
+      .isNumeric()
+      .toInt(),
+    body('flavors')
       .isArray()
       .withMessage('array'),
-    body('RecipesDiluents')
+    body('recipeDiluents')
+      .isArray()
+      .withMessage('array'),
+    body('preparationDiluents')
       .isArray()
       .withMessage('array')
   ],
@@ -106,25 +114,42 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    log.info(`request for NEW RECIPE`);
+    log.info('Handling request to create new recipe...');
     try {
       // Create the recipe, with associations
-      const { userId, name, notes } = req.body;
-      const result = await Recipe.create(
+      const { id: userId } = req.user;
+      const {
+        name,
+        notes,
+        flavors,
+        version,
+        volumeMl,
+        recipeDiluents,
+        preparationDiluents
+      } = req.body;
+
+      if (version < 1) {
+        return res.status(400).end();
+      }
+
+      const recipe = await Recipe.create(
         {
-          userId,
           name,
           notes,
-          RecipesFlavors: req.body.RecipesFlavors, // Array of flavors
-          RecipesDiluents: req.body.RecipesDiluents // Array of diluents
+          version,
+          creatorId: userId,
+          RecipeFlavors: flavors,
+          RecipeDiluents: recipeDiluents
         },
         {
           include: [
             {
+              as: 'RecipeFlavors',
               model: RecipesFlavors,
-              required: true
+              required: false
             },
             {
+              as: 'RecipeDiluents',
               model: RecipesDiluents,
               required: true
             }
@@ -132,12 +157,30 @@ router.post(
         }
       );
 
-      if (result.length === 0) {
+      if (recipe.length === 0) {
         return res.status(204).end();
       }
 
+      const preparation = await Preparation.create(
+        {
+          userId,
+          volumeMl,
+          recipeId: recipe.id,
+          PreparationsDiluents: preparationDiluents
+        },
+        {
+          include: [
+            {
+              as: 'PreparationDiluents',
+              model: PreparationsDiluents,
+              required: false
+            }
+          ]
+        }
+      );
+
       res.type('application/json');
-      res.json(result);
+      res.json({ recipe, preparation });
     } catch (error) {
       log.error(error.message);
       res.status(500).send(error.message);
@@ -172,6 +215,9 @@ router.put(
       .isArray()
       .withMessage('array'),
     body('RecipesDiluents')
+      .isArray()
+      .withMessage('array'),
+    body('PreparationsDiluents')
       .isArray()
       .withMessage('array')
   ],

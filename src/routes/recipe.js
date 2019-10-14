@@ -187,14 +187,15 @@ router.post(
     }
   }
 );
+
 /**
  * PUT Update Recipe
  * @param id int
  * @body userId int
  * @body name string
  * @body notes string
- * @body RecipesFlavors array
- * @body RecipesDiluents array
+ * @body flavors array
+ * @body recipeDiluents array
  */
 router.put(
   '/:id',
@@ -211,13 +212,10 @@ router.put(
       .isLength({ min: 1 })
       .withMessage('length'),
     body('notes').isString(),
-    body('RecipesFlavors')
+    body('flavors')
       .isArray()
       .withMessage('array'),
-    body('RecipesDiluents')
-      .isArray()
-      .withMessage('array'),
-    body('PreparationsDiluents')
+    body('recipeDiluents')
       .isArray()
       .withMessage('array')
   ],
@@ -259,7 +257,7 @@ router.put(
 
       const diluentResult = [];
 
-      for (const diluent of req.body.RecipesDiluents) {
+      for (const diluent of req.body.recipeDiluents) {
         if (diluent.millipercent === null) {
           // delete
           diluentResult[diluent.diluentId] = await RecipesDiluents.destroy({
@@ -292,7 +290,7 @@ router.put(
 
       const flavorResult = [];
 
-      for (const flavor of req.body.RecipesFlavors) {
+      for (const flavor of req.body.flavors) {
         if (flavor.millipercent === null) {
           // delete
           flavorResult[flavor.flavorId] = await RecipesFlavors.destroy({

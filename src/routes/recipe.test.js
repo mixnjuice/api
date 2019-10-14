@@ -1,11 +1,11 @@
 import express from 'express';
-import request from 'supertest';
 import passport from 'passport';
 import bodyParser from 'body-parser';
 import AnonymousStrategy from 'passport-anonymous';
 
 import recipeRoute from './recipe';
 import database from '../modules/database';
+import { captureTestErrors } from '../modules/util';
 
 describe('recipe route resource', () => {
   const app = express();
@@ -14,6 +14,8 @@ describe('recipe route resource', () => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(recipeRoute);
+
+  const request = captureTestErrors(app);
 
   afterAll(() => {
     database.sequelize.close();
@@ -50,7 +52,7 @@ describe('recipe route resource', () => {
   };
 
   it('can create recipe', done => {
-    request(app)
+    request
       .post('/')
       .send(mockData)
       .expect('Content-Type', /json/)
@@ -58,14 +60,14 @@ describe('recipe route resource', () => {
   });
 
   it('can request valid recipe', done => {
-    request(app)
+    request
       .get('/123')
       .expect('Content-Type', /json/)
       .expect(200, done);
   });
 
   it('can update existing recipe', done => {
-    request(app)
+    request
       .put('/123')
       .send(mockData)
       .expect('Content-Type', /json/)
@@ -73,21 +75,21 @@ describe('recipe route resource', () => {
   });
 
   it('can delete existing recipe', done => {
-    request(app)
+    request
       .delete('/123')
       .expect('Content-Type', /json/)
       .expect(200, done);
   });
 
   it('returns 400 for invalid number in GET request', done => {
-    request(app)
+    request
       .get('/0')
       .expect('Content-Type', /json/)
       .expect(400, done);
   });
 
   it('returns 400 for string in GET request', done => {
-    request(app)
+    request
       .get('/ham')
       .expect('Content-Type', /json/)
       .expect(400, done);

@@ -24,8 +24,10 @@ describe('recipe route resource', () => {
   const mockData = {
     userId: 4,
     name: 'Testing',
+    version: 1,
     notes: 'A strawberry mint lemonade cheesecake concoction',
-    RecipesFlavors: [
+    volumeMl: 60,
+    flavors: [
       {
         flavorId: 1,
         millipercent: 10
@@ -39,7 +41,7 @@ describe('recipe route resource', () => {
         millipercent: 100
       }
     ],
-    RecipesDiluents: [
+    recipeDiluents: [
       {
         diluentId: 1,
         millipercent: 8000
@@ -48,7 +50,8 @@ describe('recipe route resource', () => {
         diluentId: 2,
         millipercent: 1000
       }
-    ]
+    ],
+    preparationDiluents: []
   };
 
   it('can create recipe', done => {

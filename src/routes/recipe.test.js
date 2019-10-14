@@ -1,16 +1,16 @@
 import express from 'express';
 import passport from 'passport';
 import bodyParser from 'body-parser';
-import AnonymousStrategy from 'passport-anonymous';
 
 import recipeRoute from './recipe';
 import database from '../modules/database';
+import { useMockStrategy } from '../modules/auth';
 import { captureTestErrors } from '../modules/util';
 
 describe('recipe route resource', () => {
   const app = express();
 
-  passport.use(new AnonymousStrategy());
+  useMockStrategy(passport, { id: 1 });
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(recipeRoute);

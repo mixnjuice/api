@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
 
   RecipesFlavors.associate = function(models) {
     this.belongsTo(models.Recipe, { foreignKey: 'recipeId' });
-    this.belongsTo(models.Flavor, { foreignKey: 'FlavorId' });
+    this.belongsTo(models.Flavor, { foreignKey: 'flavorId' });
   };
 
   return RecipesFlavors;

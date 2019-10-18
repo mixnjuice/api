@@ -1,19 +1,21 @@
 import express from 'express';
-import request from 'supertest';
 import passport from 'passport';
 import bodyParser from 'body-parser';
-import AnonymousStrategy from 'passport-anonymous';
 
 import recipeRoute from './recipe';
 import database from '../modules/database';
+import { useMockStrategy } from '../modules/auth';
+import { captureTestErrors } from '../modules/util';
 
 describe('recipe route resource', () => {
   const app = express();
 
-  passport.use(new AnonymousStrategy());
+  useMockStrategy(passport, { id: 1 });
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(recipeRoute);
+
+  const request = captureTestErrors(app);
 
   afterAll(() => {
     database.sequelize.close();
@@ -22,8 +24,10 @@ describe('recipe route resource', () => {
   const mockData = {
     userId: 4,
     name: 'Testing',
+    version: 1,
     notes: 'A strawberry mint lemonade cheesecake concoction',
-    RecipesFlavors: [
+    volumeMl: 60,
+    flavors: [
       {
         flavorId: 1,
         millipercent: 10
@@ -37,7 +41,7 @@ describe('recipe route resource', () => {
         millipercent: 100
       }
     ],
-    RecipesDiluents: [
+    recipeDiluents: [
       {
         diluentId: 1,
         millipercent: 8000
@@ -46,11 +50,12 @@ describe('recipe route resource', () => {
         diluentId: 2,
         millipercent: 1000
       }
-    ]
+    ],
+    preparationDiluents: []
   };
 
   it('can create recipe', done => {
-    request(app)
+    request
       .post('/')
       .send(mockData)
       .expect('Content-Type', /json/)
@@ -58,14 +63,14 @@ describe('recipe route resource', () => {
   });
 
   it('can request valid recipe', done => {
-    request(app)
+    request
       .get('/123')
       .expect('Content-Type', /json/)
       .expect(200, done);
   });
 
   it('can update existing recipe', done => {
-    request(app)
+    request
       .put('/123')
       .send(mockData)
       .expect('Content-Type', /json/)
@@ -73,21 +78,21 @@ describe('recipe route resource', () => {
   });
 
   it('can delete existing recipe', done => {
-    request(app)
+    request
       .delete('/123')
       .expect('Content-Type', /json/)
       .expect(200, done);
   });
 
   it('returns 400 for invalid number in GET request', done => {
-    request(app)
+    request
       .get('/0')
       .expect('Content-Type', /json/)
       .expect(400, done);
   });
 
   it('returns 400 for string in GET request', done => {
-    request(app)
+    request
       .get('/ham')
       .expect('Content-Type', /json/)
       .expect(400, done);

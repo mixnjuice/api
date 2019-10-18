@@ -51,7 +51,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       viewCount: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       }
     },
     {
@@ -82,6 +83,14 @@ module.exports = (sequelize, DataTypes) => {
       through: models.RecipesDiluents,
       foreignKey: 'recipeId',
       otherKey: 'diluentId'
+    });
+    this.hasMany(models.RecipesFlavors, {
+      as: 'RecipeFlavors',
+      foreignKey: 'recipeId'
+    });
+    this.hasMany(models.RecipesDiluents, {
+      as: 'RecipeDiluents',
+      foreignKey: 'recipeId'
     });
     this.hasMany(models.Preparation, {
       foreignKey: 'recipeId'

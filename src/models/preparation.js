@@ -28,10 +28,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DECIMAL(4, 0),
         allowNull: false
       },
-      nicotineMillipercent: {
-        type: DataTypes.DECIMAL,
-        allowNull: false
-      },
       created: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -39,7 +35,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       viewCount: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       }
     },
     {
@@ -63,6 +60,10 @@ module.exports = (sequelize, DataTypes) => {
       through: models.PreparationsDiluents,
       foreignKey: 'preparationId',
       otherKey: 'diluentId'
+    });
+    this.hasMany(models.PreparationsDiluents, {
+      as: 'PreparationDiluents',
+      foreignKey: 'preparationId'
     });
   };
 

@@ -1,5 +1,8 @@
 import nanoid from 'nanoid';
+import use from 'superagent-use';
+import supertest from 'supertest';
 import { hash as create, compare } from 'bcrypt';
+import captureError from 'supertest-capture-error';
 
 import configs from './config';
 
@@ -32,3 +35,10 @@ export const buildWebUrl = path => {
 };
 
 export const isTestEnvironment = () => process.env.NODE_ENV === 'test';
+
+export const captureTestErrors = app =>
+  use(supertest(app)).use(
+    captureError((error, test) => {
+      error.message += `\nURL: ${test.url}\nResponse: ${test.res.text}`;
+    })
+  );

@@ -1,0 +1,1 @@
+alter table preparation drop column nicotine_millipercent;

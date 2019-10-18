@@ -1,13 +1,12 @@
 import express from 'express';
-import request from 'supertest';
 import passport from 'passport';
 import AnonymousStrategy from 'passport-anonymous';
 import bodyParser from 'body-parser';
 
 import role from './role';
 import database from '../modules/database';
+import { captureTestErrors } from '../modules/util';
 
-/* eslint-disable camelcase */
 describe('role route resource', () => {
   const app = express();
 
@@ -15,6 +14,8 @@ describe('role route resource', () => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(role);
+
+  const request = captureTestErrors(app);
 
   afterAll(() => {
     database.sequelize.close();
@@ -25,7 +26,7 @@ describe('role route resource', () => {
   };
 
   it('POST returns 200 for creating role', done => {
-    request(app)
+    request
       .post('/')
       .send(mockData)
       .expect('Content-type', /json/)
@@ -33,13 +34,11 @@ describe('role route resource', () => {
   });
 
   it('GET returns 200 for valid role', done => {
-    request(app)
-      .get('/5')
-      .expect(200, done);
+    request.get('/5').expect(200, done);
   });
 
   it('PUT returns 200 for updating role', done => {
-    request(app)
+    request
       .put('/6')
       .send(mockData)
       .expect('Content-type', /json/)
@@ -47,20 +46,14 @@ describe('role route resource', () => {
   });
 
   it('GET returns 400 for invalid role', done => {
-    request(app)
-      .get('/0')
-      .expect(400, done);
+    request.get('/0').expect(400, done);
   });
 
   it('GET returns 404 for invalid role route', done => {
-    request(app)
-      .get('/ham')
-      .expect(404, done);
+    request.get('/ham').expect(404, done);
   });
 
   it('DELETE returns 200 after deleting role', done => {
-    request(app)
-      .delete('/15')
-      .expect(200, done);
+    request.delete('/15').expect(200, done);
   });
 });

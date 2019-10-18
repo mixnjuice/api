@@ -1,13 +1,12 @@
 import express from 'express';
-import request from 'supertest';
 import passport from 'passport';
 import bodyParser from 'body-parser';
 import AnonymousStrategy from 'passport-anonymous';
 
 import register from './register';
 import database from '../modules/database';
+import { captureTestErrors } from '../modules/util';
 
-/* eslint-disable camelcase */
 describe('register route resource', () => {
   const app = express();
 
@@ -16,12 +15,14 @@ describe('register route resource', () => {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(register);
 
+  const request = captureTestErrors(app);
+
   afterAll(() => {
     database.sequelize.close();
   });
 
   it('can register user', done => {
-    request(app)
+    request
       .post('/')
       .send({
         emailAddress: 'example@example.com',
@@ -32,20 +33,14 @@ describe('register route resource', () => {
   });
 
   it('returns 400 for registration error (no data)', done => {
-    request(app)
-      .post('/')
-      .expect(400, done);
+    request.post('/').expect(400, done);
   });
 
   it('returns 400 for token error (invalid token)', done => {
-    request(app)
-      .get('/activate/?code=123456')
-      .expect(400, done);
+    request.get('/activate/?code=123456').expect(400, done);
   });
 
   it('returns 400 for token error (missing token)', done => {
-    request(app)
-      .get('/activate')
-      .expect(400, done);
+    request.get('/activate').expect(400, done);
   });
 });

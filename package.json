@@ -58,8 +58,11 @@
     "oauth2orize": "^1.11.0",
     "opener": "^1.5.1",
     "passport-http-bearer": "^1.0.1",
+    "passport-mock-strategy": "^2.0.0",
     "prettier": "^1.18.2",
     "prettier-eslint": "^9.0.0",
-    "supertest": "^4.0.2"
+    "superagent-use": "^0.1.0",
+    "supertest": "^4.0.2",
+    "supertest-capture-error": "^1.0.0"
   }
 }

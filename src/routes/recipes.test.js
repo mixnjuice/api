@@ -1,10 +1,10 @@
 import express from 'express';
-import request from 'supertest';
 import passport from 'passport';
 import AnonymousStrategy from 'passport-anonymous';
 
 import recipes from './recipes';
 import database from '../modules/database';
+import { captureTestErrors } from '../modules/util';
 
 /* eslint-disable camelcase */
 describe('recipes route resource', () => {
@@ -13,25 +13,21 @@ describe('recipes route resource', () => {
   passport.use(new AnonymousStrategy());
   app.use(recipes);
 
+  const request = captureTestErrors(app);
+
   afterAll(() => {
     database.sequelize.close();
   });
 
   it('returns valid list of 2 recipes', done => {
-    request(app)
-      .get('/?limit=2')
-      .expect(200, done);
+    request.get('/?limit=2').expect(200, done);
   });
 
   it('returns 200 for recipes list', done => {
-    request(app)
-      .get('/?offset=9000000')
-      .expect(200, done);
+    request.get('/?offset=9000000').expect(200, done);
   });
 
   it('returns 400 for invalid recipes list', done => {
-    request(app)
-      .get('/?limit=stop')
-      .expect(400, done);
+    request.get('/?limit=stop').expect(400, done);
   });
 });

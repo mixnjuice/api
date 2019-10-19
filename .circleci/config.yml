@@ -29,14 +29,14 @@ jobs:
           webhook: '$MATTERMOST_WEBHOOK_API'
       - mattermost-notify/notify_on_failure:
           webhook: '$MATTERMOST_WEBHOOK_API'
-  docker-build:
+  docker_build:
     executor: docker-publisher
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build Docker image
-          command: docker build -t $IMAGE_NAME:latest .
+        name: Build Docker image
+        command: docker build -t $IMAGE_NAME:latest .
       - run:
           name: Archive Docker image
           command: docker save -o image.tar $IMAGE_NAME
@@ -44,7 +44,7 @@ jobs:
           root: .
           paths:
             - ./image.tar
-  docker-publish:
+  docker_publish:
     executor: docker-publisher
     steps:
       - attach_workspace:
@@ -67,10 +67,10 @@ workflows:
       - docker-build:
           filters:
             branches:
-              only: master
-      - docker-publish:
+              only: feature/full-ci-cd
+      - docker_publish:
           requires:
             - build
           filters:
             branches:
-              only: master
+              only: feature/full-ci-cd

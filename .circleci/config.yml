@@ -69,6 +69,7 @@ workflows:
             branches:
               only: feature/full-ci-cd
       - docker_publish:
+          context: builds
           requires:
             - docker_build
           filters:

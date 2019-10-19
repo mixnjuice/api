@@ -70,7 +70,7 @@ workflows:
               only: feature/full-ci-cd
       - docker_publish:
           requires:
-            - build
+            - docker_build
           filters:
             branches:
               only: feature/full-ci-cd

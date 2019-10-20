@@ -87,6 +87,8 @@ workflows:
             branches:
               only: feature/full-ci-cd
       - docker_deploy:
+          requires:
+            - docker_publish
           filters:
             branches:
               only: feature/full-ci-cd

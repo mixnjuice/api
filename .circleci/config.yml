@@ -78,11 +78,15 @@ workflows:
       - docker-build:
           filters:
             branches:
-              only: master
+              only: feature/full-ci-cd
       - docker_publish:
           context: builds
           requires:
             - docker_build
           filters:
             branches:
-              only: master
+              only: feature/full-ci-cd
+      - docker_deploy:
+          filters:
+            branches:
+              only: feature/full-ci-cd

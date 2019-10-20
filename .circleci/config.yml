@@ -35,6 +35,9 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: Build application
+          command: npm install && npm run build
+      - run:
           name: Build Docker image
           command: docker build -t $IMAGE_NAME:latest .
       - run:

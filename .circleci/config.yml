@@ -58,6 +58,17 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $IMAGE_NAME:latest
+  docker_deploy:
+    machine:
+      enabled: true
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - '75:3a:34:5b:2f:1c:07:18:ce:3d:97:ce:0a:e8:2c:7d'
+      - run:
+          name: Deploy using SSH
+          command: |
+            ssh deployer@mixnjuice.com "./update-api.sh"
 workflows:
   version: 2
   main_workflow:

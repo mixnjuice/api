@@ -12,6 +12,7 @@ import {
   generateToken,
   isTestEnvironment
 } from './util';
+import MockStrategy from 'passport-mock-strategy';
 
 const log = loggers('auth');
 const { Op } = models.Sequelize;
@@ -181,6 +182,14 @@ export const ensureRole = name => async (req, _, next) => {
     next(error);
   }
 };
+
+export const useMockStrategy = (passportRef, user) =>
+  passportRef.use(
+    new MockStrategy({
+      name: 'anonymous',
+      user
+    })
+  );
 
 export default app => {
   passport.use(

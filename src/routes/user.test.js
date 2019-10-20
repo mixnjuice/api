@@ -1,13 +1,12 @@
 import express from 'express';
-import request from 'supertest';
 import passport from 'passport';
 import AnonymousStrategy from 'passport-anonymous';
 import bodyParser from 'body-parser';
 
 import user from './user';
 import database from '../modules/database';
+import { captureTestErrors } from '../modules/util';
 
-/* eslint-disable camelcase */
 describe('user route resource', () => {
   const app = express();
 
@@ -16,24 +15,22 @@ describe('user route resource', () => {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(user);
 
+  const request = captureTestErrors(app);
+
   afterAll(() => {
     database.sequelize.close();
   });
 
   it('GET returns valid user', done => {
-    request(app)
-      .get('/7')
-      .expect(200, done);
+    request.get('/7').expect(200, done);
   });
 
   it('GET returns valid user profile', done => {
-    request(app)
-      .get('/7/profile')
-      .expect(200, done);
+    request.get('/7/profile').expect(200, done);
   });
 
   it('PUT updates user profile', done => {
-    request(app)
+    request
       .put('/7/profile')
       .send({
         bio: 'eMixer',
@@ -45,13 +42,11 @@ describe('user route resource', () => {
   });
 
   it('GET returns valid user recipes', done => {
-    request(app)
-      .get('/8/recipes')
-      .expect(200, done);
+    request.get('/8/recipes').expect(200, done);
   });
 
   it('POST adds user flavor', done => {
-    request(app)
+    request
       .post('/9/flavor')
       .send({
         flavorId: 20
@@ -61,13 +56,11 @@ describe('user route resource', () => {
   });
 
   it('GET returns valid user flavor', done => {
-    request(app)
-      .get('/10/flavor/3')
-      .expect(200, done);
+    request.get('/10/flavor/3').expect(200, done);
   });
 
   it('PUT updates user flavor', done => {
-    request(app)
+    request
       .put('/7/flavor/123')
       .send({
         minMillipercent: 50,
@@ -78,31 +71,23 @@ describe('user route resource', () => {
   });
 
   it('GET returns valid user flavors', done => {
-    request(app)
-      .get('/10/flavors')
-      .expect(200, done);
+    request.get('/10/flavors').expect(200, done);
   });
 
   it('DELETE deletes a user flavor', done => {
-    request(app)
-      .delete('/11/flavor/200')
-      .expect(200, done);
+    request.delete('/11/flavor/200').expect(200, done);
   });
 
   it('GET returns valid user roles', done => {
-    request(app)
-      .get('/10/roles')
-      .expect(200, done);
+    request.get('/10/roles').expect(200, done);
   });
 
   it('GET returns a valid user role', done => {
-    request(app)
-      .get('/10/role/1')
-      .expect(200, done);
+    request.get('/10/role/1').expect(200, done);
   });
 
   it('POST assigns a user role', done => {
-    request(app)
+    request
       .post('/9/role/')
       .send({
         roleId: 3,
@@ -113,7 +98,7 @@ describe('user route resource', () => {
   });
 
   it('PUT updates a user role', done => {
-    request(app)
+    request
       .put('/9/role/3')
       .send({
         active: true
@@ -123,25 +108,19 @@ describe('user route resource', () => {
   });
 
   it('DELETE deletes a user role', done => {
-    request(app)
-      .delete('/11/role/1')
-      .expect(200, done);
+    request.delete('/11/role/1').expect(200, done);
   });
 
   it('returns 200 for missing user', done => {
-    request(app)
-      .get('/100000000')
-      .expect(200, done);
+    request.get('/100000000').expect(200, done);
   });
 
   it('returns 400 for invalid user', done => {
-    request(app)
-      .get('/0')
-      .expect(400, done);
+    request.get('/0').expect(400, done);
   });
 
   it('GET current user', done => {
-    request(app)
+    request
       .get('/current')
       .expect('Content-Type', /json/)
       .expect(200, done);

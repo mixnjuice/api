@@ -6,9 +6,9 @@ services:
     container_name: gusta-api
     restart: always
     environment:
-      API_TOKEN_SECRET: changeme
+      API_TOKEN_SECRET: ${API_TOKEN_SECRET}
       DB_HOST: database
-      DB_PASS: changeme
+      DB_PASS: ${DB_PASS}
       VIRTUAL_HOST: ${API_HOST}
       VIRTUAL_PORT: ${API_PORT}
       LETSENCRYPT_HOST: ${API_HOST}

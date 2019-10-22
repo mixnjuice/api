@@ -167,4 +167,21 @@ router.get(
   }
 );
 
+/**
+ * GET User Stats
+ */
+router.get('/count', authenticate(), async (req, res) => {
+  log.info(`request for user stats`);
+  try {
+    // User Stats
+    const result = await User.count();
+
+    res.type('application/json');
+    res.json(result);
+  } catch (error) {
+    log.error(error.message);
+    res.status(500).send(error.message);
+  }
+});
+
 export default router;

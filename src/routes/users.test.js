@@ -46,4 +46,8 @@ describe('users route resource', () => {
   it('returns 200 for roles users list', done => {
     request.get('/role/1').expect(200, done);
   });
+
+  it('returns valid stats', done => {
+    request.get('/count').expect(200, done);
+  });
 });

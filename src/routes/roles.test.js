@@ -25,4 +25,8 @@ describe('roles route resource', () => {
   it('returns 404 for page not found', done => {
     request.get('/error').expect(404, done);
   });
+
+  it('returns valid stats', done => {
+    request.get('/count').expect(200, done);
+  });
 });

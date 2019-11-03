@@ -28,4 +28,21 @@ router.get('/', authenticate(), async (req, res) => {
   }
 });
 
+/**
+ * GET Roles Stats
+ */
+router.get('/count', authenticate(), async (req, res) => {
+  log.info(`request for roles stats`);
+  try {
+    // Roles Stats
+    const result = await Role.count();
+
+    res.type('application/json');
+    res.json(result);
+  } catch (error) {
+    log.error(error.message);
+    res.status(500).send(error.message);
+  }
+});
+
 export default router;

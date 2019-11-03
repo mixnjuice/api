@@ -31,8 +31,6 @@ describe('flavors route resource', () => {
   });
 
   it('returns valid stats', done => {
-    request(app)
-      .get('/count')
-      .expect(200, done);
+    request.get('/count').expect(200, done);
   });
 });

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param, validationResult } from 'express-validator';
 
-import { authenticate } from '../modules/auth';
+import { authenticate, ensureRole } from '../modules/auth';
 import models from '../modules/database';
 import loggers from '../modules/logging';
 
@@ -25,6 +25,7 @@ const {
 router.get(
   '/:id(\\d+)',
   authenticate(),
+  ensureRole('Administrator'),
   [
     param('id')
       .isNumeric()
@@ -461,6 +462,7 @@ router.delete(
 router.get(
   '/:userId(\\d+)/roles',
   authenticate(),
+  ensureRole('Administrator'),
   [
     param('userId')
       .isNumeric()
@@ -563,6 +565,7 @@ router.get(
 router.post(
   '/:userId(\\d+)/role',
   authenticate(),
+  ensureRole('Administrator'),
   [
     param('userId')
       .isNumeric()
@@ -612,6 +615,7 @@ router.post(
 router.put(
   '/:userId(\\d+)/role/:roleId(\\d+)',
   authenticate(),
+  ensureRole('Administrator'),
   [
     param('userId')
       .isNumeric()
@@ -667,6 +671,7 @@ router.put(
 router.delete(
   '/:userId(\\d+)/role/:roleId(\\d+)',
   authenticate(),
+  ensureRole('Administrator'),
   [
     param('userId')
       .isNumeric()

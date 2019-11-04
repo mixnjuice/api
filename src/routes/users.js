@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { query, param, validationResult } from 'express-validator';
 
-import { authenticate } from '../modules/auth';
+import { authenticate, ensureRole } from '../modules/auth';
 import models from '../modules/database';
 import loggers from '../modules/logging';
 
@@ -65,6 +65,7 @@ router.get(
 router.get(
   '/accounts',
   authenticate(),
+  ensureRole('Administrator'),
   [
     query('offset')
       .optional()
@@ -88,6 +89,12 @@ router.get(
     log.info(`request for user accounts ${limit}`);
     try {
       const result = await User.findAll({
+        include: [
+          {
+            model: UserProfile,
+            required: true
+          }
+        ],
         limit,
         offset
       });
@@ -111,6 +118,7 @@ router.get(
 router.get(
   '/role/:roleId(\\d+)',
   authenticate(),
+  ensureRole('Administrator'),
   [
     param('roleId')
       .isNumeric()
@@ -147,7 +155,13 @@ router.get(
           },
           {
             model: User,
-            required: true
+            required: true,
+            include: [
+              {
+                model: UserProfile,
+                required: true
+              }
+            ]
           }
         ],
         limit,

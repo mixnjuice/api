@@ -2,7 +2,7 @@ create table user_flavor_note (
   user_id bigint not null,
   flavor_id bigint not null,
   created timestamp not null default now(),
-  notes varchar(8192) default null,
+  note text default null,
 
   constraint pk_user_flavor_note primary key (user_id, flavor_id),
   constraint fk1_user_flavor_note foreign key (user_id) references "user" (id),

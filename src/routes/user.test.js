@@ -125,4 +125,11 @@ describe('user route resource', () => {
       .expect('Content-Type', /json/)
       .expect(200, done);
   });
+
+  it('GET user profile', done => {
+    request
+      .get('/mixnjuice')
+      .expect('Content-Type', /json/)
+      .expect(200, done);
+  });
 });

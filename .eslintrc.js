@@ -161,5 +161,10 @@ module.exports = {
     radix: 2,
     strict: [2, 'function'],
     yoda: 2
+  },
+  settings: {
+    'import/resolver': {
+      'babel-module': {}
+    }
   }
 };

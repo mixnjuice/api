@@ -6,7 +6,7 @@ import AnonymousStrategy from 'passport-anonymous';
 
 import configs from './config';
 import models from './database';
-import loggers from './logging';
+import logging from './logging';
 import {
   compareHashAndPassword,
   generateToken,
@@ -14,7 +14,7 @@ import {
 } from './util';
 import MockStrategy from 'passport-mock-strategy';
 
-const log = loggers('auth');
+const log = logging('auth');
 const { Op } = models.Sequelize;
 const { UserToken, User, Role } = models;
 

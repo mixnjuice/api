@@ -42,6 +42,7 @@ module.exports = {
     'id-match': 0,
     indent: [0, 4],
     'init-declarations': 0,
+    'jest/expect-expect': 0,
     'linebreak-style': 0,
     'lines-around-comment': 0,
     'max-depth': 0,

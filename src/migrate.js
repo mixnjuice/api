@@ -2,8 +2,8 @@ import { join } from 'path';
 import program from 'commander';
 import Postgrator from 'postgrator';
 
-import config from './modules/config';
-import loggers from './modules/logging';
+import config from 'modules/config';
+import loggers from 'modules/logging';
 import packageInfo from '../package.json';
 
 const log = loggers('migrate');

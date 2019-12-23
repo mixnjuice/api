@@ -5,7 +5,7 @@ import Email from 'modules/email';
 import models, { handleError } from 'modules/database';
 import logging from 'modules/logging';
 import configs from 'modules/config';
-import { hashPassword, generateToken, buildWebUrl } from 'modules/util';
+import { hashPassword, generateToken, buildWebUrl } from 'modules/utils';
 
 const router = Router();
 const log = logging('register');

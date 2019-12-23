@@ -2,10 +2,10 @@ import pick from 'lodash/pick';
 import SequelizeMock from '@mixnjuice/sequelize-mock';
 import Sequelize, { ValidationError, DatabaseError } from 'sequelize';
 
-import logging from './logging';
-import configs from './config';
-import models from '../models';
-import { isTestEnvironment } from './util';
+import models from 'models';
+import configs from 'modules/config';
+import logging from 'modules/logging';
+import { isTestEnvironment } from 'modules/utils/test';
 
 const log = logging('database');
 const { host, port, password, username, database } = configs.database;

@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 
-import logging from './logging';
+import logging from 'modules/logging';
 
 const log = logging('email');
 

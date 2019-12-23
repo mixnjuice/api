@@ -4,14 +4,11 @@ import oauth2orize from 'oauth2orize';
 import BearerStrategy from 'passport-http-bearer';
 import AnonymousStrategy from 'passport-anonymous';
 
-import configs from './config';
-import models from './database';
-import logging from './logging';
-import {
-  compareHashAndPassword,
-  generateToken,
-  isTestEnvironment
-} from './util';
+import configs from 'modules/config';
+import models from 'modules/database';
+import logging from 'modules/logging';
+import { compareHashAndPassword, generateToken } from 'modules/utils';
+import { isTestEnvironment } from 'modules/utils/test';
 import MockStrategy from 'passport-mock-strategy';
 
 const log = logging('auth');

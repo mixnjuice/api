@@ -6,7 +6,6 @@ import users from './users';
 import database from 'modules/database';
 import { captureTestErrors, tryCatch } from 'modules/utils/test';
 
-/* eslint-disable camelcase */
 describe('users route resource', () => {
   const app = express();
 

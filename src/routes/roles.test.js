@@ -3,8 +3,8 @@ import passport from 'passport';
 import AnonymousStrategy from 'passport-anonymous';
 
 import roles from './roles';
-import database from '../modules/database';
-import { captureTestErrors } from '../modules/util';
+import database from 'modules/database';
+import { captureTestErrors, tryCatch } from 'modules/utils/test';
 
 describe('roles route resource', () => {
   const app = express();
@@ -18,15 +18,21 @@ describe('roles route resource', () => {
     database.sequelize.close();
   });
 
-  it('returns valid roles', done => {
-    request.get('/').expect(200, done);
+  it('returns valid roles', () => {
+    tryCatch(done => {
+      request.get('/').expect(200, done);
+    });
   });
 
-  it('returns 404 for page not found', done => {
-    request.get('/error').expect(404, done);
+  it('returns 404 for page not found', () => {
+    tryCatch(done => {
+      request.get('/error').expect(404, done);
+    });
   });
 
-  it('returns valid stats', done => {
-    request.get('/count').expect(200, done);
+  it('returns valid stats', () => {
+    tryCatch(done => {
+      request.get('/count').expect(200, done);
+    });
   });
 });

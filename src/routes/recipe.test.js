@@ -3,9 +3,9 @@ import passport from 'passport';
 import bodyParser from 'body-parser';
 
 import recipeRoute from './recipe';
-import database from '../modules/database';
-import { useMockStrategy } from '../modules/auth';
-import { captureTestErrors } from '../modules/util';
+import database from 'modules/database';
+import { useMockStrategy } from 'modules/auth';
+import { captureTestErrors, tryCatch } from 'modules/utils/test';
 
 describe('recipe route resource', () => {
   const app = express();
@@ -54,47 +54,59 @@ describe('recipe route resource', () => {
     preparationDiluents: []
   };
 
-  it('can create recipe', done => {
-    request
-      .post('/')
-      .send(mockData)
-      .expect('Content-Type', /json/)
-      .expect(200, done);
+  it('can create recipe', () => {
+    tryCatch(done => {
+      request
+        .post('/')
+        .send(mockData)
+        .expect('Content-Type', /json/)
+        .expect(200, done);
+    });
   });
 
-  it('can request valid recipe', done => {
-    request
-      .get('/123')
-      .expect('Content-Type', /json/)
-      .expect(200, done);
+  it('can request valid recipe', () => {
+    tryCatch(done => {
+      request
+        .get('/123')
+        .expect('Content-Type', /json/)
+        .expect(200, done);
+    });
   });
 
-  it('can update existing recipe', done => {
-    request
-      .put('/123')
-      .send(mockData)
-      .expect('Content-Type', /json/)
-      .expect(200, done);
+  it('can update existing recipe', () => {
+    tryCatch(done => {
+      request
+        .put('/123')
+        .send(mockData)
+        .expect('Content-Type', /json/)
+        .expect(200, done);
+    });
   });
 
-  it('can delete existing recipe', done => {
-    request
-      .delete('/123')
-      .expect('Content-Type', /json/)
-      .expect(200, done);
+  it('can delete existing recipe', () => {
+    tryCatch(done => {
+      request
+        .delete('/123')
+        .expect('Content-Type', /json/)
+        .expect(200, done);
+    });
   });
 
-  it('returns 400 for invalid number in GET request', done => {
-    request
-      .get('/0')
-      .expect('Content-Type', /json/)
-      .expect(400, done);
+  it('returns 400 for invalid number in GET request', () => {
+    tryCatch(done => {
+      request
+        .get('/0')
+        .expect('Content-Type', /json/)
+        .expect(400, done);
+    });
   });
 
-  it('returns 400 for string in GET request', done => {
-    request
-      .get('/ham')
-      .expect('Content-Type', /json/)
-      .expect(400, done);
+  it('returns 400 for string in GET request', () => {
+    tryCatch(done => {
+      request
+        .get('/ham')
+        .expect('Content-Type', /json/)
+        .expect(400, done);
+    });
   });
 });

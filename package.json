@@ -6,9 +6,9 @@
   "scripts": {
     "build": "gulp",
     "watch": "gulp watch",
-    "start": "gulp && node lib/index.js",
-    "migrate": "gulp && node lib/migrate.js",
-    "start-mock": "gulp && cross-env API_TOKEN_VALIDATE=false node lib/index.js",
+    "start": "node lib/index.js",
+    "migrate": "node lib/migrate.js",
+    "start-mock": "cross-env API_TOKEN_VALIDATE=false node lib/index.js",
     "test": "jest"
   },
   "dependencies": {

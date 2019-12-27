@@ -17,8 +17,8 @@ describe('user route resource', () => {
 
   const request = captureTestErrors(app);
 
-  afterAll(() => {
-    database.sequelize.close();
+  afterAll(async () => {
+    await database.sequelize.close();
   });
 
   it('GET returns valid user', () => {

@@ -17,8 +17,8 @@ describe('flavor route resource', () => {
 
   const request = captureTestErrors(app);
 
-  afterAll(() => {
-    database.sequelize.close();
+  afterAll(async () => {
+    await database.sequelize.close();
   });
 
   it(

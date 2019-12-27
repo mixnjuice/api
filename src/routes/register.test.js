@@ -17,8 +17,8 @@ describe('register route resource', () => {
 
   const request = captureTestErrors(app);
 
-  afterAll(() => {
-    database.sequelize.close();
+  afterAll(async () => {
+    await database.sequelize.close();
   });
 
   it('can register user', () => {

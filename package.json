@@ -40,7 +40,7 @@
     "@babel/plugin-transform-runtime": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
     "@babel/register": "^7.6.0",
-    "@gusta/sequelize-mock": "^0.11.0",
+    "@mixnjuice/sequelize-mock": "^0.11.1",
     "babel-eslint": "^10.0.3",
     "cross-env": "^5.2.1",
     "eslint": "^6.0.1",

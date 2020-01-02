@@ -14,8 +14,10 @@ jobs:
       - run: docker-compose exec api npm test
       - run:
           command: |
-            export ci_env=`bash <(curl -s https://codecov.io/env)`
-            docker-compose exec -e ci_env=$ci_env api npm run upload-coverage
+            echo 'export ci_env=`bash <(curl -s https://codecov.io/env)`' >> $BASH_ENV
+            source $BASH_ENV
+            docker-compose --version
+            docker --version
   notify_success:
     docker:
       - image: byrnedo/alpine-curl:latest

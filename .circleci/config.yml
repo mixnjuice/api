@@ -14,8 +14,7 @@ jobs:
       - run: docker-compose exec api npm test
       - run:
           command: |
-            echo 'export ci_env=`bash <(curl -s https://codecov.io/env)`' >> $BASH_ENV
-            source $BASH_ENV
+            export ci_env=`bash <(curl -s https://codecov.io/env)`
             docker-compose --version
             docker --version
   notify_success:

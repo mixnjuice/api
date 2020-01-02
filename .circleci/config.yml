@@ -16,7 +16,7 @@ jobs:
           command: |
             export COVERAGE_DIR=/tmp/coverage
             mkdir -p "$COVERAGE_DIR"
-            docker-compose run --rm -v "$COVERAGE_DIR:/coverage" api npm test
+            docker-compose run --rm -v "$COVERAGE_DIR:./coverage" api npm test
             bash <(curl -s https://codecov.io/bash) -f "$COVERAGE_DIR/lcov.info"
   notify_success:
     docker:

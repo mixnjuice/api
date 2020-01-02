@@ -5,7 +5,8 @@ orbs:
 
 jobs:
   build:
-    machine: true
+    machine:
+      image: circleci/classic:201808-01
     working_directory: ~/gusta-api
     steps:
       - checkout
@@ -15,8 +16,7 @@ jobs:
       - run:
           command: |
             export ci_env=`bash <(curl -s https://codecov.io/env)`
-            docker-compose --version
-            docker --version
+            docker-compose exec -e ci_env=$ci_env api npx codecov
   notify_success:
     docker:
       - image: byrnedo/alpine-curl:latest

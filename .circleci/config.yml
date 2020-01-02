@@ -16,7 +16,7 @@ jobs:
       - run:
           command: |
             export ci_env=`bash <(curl -s https://codecov.io/env)`
-            docker-compose exec -e ci_env=$ci_env api npx codecov
+            docker-compose run --rm api $(ci_env) npx codecov
   notify_success:
     docker:
       - image: byrnedo/alpine-curl:latest

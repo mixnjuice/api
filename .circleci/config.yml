@@ -12,11 +12,11 @@ jobs:
       - checkout
       - run: docker-compose up -d --build
       - run: docker-compose exec api npm run migrate
-      - run: docker-compose exec api npm test
       - run:
           command: |
-            $(eval ci_env=$(shell bash <(curl -s https://codecov.io/env)))
-            docker-compose run --rm api $(ci_env) bash -c "bash <(curl -s https://codecov.io/bash)"
+            mkdir -p coverage/
+            docker-compose run --rm -v "./coverage:./coverage" api npm test
+            bash <(curl -s https://codecov.io/bash) -f "./coverage/lcov.info"
   notify_success:
     docker:
       - image: byrnedo/alpine-curl:latest

@@ -14,9 +14,7 @@ describe('users route resource', () => {
 
   const request = captureTestErrors(app);
 
-  afterAll(async () => {
-    await database.sequelize.close();
-  });
+  afterAll(() => Promise.all(database.sequelize.close(), app.close()));
 
   it('returns valid list of 2 users', () => {
     tryCatch(done => {

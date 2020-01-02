@@ -14,7 +14,7 @@ jobs:
       - run: docker-compose exec api npm test
       - run:
           command: |
-            $ci_env=`bash <(curl -s https://codecov.io/env)`
+            $ci_env=`bash <(curl -s https://codecov.io/env)`;
             docker-compose exec -e ci_env=$ci_env api npm run upload-coverage
   notify_success:
     docker:

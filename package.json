@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "A simple REST API for recipe and flavor information",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mixnjuice/api.git"
+  },
   "scripts": {
     "build": "gulp",
     "watch": "gulp watch",

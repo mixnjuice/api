@@ -14,9 +14,10 @@ jobs:
       - run: docker-compose exec api npm run migrate
       - run:
           command: |
-            mkdir -p coverage/
-            docker-compose run --rm -v "$PWD/coverage:/coverage" api npm test
-            bash <(curl -s https://codecov.io/bash) -f "./coverage/lcov.info"
+            export COVERAGE_DIR=/tmp/coverage
+            mkdir -p "$COVERAGE_DIR"
+            docker-compose run --rm -v "$COVERAGE_DIR:/coverage" api npm test
+            bash <(curl -s https://codecov.io/bash) -f "$COVERAGE_DIR/lcov.info"
   notify_success:
     docker:
       - image: byrnedo/alpine-curl:latest

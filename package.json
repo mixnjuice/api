@@ -9,7 +9,7 @@
     "start": "node lib/index.js",
     "migrate": "node lib/migrate.js",
     "start-mock": "cross-env API_TOKEN_VALIDATE=false node lib/index.js",
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "dependencies": {
     "@babel/runtime": "^7.7.7",

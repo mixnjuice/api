@@ -15,7 +15,7 @@ jobs:
       - run:
           command: |
             mkdir -p coverage/
-            docker-compose run --rm -v "./coverage:./coverage" api npm test
+            docker-compose run --rm -v "$PWD/coverage:/coverage" api npm test
             bash <(curl -s https://codecov.io/bash) -f "./coverage/lcov.info"
   notify_success:
     docker:

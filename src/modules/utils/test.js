@@ -15,10 +15,11 @@ export const captureTestErrors = app =>
     })
   );
 
-export const tryCatch = fn => (...args) => {
+export const tryCatch = fn => done => {
   try {
-    fn(...args);
+    fn(done);
   } catch (error) {
     log.error(error.message, error);
+    done(error);
   }
 };

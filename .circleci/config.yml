@@ -10,8 +10,7 @@ jobs:
     working_directory: ~/gusta-api
     steps:
       - checkout
-      - run: DOCKER_BUILDKIT=1 docker build .
-      - run: docker-compose up -d
+      - run: docker-compose up -d --build
       - run: docker-compose exec api npm run migrate
       - run:
           command: |

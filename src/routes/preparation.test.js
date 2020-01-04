@@ -4,8 +4,8 @@ import bodyParser from 'body-parser';
 import AnonymousStrategy from 'passport-anonymous';
 
 import preparationRoute from './preparation';
-import database from '../modules/database';
-import { captureTestErrors } from '../modules/util';
+import database from 'modules/database';
+import { captureTestErrors, tryCatch } from 'modules/utils/test';
 
 describe('preparation route resource', () => {
   const app = express();
@@ -17,9 +17,7 @@ describe('preparation route resource', () => {
 
   const request = captureTestErrors(app);
 
-  afterAll(() => {
-    database.sequelize.close();
-  });
+  afterAll(() => Promise.all(database.sequelize.close(), app.close()));
 
   const mockData = {
     recipeId: '17',
@@ -49,47 +47,59 @@ describe('preparation route resource', () => {
     ]
   };
 
-  it('can create preparation', done => {
-    request
-      .post('/')
-      .send(mockData)
-      .expect('Content-Type', /json/)
-      .expect(200, done);
+  it('can create preparation', () => {
+    tryCatch(done => {
+      request
+        .post('/')
+        .send(mockData)
+        .expect('Content-Type', /json/)
+        .expect(200, done);
+    });
   });
 
-  it('can request valid preparation', done => {
-    request
-      .get('/123')
-      .expect('Content-Type', /json/)
-      .expect(200, done);
+  it('can request valid preparation', () => {
+    tryCatch(done => {
+      request
+        .get('/123')
+        .expect('Content-Type', /json/)
+        .expect(200, done);
+    });
   });
 
-  it('can update existing preparation', done => {
-    request
-      .put('/123')
-      .send(mockData)
-      .expect('Content-Type', /json/)
-      .expect(200, done);
+  it('can update existing preparation', () => {
+    tryCatch(done => {
+      request
+        .put('/123')
+        .send(mockData)
+        .expect('Content-Type', /json/)
+        .expect(200, done);
+    });
   });
 
-  it('can delete existing preparation', done => {
-    request
-      .delete('/123')
-      .expect('Content-Type', /json/)
-      .expect(200, done);
+  it('can delete existing preparation', () => {
+    tryCatch(done => {
+      request
+        .delete('/123')
+        .expect('Content-Type', /json/)
+        .expect(200, done);
+    });
   });
 
-  it('returns 400 for invalid number in GET request', done => {
-    request
-      .get('/0')
-      .expect('Content-Type', /json/)
-      .expect(400, done);
+  it('returns 400 for invalid number in GET request', () => {
+    tryCatch(done => {
+      request
+        .get('/0')
+        .expect('Content-Type', /json/)
+        .expect(400, done);
+    });
   });
 
-  it('returns 400 for string in GET request', done => {
-    request
-      .get('/ham')
-      .expect('Content-Type', /json/)
-      .expect(400, done);
+  it('returns 400 for string in GET request', () => {
+    tryCatch(done => {
+      request
+        .get('/ham')
+        .expect('Content-Type', /json/)
+        .expect(400, done);
+    });
   });
 });

@@ -3,27 +3,27 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import responseTime from 'response-time';
 
-import configs from './modules/config';
-import loggers from './modules/logging';
-import bindAuth from './modules/auth';
+import configs from 'modules/config';
+import loggers from 'modules/logging';
+import bindAuth from 'modules/auth';
 
-import data from './routes/data';
-import diluent from './routes/diluent';
-import diluents from './routes/diluents';
-import flavor from './routes/flavor';
-import flavors from './routes/flavors';
-import preparation from './routes/preparation';
-import preparations from './routes/preparations';
-import recipe from './routes/recipe';
-import recipes from './routes/recipes';
-import register from './routes/register';
-import role from './routes/role';
-import roles from './routes/roles';
-import stats from './routes/stats';
-import user from './routes/user';
-import users from './routes/users';
-import vendor from './routes/vendor';
-import vendors from './routes/vendors';
+import data from 'routes/data';
+import diluent from 'routes/diluent';
+import diluents from 'routes/diluents';
+import flavor from 'routes/flavor';
+import flavors from 'routes/flavors';
+import preparation from 'routes/preparation';
+import preparations from 'routes/preparations';
+import recipe from 'routes/recipe';
+import recipes from 'routes/recipes';
+import register from 'routes/register';
+import role from 'routes/role';
+import roles from 'routes/roles';
+import stats from 'routes/stats';
+import user from 'routes/user';
+import users from 'routes/users';
+import vendor from 'routes/vendor';
+import vendors from 'routes/vendors';
 
 // extract API config and create express app
 const { api: config } = configs;

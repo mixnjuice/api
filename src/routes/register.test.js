@@ -4,8 +4,8 @@ import bodyParser from 'body-parser';
 import AnonymousStrategy from 'passport-anonymous';
 
 import register from './register';
-import database from '../modules/database';
-import { captureTestErrors } from '../modules/util';
+import database from 'modules/database';
+import { captureTestErrors, tryCatch } from 'modules/utils/test';
 
 describe('register route resource', () => {
   const app = express();
@@ -17,30 +17,36 @@ describe('register route resource', () => {
 
   const request = captureTestErrors(app);
 
-  afterAll(() => {
-    database.sequelize.close();
+  afterAll(() => Promise.all(database.sequelize.close(), app.close()));
+
+  it('can register user', () => {
+    tryCatch(done => {
+      request
+        .post('/')
+        .send({
+          emailAddress: 'example@example.com',
+          password: '12oj08ajf',
+          username: 'mixnjuice'
+        })
+        .expect(200, done);
+    });
   });
 
-  it('can register user', done => {
-    request
-      .post('/')
-      .send({
-        emailAddress: 'example@example.com',
-        password: '12oj08ajf',
-        username: 'mixnjuice'
-      })
-      .expect(200, done);
+  it('returns 400 for registration error (no data)', () => {
+    tryCatch(done => {
+      request.post('/').expect(400, done);
+    });
   });
 
-  it('returns 400 for registration error (no data)', done => {
-    request.post('/').expect(400, done);
+  it('returns 400 for token error (invalid token)', () => {
+    tryCatch(done => {
+      request.get('/activate/?code=123456').expect(400, done);
+    });
   });
 
-  it('returns 400 for token error (invalid token)', done => {
-    request.get('/activate/?code=123456').expect(400, done);
-  });
-
-  it('returns 400 for token error (missing token)', done => {
-    request.get('/activate').expect(400, done);
+  it('returns 400 for token error (missing token)', () => {
+    tryCatch(done => {
+      request.get('/activate').expect(400, done);
+    });
   });
 });

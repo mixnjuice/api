@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
-import loggers from './modules/logging';
-import models from './modules/database';
+import loggers from 'modules/logging';
+import models from 'modules/database';
 
 const log = loggers('token-clean');
 const { Op } = models.Sequelize;

@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { body, param, validationResult } from 'express-validator';
 
-import { authenticate } from '../modules/auth';
-import models from '../modules/database';
-import loggers from '../modules/logging';
+import { authenticate } from 'modules/auth';
+import models from 'modules/database';
+import loggers from 'modules/logging';
 
 const router = Router();
 const log = loggers('user');

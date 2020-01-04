@@ -1,5 +1,9 @@
 # Gusta API
 
+Build status: [![CircleCI](https://circleci.com/gh/mixnjuice/api/tree/master.svg?style=svg)](https://circleci.com/gh/mixnjuice/api/tree/master)
+
+Test coverage: [![codecov](https://codecov.io/gh/mixnjuice/api/branch/master/graph/badge.svg)](https://codecov.io/gh/mixnjuice/api)
+
 This repository contains the express-based API that powers the Gusta Project frontend.
 
 ## libraries

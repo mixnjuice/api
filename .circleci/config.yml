@@ -6,11 +6,12 @@ orbs:
 jobs:
   build:
     machine:
-      image: circleci/classic:201808-01
+      image: circleci/classic:latest
     working_directory: ~/gusta-api
     steps:
       - checkout
-      - run: docker-compose up -d --build
+      - run: DOCKER_BUILDKIT=1 docker build .
+      - run: docker-compose up -d
       - run: docker-compose exec api npm run migrate
       - run:
           command: |

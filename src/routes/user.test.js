@@ -158,10 +158,12 @@ describe('user route resource', () => {
     });
   });
 
-  it('GET user profile', done => {
-    request
-      .get('/mixnjuice')
-      .expect('Content-Type', /json/)
-      .expect(200, done);
+  it('GET user profile', () => {
+    tryCatch(done => {
+      request
+        .get('/mixnjuice')
+        .expect('Content-Type', /json/)
+        .expect(200, done);
+    });
   });
 });

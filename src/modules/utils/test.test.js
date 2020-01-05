@@ -48,7 +48,7 @@ describe('test utilities', () => {
 
       tryCatch(failure)(done);
       expect(failure).toHaveBeenCalled();
-      expect(done).not.toHaveBeenCalled();
+      expect(done).toHaveBeenCalledWith(error);
       expect(mockLog.error).toHaveBeenCalledWith(error.message, error);
     });
   });

@@ -6,7 +6,7 @@ orbs:
 jobs:
   build:
     machine:
-      image: circleci/classic:201808-01
+      image: circleci/classic:latest
     working_directory: ~/gusta-api
     steps:
       - checkout

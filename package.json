@@ -13,7 +13,7 @@
     "start": "node lib/index.js",
     "migrate": "node lib/migrate.js",
     "start-mock": "cross-env API_TOKEN_VALIDATE=false node lib/index.js",
-    "test": "jest --forceExit",
+    "test": "jest",
     "upload-coverage": "bash <(curl -s https://codecov.io/bash)"
   },
   "dependencies": {

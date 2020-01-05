@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:lts-alpine
 
 WORKDIR /usr/src/flavor-api
 
@@ -8,7 +8,12 @@ COPY . .
 # overwrite config with default
 COPY .env.default .env
 
-RUN chmod +x ./bin/start.sh
+RUN apk add --no-cache dos2unix
+
+RUN apk --no-cache add --virtual builds-deps build-base python
+
+RUN dos2unix ./bin/start.sh && \
+  chmod +x ./bin/start.sh
 
 RUN npm install
 

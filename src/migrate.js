@@ -2,7 +2,7 @@ import { join } from 'path';
 import program from 'commander';
 import Postgrator from 'postgrator';
 
-import config from 'modules/config';
+import { database as config } from 'modules/config';
 import loggers from 'modules/logging';
 import packageInfo from '../package.json';
 
@@ -12,7 +12,7 @@ const postgrator = new Postgrator({
   migrationDirectory: join(__dirname, '..', 'schema'),
   driver: 'pg',
   schemaTable: 'schemaversion',
-  ...config.database
+  ...config
 });
 
 const logMigration = migration => {

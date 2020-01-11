@@ -3,7 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import responseTime from 'response-time';
 
-import configs from 'modules/config';
+import { api as config } from 'modules/config';
 import loggers from 'modules/logging';
 import bindAuth from 'modules/auth';
 
@@ -25,8 +25,6 @@ import users from 'routes/users';
 import vendor from 'routes/vendor';
 import vendors from 'routes/vendors';
 
-// extract API config and create express app
-const { api: config } = configs;
 const log = loggers('app');
 
 export const app = express();

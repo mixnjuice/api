@@ -3,12 +3,12 @@ import SequelizeMock from '@mixnjuice/sequelize-mock';
 import Sequelize, { ValidationError, DatabaseError } from 'sequelize';
 
 import models from 'models';
-import configs from 'modules/config';
+import { database as config } from 'modules/config';
 import logging from 'modules/logging';
 import { isTestEnvironment } from 'modules/utils/test';
 
 const log = logging('database');
-const { host, port, password, username, database } = configs.database;
+const { host, port, password, username, database } = config;
 const validationProps = ['message', 'type', 'path', 'value'];
 
 const sequelize = isTestEnvironment()

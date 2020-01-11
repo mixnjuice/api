@@ -1,9 +1,8 @@
 import nanoid from 'nanoid';
 import { hash as create, compare } from 'bcrypt';
 
-import configs from 'modules/config';
+import { api as apiConfig, web as webConfig } from 'modules/config';
 
-const { api: apiConfig, web: webConfig } = configs;
 const {
   passwords: { saltRounds },
   tokens: { length: tokenLength }

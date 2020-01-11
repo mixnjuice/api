@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-import configs from 'modules/config';
+import { web as webConfig } from 'modules/config';
 import {
   generateToken,
   buildWebUrl,
@@ -70,7 +70,7 @@ describe('utility methods', () => {
     });
 
     it('can construct https url', () => {
-      Object.defineProperties(configs.web, {
+      Object.defineProperties(webConfig, {
         hostname: {
           get: jest.fn().mockReturnValue('localhost')
         },

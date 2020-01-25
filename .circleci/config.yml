@@ -18,14 +18,10 @@ jobs:
             docker-compose run --rm -v "$(pwd)"/coverage:/usr/src/flavor-api/coverage \
               api npm test
             bash <(curl -s https://codecov.io/bash) -f ./coverage/lcov.info
-  notify:
-    docker:
-      - image: byrnedo/alpine-curl:latest
-    steps:
       - mattermost-notify/notify_on_success:
-          webhook: '$MATTERMOST_WEBHOOK_API'
+        webhook: '$MATTERMOST_WEBHOOK_API'
       - mattermost-notify/notify_on_failure:
-          webhook: '$MATTERMOST_WEBHOOK_API'
+        webhook: '$MATTERMOST_WEBHOOK_API'
 
 workflows:
   version: 2
@@ -33,7 +29,3 @@ workflows:
     jobs:
       - build:
           context: builds
-      - notify:
-          context: webhooks
-          requires:
-            - build

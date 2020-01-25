@@ -66,8 +66,4 @@ describe('role route resource', () => {
       request.delete('/15').expect(200, done);
     });
   });
-
-  it('fails', () => {
-    expect(true).toBe(false);
-  });
 });

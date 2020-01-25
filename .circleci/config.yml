@@ -19,9 +19,9 @@ jobs:
               api npm test
             bash <(curl -s https://codecov.io/bash) -f ./coverage/lcov.info
       - mattermost-notify/notify_on_success:
-        webhook: '$MATTERMOST_WEBHOOK_API'
+          webhook: '$MATTERMOST_WEBHOOK_API'
       - mattermost-notify/notify_on_failure:
-        webhook: '$MATTERMOST_WEBHOOK_API'
+          webhook: '$MATTERMOST_WEBHOOK_API'
 
 workflows:
   version: 2

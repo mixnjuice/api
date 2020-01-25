@@ -24,7 +24,6 @@ jobs:
     steps:
       - mattermost-notify/notify_on_success:
           webhook: '$MATTERMOST_WEBHOOK_API'
-    steps:
       - mattermost-notify/notify_on_failure:
           webhook: '$MATTERMOST_WEBHOOK_API'
 

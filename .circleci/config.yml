@@ -75,7 +75,7 @@ workflows:
     jobs:
       - build:
           context: builds
-      - docker-build:
+      - docker_build:
           filters:
             branches:
               only: feature/full-ci-cd

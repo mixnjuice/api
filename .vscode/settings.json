@@ -4,6 +4,8 @@
   "editor.formatOnSave": true,
   "eslint.enable": true,
   "eslint.run": "onSave",
-  "eslint.autoFixOnSave": true,
-  "prettier.eslintIntegration": true
+  "stylelint.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  }
 }

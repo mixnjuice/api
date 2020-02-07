@@ -23,7 +23,7 @@ create table ingredient (
   updated timestamp default null,
 
   constraint pk_ingredient primary key (id),
-  constraint uk1_ingredient unique (name),
+  constraint uk1_ingredient unique (name, cas_number),
   constraint uk2_ingredient unique (cas_number),
   constraint fk1_ingredient foreign key (ingredient_category_id) references ingredient_category (id)
 );
@@ -49,7 +49,6 @@ insert into ingredient (name, cas_number, ingredient_category_id) values ('Lime 
 insert into ingredient (name, cas_number, ingredient_category_id) values ('Molasses', '8052-35-5', 2);
 insert into ingredient (name, cas_number, ingredient_category_id) values ('Nutmeg oil', '84082-68-8', 3);
 insert into ingredient (name, cas_number, ingredient_category_id) values ('Orange Oil', '8008-57-9', 2);
-insert into ingredient (name, cas_number, ingredient_category_id) values ('Peppermint oil', '8006-90-4', 1);
 insert into ingredient (name, cas_number, ingredient_category_id) values ('Peppermint oil', '8006-90-4', 1);
 insert into ingredient (name, cas_number, ingredient_category_id) values ('Polysorbate 80', '9005-65-6 ', 1);
 insert into ingredient (name, cas_number, ingredient_category_id) values ('Rose oxide', '16409-43-1', 1);

@@ -24,7 +24,6 @@ create table ingredient (
 
   constraint pk_ingredient primary key (id),
   constraint uk1_ingredient unique (name, cas_number),
-  constraint uk2_ingredient unique (cas_number),
   constraint fk1_ingredient foreign key (ingredient_category_id) references ingredient_category (id)
 );
 

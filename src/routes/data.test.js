@@ -114,9 +114,22 @@ describe('data route resource', () => {
   );
 
   it(
+    'GET returns 200 for data suppliers (paged)',
+    tryCatch(done => {
+      request.get('/suppliers/?limit=20&offset=100').expect(200, done);
+    })
+  );
+
+  it(
     'GET returns 200 for schema version data',
     tryCatch(done => {
       request.get('/version').expect(200, done);
     })
   );
+
+  it('returns valid data supplier stats', () => {
+    tryCatch(done => {
+      request.get('suppliers/count').expect(200, done);
+    });
+  });
 });

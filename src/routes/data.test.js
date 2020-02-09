@@ -120,6 +120,18 @@ describe('data route resource', () => {
     })
   );
 
+  it('returns 400 for invalid data suppliers list', () => {
+    tryCatch(done => {
+      request.get('suppliers/?limit=stop').expect(400, done);
+    });
+  });
+
+  it('returns 204 for invalid data suppliers list', () => {
+    tryCatch(done => {
+      request.get('suppliers/?limit=0').expect(204, done);
+    });
+  });
+
   it(
     'GET returns 200 for schema version data',
     tryCatch(done => {

@@ -56,5 +56,20 @@ router.get(
     }
   }
 );
+/**
+ * GET Vendor Stats
+ */
+router.get('/count', authenticate(), async (req, res) => {
+  log.info(`request for vendor stats`);
+  try {
+    const result = await Vendor.count();
+
+    res.type('application/json');
+    res.json(result);
+  } catch (error) {
+    log.error(error.message);
+    res.status(500).send(error.message);
+  }
+});
 
 export default router;

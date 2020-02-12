@@ -63,7 +63,11 @@ router.get(
 router.get('/count', authenticate(), async (req, res) => {
   log.info(`request for user stats`);
   try {
-    const result = await Diluent.count();
+    const diluents = await Diluent.count();
+    // Results
+    const result = {
+      diluents
+    };
 
     res.type('application/json');
     res.json(result);

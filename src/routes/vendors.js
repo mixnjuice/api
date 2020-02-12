@@ -62,7 +62,11 @@ router.get(
 router.get('/count', authenticate(), async (req, res) => {
   log.info(`request for vendor stats`);
   try {
-    const result = await Vendor.count();
+    const vendors = await Vendor.count();
+    // Results
+    const result = {
+      vendors
+    };
 
     res.type('application/json');
     res.json(result);

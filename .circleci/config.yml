@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  mattermost-notify: bulletlogic/mattermost-notify@0.0.4
-
 executors:
   docker-publisher:
     environment:
@@ -25,10 +22,6 @@ jobs:
             docker-compose run --rm -v "$(pwd)"/coverage:/usr/src/flavor-api/coverage \
               api npm test
             bash <(curl -s https://codecov.io/bash) -f ./coverage/lcov.info
-      - mattermost-notify/notify_on_success:
-          webhook: '$MATTERMOST_WEBHOOK_API'
-      - mattermost-notify/notify_on_failure:
-          webhook: '$MATTERMOST_WEBHOOK_API'
   docker_build:
     executor: docker-publisher
     steps:

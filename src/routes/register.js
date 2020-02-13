@@ -1,11 +1,12 @@
 import { Router } from 'express';
-import { body, query, validationResult } from 'express-validator';
+import { body, query } from 'express-validator';
 
 import Email from 'modules/email';
 import models, { handleError } from 'modules/database';
 import logging from 'modules/logging';
 import { email as emailConfig, api as apiConfig } from 'modules/config';
 import { hashPassword, generateToken, buildWebUrl } from 'modules/utils';
+import { handleValidationErrors } from 'modules/utils/request';
 
 const router = Router();
 const log = logging('register');
@@ -30,13 +31,8 @@ router.post(
       .isLength(8)
       .withMessage('length')
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     try {
       log.info('Starting user registration');
       const { emailAddress, password: rawPassword, username } = req.body;
@@ -74,19 +70,17 @@ router.post(
   }
 );
 
-router.get('/activate', [
-  query('code')
-    .isLength({ min: tokenLength, max: tokenLength })
-    .withMessage('length')
-    .matches(/[A-Za-z0-9_-]+/)
-    .withMessage('format'),
+router.get(
+  '/activate',
+  [
+    query('code')
+      .isLength({ min: tokenLength, max: tokenLength })
+      .withMessage('length')
+      .matches(/[A-Za-z0-9_-]+/)
+      .withMessage('format')
+  ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     const { code: activationCode } = req.query;
 
     try {
@@ -109,6 +103,6 @@ router.get('/activate', [
       handleError(error, res);
     }
   }
-]);
+);
 
 export default router;

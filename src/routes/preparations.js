@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { query, validationResult } from 'express-validator';
+import { query } from 'express-validator';
 
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
+import { fetchAll, handleValidationErrors } from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('preparations');
@@ -27,33 +28,14 @@ router.get(
       .isNumeric()
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  req => {
     const limit = req.query.limit || 20;
 
     const offset = req.query.offset - 1 || 0;
 
     log.info(`request for preparations ${limit}`);
-    try {
-      const result = await Preparation.findAll({
-        limit,
-        offset
-      });
-
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
+    return fetchAll(Preparation, { limit, offset });
   }
 );
 

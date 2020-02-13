@@ -1,9 +1,14 @@
 import { Router } from 'express';
-import { body, param, query, validationResult } from 'express-validator';
+import { body, param, query } from 'express-validator';
 
 import { authenticate, ensureRole } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
+import {
+  countAll,
+  fetchAll,
+  handleValidationErrors
+} from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('data');
@@ -22,12 +27,8 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`request for data supplier id ${id}`);
@@ -66,13 +67,8 @@ router.post(
       .withMessage('length'),
     body('code').isString()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     log.info(`request for new data supplier`);
     try {
       const { name, code } = req.body;
@@ -115,12 +111,8 @@ router.put(
       .withMessage('length'),
     body('code').isString()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
     const { name, code } = req.body;
 
@@ -163,12 +155,8 @@ router.delete(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`request to delete data supplier id ${id}`);
@@ -194,18 +182,7 @@ router.delete(
 /**
  * GET Suppliers Stats
  */
-router.get('/suppliers/count', authenticate(), async (req, res) => {
-  log.info(`request for data suppliers stats`);
-  try {
-    const result = await DataSupplier.count();
-
-    res.type('application/json');
-    res.json(result);
-  } catch (error) {
-    log.error(error.message);
-    res.status(500).send(error.message);
-  }
-});
+router.get('/suppliers/count', authenticate(), countAll(DataSupplier));
 /**
  * GET Data Suppliers
  */
@@ -222,63 +199,21 @@ router.get(
       .isNumeric()
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  req => {
     const limit = req.query.limit || 20;
     const offset = req.query.offset - 1 || 0;
 
     log.info(`request for data suppliers`);
-    try {
-      const result = await DataSupplier.findAll({
-        limit,
-        offset
-      });
-
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
+    return fetchAll(DataSupplier, { limit, offset });
   }
 );
 /**
  * GET Database Schema Version Info
  */
-router.get(
-  '/version',
-  authenticate(),
-  ensureRole('Administrator'),
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    log.info(`request for Schema Version`);
-    try {
-      const result = await SchemaVersion.findAll();
-
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
-);
+router.get('/version', authenticate(), ensureRole('Administrator'), () => {
+  log.info(`request for Schema Version`);
+  return fetchAll(SchemaVersion);
+});
 
 export default router;

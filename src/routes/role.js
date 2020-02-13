@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { body, param, validationResult } from 'express-validator';
+import { body, param } from 'express-validator';
 
 import { authenticate, ensureRole } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
+import { handleValidationErrors } from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('role');
@@ -22,12 +23,8 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`request for role id ${id}`);
@@ -66,12 +63,8 @@ router.put(
       .toInt(),
     body('name').isString()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
     const { name } = req.body;
 
@@ -110,12 +103,8 @@ router.post(
   authenticate(),
   ensureRole('Administrator'),
   [body('name').isString()],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { name } = req.body;
 
     log.info(`create new role`);
@@ -150,12 +139,8 @@ router.delete(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`delete role id ${id}`);

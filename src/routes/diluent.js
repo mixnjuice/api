@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { body, param, validationResult } from 'express-validator';
+import { body, param } from 'express-validator';
 
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
+import { handleValidationErrors } from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('diluent');
@@ -22,12 +23,8 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`request for diluent id ${id}`);
@@ -65,13 +62,8 @@ router.post(
     body('code').isString(),
     body('density').isNumeric()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     log.info(`request for new diluent`);
     try {
       const { name, slug, code, density } = req.body;
@@ -118,12 +110,8 @@ router.put(
     body('code').isString(),
     body('density').isDecimal()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
     const { name, slug, code, density } = req.body;
 
@@ -168,12 +156,8 @@ router.delete(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`request to delete diluent id ${id}`);

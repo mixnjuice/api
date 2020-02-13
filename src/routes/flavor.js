@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { body, param, validationResult } from 'express-validator';
+import { body, param } from 'express-validator';
 
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
+import { fetchAll, handleValidationErrors } from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('flavor');
@@ -22,12 +23,8 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`request for ${id}`);
@@ -81,12 +78,8 @@ router.post(
       .withMessage('length'),
     body('density').isDecimal()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { vendorId, name, slug, density } = req.body;
 
     log.info(`request for new flavor`);
@@ -140,12 +133,8 @@ router.put(
       .withMessage('length'),
     body('density').isDecimal()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
     const { vendorId, name, slug, density } = req.body;
 
@@ -190,12 +179,8 @@ router.delete(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`request to delete flavor id ${id}`);
@@ -231,38 +216,22 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  req => {
     const { flavorId } = req.params;
 
     log.info(`request for flavor id ${flavorId} identifiers`);
-    try {
-      const result = await FlavorIdentifier.findAll({
-        where: {
-          flavorId
-        },
-        include: [
-          {
-            model: DataSupplier,
-            require: true
-          }
-        ]
-      });
-
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
+    return fetchAll(FlavorIdentifier, {
+      where: {
+        flavorId
+      },
+      include: [
+        {
+          model: DataSupplier,
+          require: true
+        }
+      ]
+    });
   }
 );
 /**
@@ -283,12 +252,8 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { flavorId, dataSupplierId } = req.params;
 
     log.info(
@@ -343,12 +308,8 @@ router.post(
       .isLength({ min: 1 })
       .withMessage('length')
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { flavorId } = req.params;
     const { dataSupplierId, identifier } = req.body;
 
@@ -395,12 +356,8 @@ router.put(
       .isLength({ min: 1 })
       .withMessage('length')
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { flavorId, dataSupplierId } = req.params;
     const { identifier } = req.body;
 
@@ -450,12 +407,8 @@ router.delete(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { flavorId, dataSupplierId } = req.params;
 
     log.info(

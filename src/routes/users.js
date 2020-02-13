@@ -1,9 +1,14 @@
 import { Router } from 'express';
-import { query, param, validationResult } from 'express-validator';
+import { query, param } from 'express-validator';
 
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
+import {
+  countAll,
+  fetchAll,
+  handleValidationErrors
+} from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('users');
@@ -27,33 +32,14 @@ router.get(
       .isNumeric()
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  req => {
     const limit = req.query.limit || 20;
 
     const offset = req.query.offset - 1 || 0;
 
     log.info(`request for user profiles ${limit}`);
-    try {
-      const result = await UserProfile.findAll({
-        limit,
-        offset
-      });
-
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
+    return fetchAll(UserProfile, { limit, offset });
   }
 );
 
@@ -75,33 +61,14 @@ router.get(
       .isNumeric()
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  req => {
     const limit = req.query.limit || 20;
 
     const offset = req.query.offset - 1 || 0;
 
     log.info(`request for user accounts ${limit}`);
-    try {
-      const result = await User.findAll({
-        limit,
-        offset
-      });
-
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
+    return fetchAll(User, { limit, offset });
   }
 );
 /**
@@ -124,64 +91,36 @@ router.get(
       .isNumeric()
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  req => {
     const limit = req.query.limit || 20;
     const offset = req.query.offset - 1 || 0;
     const { roleId } = req.params;
 
     log.info(`request for all users with role id ${roleId}`);
-    try {
-      const result = await UsersRoles.findAll({
-        where: {
-          roleId
+    return fetchAll(UsersRoles, {
+      where: {
+        roleId
+      },
+      include: [
+        {
+          model: Role,
+          required: true
         },
-        include: [
-          {
-            model: Role,
-            required: true
-          },
-          {
-            model: User,
-            required: true
-          }
-        ],
-        limit,
-        offset
-      });
-
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
+        {
+          model: User,
+          required: true
+        }
+      ],
+      limit,
+      offset
+    });
   }
 );
 
 /**
  * GET User Stats
  */
-router.get('/count', authenticate(), async (req, res) => {
-  log.info(`request for user stats`);
-  try {
-    // User Stats
-    const result = await User.count();
-
-    res.type('application/json');
-    res.json(result);
-  } catch (error) {
-    log.error(error.message);
-    res.status(500).send(error.message);
-  }
-});
+router.get('/count', authenticate(), countAll(User));
 
 export default router;

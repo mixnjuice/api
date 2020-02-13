@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { body, param, validationResult } from 'express-validator';
+import { body, param } from 'express-validator';
 
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
+import { fetchAll, handleValidationErrors } from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('user');
@@ -31,12 +32,8 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`request for user ${id}`);
@@ -75,12 +72,8 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { userId } = req.params;
 
     log.info(`request for user profile ${userId}`);
@@ -116,12 +109,8 @@ router.put(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { userId } = req.params;
     const { location, bio, url } = req.body;
 
@@ -165,32 +154,16 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  req => {
     const { userId } = req.params;
 
     log.info(`request for user recipes ${userId}`);
-    try {
-      const result = await Recipe.findAll({
-        where: {
-          userId
-        }
-      });
-
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
+    return fetchAll(Recipe, {
+      where: {
+        userId
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
+    });
   }
 );
 
@@ -207,44 +180,28 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  req => {
     const { userId } = req.params;
 
     log.info(`request flavor stash for user ${userId}`);
-    try {
-      const result = await UsersFlavors.findAll({
-        where: {
-          userId
-        },
-        include: [
-          {
-            model: Flavor,
-            required: true,
-            include: [
-              {
-                model: Vendor,
-                required: true
-              }
-            ]
-          }
-        ]
-      });
-
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
+    return fetchAll(UsersFlavors, {
+      where: {
+        userId
+      },
+      include: [
+        {
+          model: Flavor,
+          required: true,
+          include: [
+            {
+              model: Vendor,
+              required: true
+            }
+          ]
+        }
+      ]
+    });
   }
 );
 /**
@@ -265,47 +222,32 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  req => {
+    const { userId, flavorId } = req.params;
 
     log.info(
       `request flavor stash flavor id ${req.params.userId} for user ${req.params.userId}`
     );
-    try {
-      const { userId, flavorId } = req.params;
-      const result = await UsersFlavors.findAll({
-        where: {
-          userId,
-          flavorId
-        },
-        include: [
-          {
-            model: Flavor,
-            required: true,
-            include: [
-              {
-                model: Vendor,
-                required: true
-              }
-            ]
-          }
-        ]
-      });
 
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
+    return fetchAll(UsersFlavors, {
+      where: {
+        userId,
+        flavorId
+      },
+      include: [
+        {
+          model: Flavor,
+          required: true,
+          include: [
+            {
+              model: Vendor,
+              required: true
+            }
+          ]
+        }
+      ]
+    });
   }
 );
 /**
@@ -321,12 +263,8 @@ router.post(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { userId } = req.params;
     const { flavorId, created, minMillipercent, maxMillipercent } = req.body;
 
@@ -370,12 +308,8 @@ router.put(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { minMillipercent, maxMillipercent } = req.body;
     const { userId, flavorId } = req.params;
 
@@ -425,12 +359,8 @@ router.delete(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { userId, flavorId } = req.params;
 
     log.info(`delete from flavor stash for ${flavorId}`);
@@ -467,38 +397,22 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  req => {
     const { userId } = req.params;
 
     log.info(`request roles for user ${userId}`);
-    try {
-      const result = await UsersRoles.findAll({
-        where: {
-          userId
-        },
-        include: [
-          {
-            model: Role,
-            required: true
-          }
-        ]
-      });
-
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
+    return fetchAll(UsersRoles, {
+      where: {
+        userId
+      },
+      include: [
+        {
+          model: Role,
+          required: true
+        }
+      ]
+    });
   }
 );
 /**
@@ -519,12 +433,8 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { userId, roleId } = req.params;
 
     log.info(`request role id ${roleId} for user ${userId}`);
@@ -574,12 +484,8 @@ router.post(
       .toInt(),
     body('active').isBoolean()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { userId } = req.params;
     const { roleId, active } = req.body;
 
@@ -623,12 +529,8 @@ router.put(
       .toInt(),
     body('active').isBoolean()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { userId, roleId } = req.params;
     const { active } = req.body;
 
@@ -677,12 +579,8 @@ router.delete(
       .isInt({ min: 1 })
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { userId, roleId } = req.params;
 
     log.info(`delete from role ${roleId} from user ${userId}`);
@@ -725,12 +623,8 @@ router.get(
   '/:name',
   authenticate(),
   [param('name').isString()],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { name } = req.params;
 
     log.info(`request for username ${name}`);

@@ -57,4 +57,24 @@ router.get(
   }
 );
 
+/**
+ * GET Diluent Stats
+ */
+router.get('/count', authenticate(), async (req, res) => {
+  log.info(`request for user stats`);
+  try {
+    const diluents = await Diluent.count();
+    // Results
+    const result = {
+      diluents
+    };
+
+    res.type('application/json');
+    res.json(result);
+  } catch (error) {
+    log.error(error.message);
+    res.status(500).send(error.message);
+  }
+});
+
 export default router;

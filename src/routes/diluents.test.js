@@ -45,4 +45,10 @@ describe('diluents route resource', () => {
       request.get('/?limit=stop').expect(400, done);
     });
   });
+
+  it('returns 200 diluents count', () => {
+    tryCatch(done => {
+      request.get('/count').expect(200, done);
+    });
+  });
 });

@@ -1,16 +1,15 @@
 import { Router } from 'express';
 import { body, query, validationResult } from 'express-validator';
 
-import Email from '../modules/email';
-import models, { handleError } from '../modules/database';
-import logging from '../modules/logging';
-import configs from '../modules/config';
-import { hashPassword, generateToken, buildWebUrl } from '../modules/util';
+import Email from 'modules/email';
+import models, { handleError } from 'modules/database';
+import logging from 'modules/logging';
+import { email as emailConfig, api as apiConfig } from 'modules/config';
+import { hashPassword, generateToken, buildWebUrl } from 'modules/utils';
 
 const router = Router();
 const log = logging('register');
 const { User, UserProfile } = models;
-const { email: emailConfig, api: apiConfig } = configs;
 const {
   tokens: { length: tokenLength }
 } = apiConfig;

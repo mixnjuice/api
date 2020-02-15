@@ -3,10 +3,9 @@ import passport from 'passport';
 import AnonymousStrategy from 'passport-anonymous';
 
 import recipes from './recipes';
-import database from '../modules/database';
-import { captureTestErrors } from '../modules/util';
+import database from 'modules/database';
+import { captureTestErrors, tryCatch } from 'modules/utils/test';
 
-/* eslint-disable camelcase */
 describe('recipes route resource', () => {
   const app = express();
 
@@ -15,19 +14,26 @@ describe('recipes route resource', () => {
 
   const request = captureTestErrors(app);
 
-  afterAll(() => {
-    database.sequelize.close();
-  });
+  afterAll(() => Promise.all(database.sequelize.close(), app.close()));
 
-  it('returns valid list of 2 recipes', done => {
-    request.get('/?limit=2').expect(200, done);
-  });
+  it(
+    'returns valid list of 2 recipes',
+    tryCatch(done => {
+      request.get('/?limit=2').expect(200, done);
+    })
+  );
 
-  it('returns 200 for recipes list', done => {
-    request.get('/?offset=9000000').expect(200, done);
-  });
+  it(
+    'returns 200 for recipes list',
+    tryCatch(done => {
+      request.get('/?offset=9000000').expect(200, done);
+    })
+  );
 
-  it('returns 400 for invalid recipes list', done => {
-    request.get('/?limit=stop').expect(400, done);
-  });
+  it(
+    'returns 400 for invalid recipes list',
+    tryCatch(done => {
+      request.get('/?limit=stop').expect(400, done);
+    })
+  );
 });

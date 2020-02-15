@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { query, validationResult } from 'express-validator';
 
-import { authenticate } from '../modules/auth';
-import models from '../modules/database';
-import loggers from '../modules/logging';
+import { authenticate } from 'modules/auth';
+import models from 'modules/database';
+import loggers from 'modules/logging';
 
 const router = Router();
 const log = loggers('vendors');
@@ -56,5 +56,24 @@ router.get(
     }
   }
 );
+/**
+ * GET Vendor Stats
+ */
+router.get('/count', authenticate(), async (req, res) => {
+  log.info(`request for vendor stats`);
+  try {
+    const vendors = await Vendor.count();
+    // Results
+    const result = {
+      vendors
+    };
+
+    res.type('application/json');
+    res.json(result);
+  } catch (error) {
+    log.error(error.message);
+    res.status(500).send(error.message);
+  }
+});
 
 export default router;

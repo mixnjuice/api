@@ -4,21 +4,17 @@ import oauth2orize from 'oauth2orize';
 import BearerStrategy from 'passport-http-bearer';
 import AnonymousStrategy from 'passport-anonymous';
 
-import configs from './config';
-import models from './database';
-import loggers from './logging';
-import {
-  compareHashAndPassword,
-  generateToken,
-  isTestEnvironment
-} from './util';
+import { api as webConfig } from 'modules/config';
+import models from 'modules/database';
+import logging from 'modules/logging';
+import { compareHashAndPassword, generateToken } from 'modules/utils';
+import { isTestEnvironment } from 'modules/utils/test';
 import MockStrategy from 'passport-mock-strategy';
 
-const log = loggers('auth');
+const log = logging('auth');
 const { Op } = models.Sequelize;
 const { UserToken, User, Role } = models;
 
-const { api: webConfig } = configs;
 const { age: tokenAge, validate: validateTokens } = webConfig.tokens;
 const { validate: validateRoles } = webConfig.roles;
 

@@ -1,0 +1,11 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.formatOnSave": true,
+  "eslint.enable": true,
+  "eslint.run": "onSave",
+  "stylelint.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  }
+}

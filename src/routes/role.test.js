@@ -4,8 +4,8 @@ import AnonymousStrategy from 'passport-anonymous';
 import bodyParser from 'body-parser';
 
 import role from './role';
-import database from '../modules/database';
-import { captureTestErrors } from '../modules/util';
+import database from 'modules/database';
+import { captureTestErrors, tryCatch } from 'modules/utils/test';
 
 describe('role route resource', () => {
   const app = express();
@@ -17,43 +17,53 @@ describe('role route resource', () => {
 
   const request = captureTestErrors(app);
 
-  afterAll(() => {
-    database.sequelize.close();
-  });
+  afterAll(() => Promise.all(database.sequelize.close(), app.close()));
 
   const mockData = {
     name: 'Luser'
   };
 
-  it('POST returns 200 for creating role', done => {
-    request
-      .post('/')
-      .send(mockData)
-      .expect('Content-type', /json/)
-      .expect(200, done);
+  it('POST returns 200 for creating role', () => {
+    tryCatch(done => {
+      request
+        .post('/')
+        .send(mockData)
+        .expect('Content-type', /json/)
+        .expect(200, done);
+    });
   });
 
-  it('GET returns 200 for valid role', done => {
-    request.get('/5').expect(200, done);
+  it('GET returns 200 for valid role', () => {
+    tryCatch(done => {
+      request.get('/5').expect(200, done);
+    });
   });
 
-  it('PUT returns 200 for updating role', done => {
-    request
-      .put('/6')
-      .send(mockData)
-      .expect('Content-type', /json/)
-      .expect(200, done);
+  it('PUT returns 200 for updating role', () => {
+    tryCatch(done => {
+      request
+        .put('/6')
+        .send(mockData)
+        .expect('Content-type', /json/)
+        .expect(200, done);
+    });
   });
 
-  it('GET returns 400 for invalid role', done => {
-    request.get('/0').expect(400, done);
+  it('GET returns 400 for invalid role', () => {
+    tryCatch(done => {
+      request.get('/0').expect(400, done);
+    });
   });
 
-  it('GET returns 404 for invalid role route', done => {
-    request.get('/ham').expect(404, done);
+  it('GET returns 404 for invalid role route', () => {
+    tryCatch(done => {
+      request.get('/ham').expect(404, done);
+    });
   });
 
-  it('DELETE returns 200 after deleting role', done => {
-    request.delete('/15').expect(200, done);
+  it('DELETE returns 200 after deleting role', () => {
+    tryCatch(done => {
+      request.delete('/15').expect(200, done);
+    });
   });
 });

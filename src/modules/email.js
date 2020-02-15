@@ -1,8 +1,8 @@
 import AWS from 'aws-sdk';
 
-import loggers from './logging';
+import logging from 'modules/logging';
 
-const log = loggers('email');
+const log = logging('email');
 
 export default class Email {
   /**

@@ -1,20 +1,19 @@
 import bcrypt from 'bcrypt';
 
-import configs from './config';
+import { web as webConfig } from 'modules/config';
 import {
   generateToken,
   buildWebUrl,
-  isTestEnvironment,
   hashPassword,
   compareHashAndPassword
-} from './util';
+} from 'modules/utils';
 
 jest.mock('bcrypt', () => ({
   hash: jest.fn(),
   compare: jest.fn()
 }));
 
-jest.mock('./config', () => ({
+jest.mock('modules/config', () => ({
   web: {
     hostname: 'localhost',
     useTls: false,
@@ -32,8 +31,7 @@ jest.mock('./config', () => ({
 
 describe('utility methods', () => {
   afterEach(() => {
-    bcrypt.hash.mockReset();
-    bcrypt.compare.mockReset();
+    jest.clearAllMocks();
   });
 
   describe('generateToken', () => {
@@ -72,7 +70,7 @@ describe('utility methods', () => {
     });
 
     it('can construct https url', () => {
-      Object.defineProperties(configs.web, {
+      Object.defineProperties(webConfig, {
         hostname: {
           get: jest.fn().mockReturnValue('localhost')
         },
@@ -85,18 +83,6 @@ describe('utility methods', () => {
       });
 
       expect(buildWebUrl('/test')).toEqual('https://localhost/test');
-    });
-  });
-
-  describe('isTestEnvironment', () => {
-    it('works in test environment', () => {
-      expect(isTestEnvironment()).toBeTruthy();
-    });
-
-    it('works outside of test environment', () => {
-      process.env.NODE_ENV = 'production';
-      expect(isTestEnvironment()).toBeFalsy();
-      process.env.NODE_ENV = 'test';
     });
   });
 });

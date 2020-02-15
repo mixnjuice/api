@@ -1,12 +1,8 @@
 import nanoid from 'nanoid';
-import use from 'superagent-use';
-import supertest from 'supertest';
 import { hash as create, compare } from 'bcrypt';
-import captureError from 'supertest-capture-error';
 
-import configs from './config';
+import { api as apiConfig, web as webConfig } from 'modules/config';
 
-const { api: apiConfig, web: webConfig } = configs;
 const {
   passwords: { saltRounds },
   tokens: { length: tokenLength }
@@ -33,12 +29,3 @@ export const buildWebUrl = path => {
     needsSlash ? '/' : ''
   }${path}`;
 };
-
-export const isTestEnvironment = () => process.env.NODE_ENV === 'test';
-
-export const captureTestErrors = app =>
-  use(supertest(app)).use(
-    captureError((error, test) => {
-      error.message += `\nURL: ${test.url}\nResponse: ${test.res.text}`;
-    })
-  );

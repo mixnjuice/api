@@ -722,4 +722,47 @@ router.get('/current', authenticate(), async (req, res) => {
   }
 });
 
+/**
+ * GET User Info by Username
+ * @param userName string
+ */
+router.get(
+  '/:name',
+  authenticate(),
+  [param('name').isString()],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const { name } = req.params;
+
+    log.info(`request for username ${name}`);
+    try {
+      const result = await UserProfile.findOne({
+        where: {
+          name
+        },
+        include: [
+          {
+            model: User,
+            required: true
+          }
+        ]
+      });
+
+      if (!result) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
+
 export default router;

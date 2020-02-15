@@ -2,8 +2,8 @@ version: '3'
 services:
   api:
     build: .
-    image: gusta-api:latest
-    container_name: gusta-api
+    image: mixnjuice-api:latest
+    container_name: mixnjuice-api
     restart: always
     environment:
       API_TOKEN_SECRET: ${API_TOKEN_SECRET}
@@ -16,7 +16,7 @@ services:
       - database
   database:
     image: postgres:latest
-    container_name: gusta-api-pg
+    container_name: mixnjuice-api-pg
     environment:
       POSTGRES_USER: flavors
       POSTGRES_PASSWORD: ${DB_PASS}

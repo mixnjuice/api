@@ -53,6 +53,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0
+      },
+      shareKey: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null
       }
     },
     {

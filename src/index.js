@@ -1,4 +1,4 @@
-import loggers from './modules/logging';
+import loggers from 'modules/logging';
 import { start } from './app';
 
 const log = loggers('index');

@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { authenticate, ensureRole } from '../modules/auth';
-import models from '../modules/database';
-import loggers from '../modules/logging';
+import { authenticate, ensureRole } from 'modules/auth';
+import models from 'modules/database';
+import loggers from 'modules/logging';
 
 const router = Router();
 const log = loggers('stats');

@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { body, param, validationResult } from 'express-validator';
+import { body, param, query, validationResult } from 'express-validator';
 
-import { authenticate, ensureRole } from '../modules/auth';
-import models from '../modules/database';
-import loggers from '../modules/logging';
+import { authenticate, ensureRole } from 'modules/auth';
+import models from 'modules/database';
+import loggers from 'modules/logging';
 
 const router = Router();
 const log = loggers('data');
@@ -192,22 +192,12 @@ router.delete(
   }
 );
 /**
- * GET Data Suppliers
+ * GET Suppliers Stats
  */
-router.get('/suppliers', authenticate(), async (req, res) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  log.info(`request for data suppliers`);
+router.get('/suppliers/count', authenticate(), async (req, res) => {
+  log.info(`request for data suppliers stats`);
   try {
-    const result = await DataSupplier.findAll();
-
-    if (!Array.isArray(result) || result.length === 0) {
-      return res.status(204).end();
-    }
+    const result = await DataSupplier.count();
 
     res.type('application/json');
     res.json(result);
@@ -216,6 +206,50 @@ router.get('/suppliers', authenticate(), async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+/**
+ * GET Data Suppliers
+ */
+router.get(
+  '/suppliers',
+  authenticate(),
+  [
+    query('offset')
+      .optional()
+      .isNumeric()
+      .toInt(),
+    query('limit')
+      .optional()
+      .isNumeric()
+      .toInt()
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const limit = req.query.limit || 20;
+    const offset = req.query.offset - 1 || 0;
+
+    log.info(`request for data suppliers`);
+    try {
+      const result = await DataSupplier.findAll({
+        limit,
+        offset
+      });
+
+      if (!Array.isArray(result) || result.length === 0) {
+        return res.status(204).end();
+      }
+
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
+  }
+);
 /**
  * GET Database Schema Version Info
  */

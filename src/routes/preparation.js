@@ -1,9 +1,13 @@
 import { Router } from 'express';
-import { body, param, validationResult } from 'express-validator';
+import { body, param } from 'express-validator';
 
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
+import {
+  handleModelOperation,
+  handleValidationErrors
+} from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('preparation');
@@ -29,18 +33,13 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  handleModelOperation(Preparation, 'findOne', req => {
     const { id } = req.params;
 
     log.info(`request for preparation ${id}`);
-    try {
-      // Get the preparation, with associations
-      const result = await Preparation.findOne({
+    return [
+      {
         where: {
           id
         },
@@ -68,19 +67,9 @@ router.get(
             as: 'Diluents'
           }
         ]
-      });
-
-      if (!result) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * POST Create a Preparation
@@ -108,12 +97,8 @@ router.post(
       .isArray()
       .withMessage('array')
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { recipeId, userId, volumeMl, nicotineMillipercent } = req.body;
 
     log.info(`request for NEW PREPARATION`);
@@ -161,6 +146,7 @@ router.post(
     }
   }
 );
+
 /**
  * PUT Update a Preparation
  * - Doesn't allow the Recipe ID or User ID to change
@@ -184,12 +170,8 @@ router.put(
       .isArray()
       .withMessage('array')
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`update preparation id ${id}`);
@@ -270,6 +252,7 @@ router.put(
     }
   }
 );
+
 /**
  * DELETE Preparation
  * @param id int
@@ -282,12 +265,8 @@ router.delete(
       .isNumeric()
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`delete preparation id ${id}`);

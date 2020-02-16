@@ -1,17 +1,9 @@
-import express from 'express';
-import passport from 'passport';
-import AnonymousStrategy from 'passport-anonymous';
-
 import preparations from './preparations';
 import database from 'modules/database';
-import { captureTestErrors, tryCatch } from 'modules/utils/test';
+import { captureTestErrors, tryCatch, bootstrapApp } from 'modules/utils/test';
 
 describe('preparations route resource', () => {
-  const app = express();
-
-  passport.use(new AnonymousStrategy());
-  app.use(preparations);
-
+  const app = bootstrapApp(preparations);
   const request = captureTestErrors(app);
 
   afterAll(() => Promise.all(database.sequelize.close(), app.close()));

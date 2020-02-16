@@ -1,3 +1,7 @@
+import bodyParser from 'body-parser';
+import express from 'express';
+import passport from 'passport';
+import AnonymousStrategy from 'passport-anonymous';
 import use from 'superagent-use';
 import supertest from 'supertest';
 import captureError from 'supertest-capture-error';
@@ -22,4 +26,15 @@ export const tryCatch = fn => done => {
     log.error(error.message, error);
     done(error);
   }
+};
+
+export const bootstrapApp = router => {
+  const app = express();
+
+  passport.use(new AnonymousStrategy());
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(router);
+
+  return app;
 };

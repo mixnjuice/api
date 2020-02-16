@@ -1,9 +1,14 @@
 import { Router } from 'express';
-import { query, validationResult } from 'express-validator';
+import { query } from 'express-validator';
 
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
+import {
+  handleCount,
+  handleFindAll,
+  handleValidationErrors
+} from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('flavors');
@@ -27,57 +32,28 @@ router.get(
       .isNumeric()
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  handleFindAll(Flavor, req => {
     const limit = req.query.limit || 20;
-
     const offset = req.query.offset - 1 || 0;
 
     log.info(`request for flavors ${limit}`);
-    try {
-      const result = await Flavor.findAll({
-        limit,
-        offset,
-        include: [
-          {
-            model: Vendor,
-            require: true
-          }
-        ]
-      });
-
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    return {
+      limit,
+      offset,
+      include: [
+        {
+          model: Vendor,
+          require: true
+        }
+      ]
+    };
+  })
 );
 
 /**
  * GET Flavor Stats
  */
-router.get('/count', authenticate(), async (req, res) => {
-  log.info(`request for flavor stats`);
-  try {
-    // Flavor Stats
-    const result = await Flavor.count();
-
-    res.type('application/json');
-    res.json(result);
-  } catch (error) {
-    log.error(error.message);
-    res.status(500).send(error.message);
-  }
-});
+router.get('/count', authenticate(), handleCount(Flavor));
 
 export default router;

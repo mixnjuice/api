@@ -1,20 +1,9 @@
-import express from 'express';
-import passport from 'passport';
-import bodyParser from 'body-parser';
-import AnonymousStrategy from 'passport-anonymous';
-
 import preparationRoute from './preparation';
 import database from 'modules/database';
-import { captureTestErrors, tryCatch } from 'modules/utils/test';
+import { captureTestErrors, tryCatch, bootstrapApp } from 'modules/utils/test';
 
 describe('preparation route resource', () => {
-  const app = express();
-
-  passport.use(new AnonymousStrategy());
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(preparationRoute);
-
+  const app = bootstrapApp(preparationRoute);
   const request = captureTestErrors(app);
 
   afterAll(() => Promise.all(database.sequelize.close(), app.close()));

@@ -1,9 +1,13 @@
 import { Router } from 'express';
-import { body, param, validationResult } from 'express-validator';
+import { body, param } from 'express-validator';
 
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
+import {
+  handleValidationErrors,
+  handleModelOperation
+} from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('recipe');
@@ -31,48 +35,26 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    const { id } = req.params;
-
-    log.info(`request for ${id}`);
-    try {
-      // Get the recipe, with associations
-      const result = await Recipe.findOne({
-        where: {
-          id
-        },
-        include: [
-          {
-            model: UserProfile,
-            required: true
-          },
-          {
-            model: Flavor,
-            as: 'Flavors'
-          },
-          {
-            model: Diluent,
-            as: 'Diluents'
-          }
-        ]
-      });
-
-      if (!result) {
-        return res.status(204).end();
+  handleValidationErrors(),
+  handleModelOperation(Recipe, 'findOne', req => ({
+    where: {
+      id: req.params.id
+    },
+    include: [
+      {
+        model: UserProfile,
+        required: true
+      },
+      {
+        model: Flavor,
+        as: 'Flavors'
+      },
+      {
+        model: Diluent,
+        as: 'Diluents'
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ]
+  }))
 );
 /**
  * POST Create a Recipe and associations
@@ -107,13 +89,8 @@ router.post(
       .isArray()
       .withMessage('array')
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     log.info('Handling request to create new recipe...');
     try {
       // Create the recipe, with associations
@@ -219,12 +196,8 @@ router.put(
       .isArray()
       .withMessage('array')
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`update recipe id ${id}`);
@@ -343,12 +316,8 @@ router.delete(
       .isNumeric()
       .toInt()
   ],
+  handleValidationErrors(),
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
     const { id } = req.params;
 
     log.info(`delete recipe id ${id}`);

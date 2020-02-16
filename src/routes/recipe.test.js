@@ -1,20 +1,14 @@
-import express from 'express';
 import passport from 'passport';
-import bodyParser from 'body-parser';
 
 import recipeRoute from './recipe';
 import database from 'modules/database';
 import { useMockStrategy } from 'modules/auth';
-import { captureTestErrors, tryCatch } from 'modules/utils/test';
+import { captureTestErrors, tryCatch, bootstrapApp } from 'modules/utils/test';
 
 describe('recipe route resource', () => {
-  const app = express();
-
   useMockStrategy(passport, { id: 1 });
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(recipeRoute);
 
+  const app = bootstrapApp(recipeRoute);
   const request = captureTestErrors(app);
 
   afterAll(() => Promise.all(database.sequelize.close(), app.close()));

@@ -1,9 +1,14 @@
 import { Router } from 'express';
-import { body, param, validationResult } from 'express-validator';
+import { body, param } from 'express-validator';
 
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
+import {
+  handleFindAll,
+  handleValidationErrors,
+  handleModelOperation
+} from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('vendor');
@@ -22,33 +27,19 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  handleModelOperation(Vendor, 'findOne', req => {
     const { id } = req.params;
 
     log.info(`request for vendor ${req.params.id}`);
-    try {
-      const result = await Vendor.findOne({
+    return [
+      {
         where: {
           id
         }
-      });
-
-      if (!result) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * POST Create a Vendor
@@ -73,33 +64,19 @@ router.post(
       .isLength({ min: 1 })
       .withMessage('length')
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  handleModelOperation(Vendor, 'create', req => {
+    const { name, slug, code } = req.body;
 
     log.info(`request for new vendor`);
-    try {
-      const { name, slug, code } = req.body;
-      const result = await Vendor.create({
+    return [
+      {
         name,
         slug,
         code
-      });
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * PUT Updates a Vendor
@@ -130,41 +107,23 @@ router.put(
       .isLength({ min: 1 })
       .withMessage('length')
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
+  handleValidationErrors(),
+  handleModelOperation(Vendor, 'update', req => {
+    const { id, name, slug, code } = req.params;
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    const { id } = req.params;
-    const { name, slug, code } = req.body;
-
-    log.info(`request to update vendor id ${id}`);
-    try {
-      const result = await Vendor.update(
-        {
-          name,
-          slug,
-          code
-        },
-        {
-          where: {
-            id
-          }
+    return [
+      {
+        name,
+        slug,
+        code
+      },
+      {
+        where: {
+          id
         }
-      );
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * DELETE Deletes a Vendor
@@ -179,33 +138,12 @@ router.delete(
       .isInt({ min: 1 })
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+  handleValidationErrors(),
+  handleModelOperation(Vendor, 'destroy', req => ({
+    where: {
+      id: req.params.id
     }
-    const { id } = req.params;
-
-    log.info(`request to delete vendor id ${id}`);
-    try {
-      const result = await Vendor.destroy({
-        where: {
-          id
-        }
-      });
-
-      if (result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+  }))
 );
 /**
  * GET Vendor Data Supplier Identifiers
@@ -220,39 +158,24 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  handleFindAll(VendorIdentifier, req => {
     const { vendorId } = req.params;
 
     log.info(`request for vendor id ${vendorId} identifiers`);
-    try {
-      const result = await VendorIdentifier.findAll({
-        where: {
-          vendorId
-        },
-        include: [
-          {
-            model: DataSupplier,
-            require: true
-          }
-        ]
-      });
 
-      if (!Array.isArray(result) || result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    return {
+      where: {
+        vendorId
+      },
+      include: [
+        {
+          model: DataSupplier,
+          require: true
+        }
+      ]
+    };
+  })
 );
 /**
  * GET Vendor Data Supplier Identifier
@@ -272,19 +195,15 @@ router.get(
       .isInt({ min: 1 })
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  handleModelOperation(VendorIdentifier, 'findOne', req => {
     const { vendorId, dataSupplierId } = req.params;
 
     log.info(
       `request for vendor id ${vendorId} data supplier id ${dataSupplierId} identifer`
     );
-    try {
-      const result = await VendorIdentifier.findOne({
+    return [
+      {
         where: {
           vendorId,
           dataSupplierId
@@ -295,19 +214,9 @@ router.get(
             require: true
           }
         ]
-      });
-
-      if (!result) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * POST Create a Vendor Identifier
@@ -332,34 +241,20 @@ router.post(
       .isLength({ min: 1 })
       .withMessage('length')
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  handleModelOperation(VendorIdentifier, 'create', req => {
     const { vendorId } = req.params;
     const { dataSupplierId, identifier } = req.body;
 
     log.info(`request for new vendor identifier for vendor id ${vendorId}`);
-    try {
-      const result = await VendorIdentifier.create({
+    return [
+      {
         vendorId,
         dataSupplierId,
         identifier
-      });
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * PUT Update a Vendor Identifier
@@ -384,42 +279,26 @@ router.put(
       .isLength({ min: 1 })
       .withMessage('length')
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  handleModelOperation(VendorIdentifier, 'update', req => {
     const { identifier } = req.body;
     const { vendorId, dataSupplierId } = req.params;
 
     log.info(
       `request to update vendor id ${vendorId} identifier id ${dataSupplierId}`
     );
-    try {
-      const result = await VendorIdentifier.update(
-        {
-          identifier
-        },
-        {
-          where: {
-            vendorId,
-            dataSupplierId
-          }
+    return [
+      {
+        identifier
+      },
+      {
+        where: {
+          vendorId,
+          dataSupplierId
         }
-      );
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * Delete Diluent
@@ -439,36 +318,22 @@ router.delete(
       .isInt({ min: 1 })
       .toInt()
   ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+  handleValidationErrors(),
+  handleModelOperation(VendorIdentifier, 'destroy', req => {
     const { vendorId, dataSupplierId } = req.params;
 
     log.info(
       `request to delete vendor id ${vendorId} identifier id ${dataSupplierId}`
     );
-    try {
-      const result = await VendorIdentifier.destroy({
+    return [
+      {
         where: {
           vendorId,
           dataSupplierId
         }
-      });
-
-      if (!result || result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 
 export default router;

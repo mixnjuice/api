@@ -1,5 +1,8 @@
-import { isTestEnvironment, tryCatch } from './test';
+import express from 'express';
+
+import { isTestEnvironment, tryCatch, bootstrapApp } from './test';
 import logging from 'modules/logging';
+import supertest from 'supertest';
 
 jest.mock('modules/logging', () => {
   const error = jest.fn();
@@ -51,5 +54,27 @@ describe('test utilities', () => {
       expect(done).toHaveBeenCalledWith(error);
       expect(mockLog.error).toHaveBeenCalledWith(error.message, error);
     });
+  });
+
+  describe('bootstrapApp', () => {
+    it(
+      'works for a valid router',
+      tryCatch(async done => {
+        const router = new express.Router();
+
+        router.get('/', (req, res) => {
+          res.sendStatus(204);
+        });
+
+        const app = bootstrapApp(router);
+
+        expect(app).toBeDefined();
+        const request = supertest(app);
+        const response = await request.get('/');
+
+        expect(response.status).toBe(204);
+        done();
+      })
+    );
   });
 });

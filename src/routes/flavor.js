@@ -4,7 +4,11 @@ import { body, param } from 'express-validator';
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
-import { handleFindAll, handleValidationErrors } from 'modules/utils/request';
+import {
+  handleFindAll,
+  handleValidationErrors,
+  handleModelOperation
+} from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('flavor');
@@ -24,12 +28,12 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(Flavor, 'findOne', req => {
     const { id } = req.params;
 
     log.info(`request for ${id}`);
-    try {
-      const result = await Flavor.findOne({
+    return [
+      {
         where: {
           id
         },
@@ -39,20 +43,11 @@ router.get(
             require: true
           }
         ]
-      });
-
-      if (!result) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
+
 /**
  * POST Create a Flavor
  * @body vendorId int
@@ -79,30 +74,21 @@ router.post(
     body('density').isDecimal()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(Flavor, 'create', req => {
     const { vendorId, name, slug, density } = req.body;
 
     log.info(`request for new flavor`);
-    try {
-      const result = await Flavor.create({
+    return [
+      {
         vendorId,
         name,
         slug,
         density
-      });
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
+
 /**
  * PUT Updates a Flavor
  * @param id int
@@ -134,38 +120,27 @@ router.put(
     body('density').isDecimal()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(Flavor, 'update', req => {
     const { id } = req.params;
     const { vendorId, name, slug, density } = req.body;
 
     log.info(`request to update flavor id ${id}`);
-    try {
-      const result = await Flavor.update(
-        {
-          vendorId,
-          name,
-          slug,
-          density
-        },
-        {
-          where: {
-            id
-          }
+    return [
+      {
+        vendorId,
+        name,
+        slug,
+        density
+      },
+      {
+        where: {
+          id
         }
-      );
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
+
 /**
  * DELETE Deletes a Flavor
  * @param id int
@@ -180,29 +155,20 @@ router.delete(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(Flavor, 'destroy', req => {
     const { id } = req.params;
 
     log.info(`request to delete flavor id ${id}`);
-    try {
-      const result = await Flavor.destroy({
+    return [
+      {
         where: {
           id
         }
-      });
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
+
 /**
  * GET Flavor Data Supplier Identifiers
  * @param id int
@@ -234,6 +200,7 @@ router.get(
     };
   })
 );
+
 /**
  * GET Flavor Data Supplier Identifier
  * @param flavorId int
@@ -253,14 +220,14 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(FlavorIdentifier, 'findOne', req => {
     const { flavorId, dataSupplierId } = req.params;
 
     log.info(
       `request for flavor id ${flavorId} data supplier id ${dataSupplierId} identifer`
     );
-    try {
-      const result = await FlavorIdentifier.findOne({
+    return [
+      {
         where: {
           flavorId,
           dataSupplierId
@@ -271,20 +238,11 @@ router.get(
             require: true
           }
         ]
-      });
-
-      if (!result) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
+
 /**
  * POST Create a Flavor Identifier
  * @param id int
@@ -309,29 +267,19 @@ router.post(
       .withMessage('length')
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(FlavorIdentifier, 'create', req => {
     const { flavorId } = req.params;
     const { dataSupplierId, identifier } = req.body;
 
     log.info(`request for new flavor identifier for flavor id ${flavorId}`);
-    try {
-      const result = await FlavorIdentifier.create({
+    return [
+      {
         flavorId,
         dataSupplierId,
         identifier
-      });
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * PUT Update a Flavor Identifier
@@ -357,37 +305,25 @@ router.put(
       .withMessage('length')
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(FlavorIdentifier, 'update', req => {
     const { flavorId, dataSupplierId } = req.params;
     const { identifier } = req.body;
 
     log.info(
       `request to update flavor id ${flavorId} identifier id ${dataSupplierId}`
     );
-    try {
-      const result = await FlavorIdentifier.update(
-        {
-          identifier
-        },
-        {
-          where: {
-            flavorId,
-            dataSupplierId
-          }
+    return [
+      {
+        identifier
+      },
+      {
+        where: {
+          flavorId,
+          dataSupplierId
         }
-      );
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * Delete Diluent
@@ -408,31 +344,21 @@ router.delete(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(FlavorIdentifier, 'destroy', req => {
     const { flavorId, dataSupplierId } = req.params;
 
     log.info(
       `request to delete flavor id ${flavorId} identifier id ${dataSupplierId}`
     );
-    try {
-      const result = await FlavorIdentifier.destroy({
+    return [
+      {
         where: {
           flavorId,
           dataSupplierId
         }
-      });
-
-      if (!result || result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 
 export default router;

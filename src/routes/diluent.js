@@ -4,7 +4,10 @@ import { body, param } from 'express-validator';
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
-import { handleValidationErrors } from 'modules/utils/request';
+import {
+  handleModelOperation,
+  handleValidationErrors
+} from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('diluent');
@@ -24,28 +27,18 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(Diluent, 'findOne', req => {
     const { id } = req.params;
 
     log.info(`request for diluent id ${id}`);
-    try {
-      const result = await Diluent.findOne({
+    return [
+      {
         where: {
           id
         }
-      });
-
-      if (!result) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * POST Create a Diluent
@@ -63,28 +56,19 @@ router.post(
     body('density').isNumeric()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(Diluent, 'create', req => {
+    const { name, slug, code, density } = req.body;
+
     log.info(`request for new diluent`);
-    try {
-      const { name, slug, code, density } = req.body;
-      const result = await Diluent.create({
+    return [
+      {
         name,
         slug,
         code,
         density
-      });
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * PUT Update a Diluent
@@ -111,37 +95,25 @@ router.put(
     body('density').isDecimal()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(Diluent, 'update', req => {
     const { id } = req.params;
     const { name, slug, code, density } = req.body;
 
     log.info(`request to update diluent ${id}`);
-    try {
-      const result = await Diluent.update(
-        {
-          name,
-          slug,
-          code,
-          density
-        },
-        {
-          where: {
-            id: req.params.id
-          }
+    return [
+      {
+        name,
+        slug,
+        code,
+        density
+      },
+      {
+        where: {
+          id: req.params.id
         }
-      );
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * Delete Diluent
@@ -157,27 +129,17 @@ router.delete(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(Diluent, 'destroy', req => {
     const { id } = req.params;
 
     log.info(`request to delete diluent id ${id}`);
-    try {
-      const result = await Diluent.destroy({
+    return [
+      {
         where: {
           id
         }
-      });
-
-      if (!result || result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 export default router;

@@ -1,20 +1,9 @@
-import express from 'express';
-import passport from 'passport';
-import AnonymousStrategy from 'passport-anonymous';
-import bodyParser from 'body-parser';
-
 import flavor from './flavor';
 import database from 'modules/database';
-import { captureTestErrors, tryCatch } from 'modules/utils/test';
+import { captureTestErrors, tryCatch, bootstrapApp } from 'modules/utils/test';
 
 describe('flavor route resource', () => {
-  const app = express();
-
-  passport.use(new AnonymousStrategy());
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(flavor);
-
+  const app = bootstrapApp(flavor);
   const request = captureTestErrors(app);
 
   afterAll(() => Promise.all(database.sequelize.close(), app.close()));

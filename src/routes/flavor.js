@@ -4,7 +4,7 @@ import { body, param } from 'express-validator';
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
-import { fetchAll, handleValidationErrors } from 'modules/utils/request';
+import { handleFindAll, handleValidationErrors } from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('flavor');
@@ -217,11 +217,11 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  req => {
+  handleFindAll(FlavorIdentifier, req => {
     const { flavorId } = req.params;
 
     log.info(`request for flavor id ${flavorId} identifiers`);
-    return fetchAll(FlavorIdentifier, {
+    return {
       where: {
         flavorId
       },
@@ -231,8 +231,8 @@ router.get(
           require: true
         }
       ]
-    });
-  }
+    };
+  })
 );
 /**
  * GET Flavor Data Supplier Identifier

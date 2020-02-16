@@ -5,8 +5,8 @@ import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
-  countAll,
-  fetchAll,
+  handleCount,
+  handleFindAll,
   handleValidationErrors
 } from 'modules/utils/request';
 
@@ -33,13 +33,12 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  req => {
+  handleFindAll(req => {
     const limit = req.query.limit || 20;
-
     const offset = req.query.offset - 1 || 0;
 
     log.info(`request for flavors ${limit}`);
-    return fetchAll(Flavor, {
+    return {
       limit,
       offset,
       include: [
@@ -48,13 +47,13 @@ router.get(
           require: true
         }
       ]
-    });
-  }
+    };
+  })
 );
 
 /**
  * GET Flavor Stats
  */
-router.get('/count', authenticate(), countAll(Flavor));
+router.get('/count', authenticate(), handleCount(Flavor));
 
 export default router;

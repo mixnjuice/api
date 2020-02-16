@@ -4,7 +4,11 @@ import { body, param } from 'express-validator';
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
-import { fetchAll, handleValidationErrors } from 'modules/utils/request';
+import {
+  handleFindAll,
+  handleModelOperation,
+  handleValidationErrors
+} from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('user');
@@ -33,28 +37,18 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(User, 'findOne', req => {
     const { id } = req.params;
 
     log.info(`request for user ${id}`);
-    try {
-      const result = await User.findOne({
+    return [
+      {
         where: {
           id
         }
-      });
-
-      if (!result) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /* PUT /:userId - Update user info. - still trying to figure out the best approach here
  */
@@ -73,28 +67,18 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(UserProfile, 'findOne', req => {
     const { userId } = req.params;
 
     log.info(`request for user profile ${userId}`);
-    try {
-      const result = await UserProfile.findOne({
+    return [
+      {
         where: {
           userId
         }
-      });
-
-      if (!result) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * PUT Update User's Profile
@@ -110,36 +94,23 @@ router.put(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(UserProfile, 'update', req => {
     const { userId } = req.params;
     const { location, bio, url } = req.body;
 
-    log.info(`update user profile ${userId}`);
-    try {
-      const result = await UserProfile.update(
-        {
-          location,
-          bio,
-          url
-        },
-        {
-          where: {
-            userId
-          }
+    return [
+      {
+        location,
+        bio,
+        url
+      },
+      {
+        where: {
+          userId
         }
-      );
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * GET User Recipes
@@ -155,16 +126,16 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  req => {
+  handleFindAll(Recipe, req => {
     const { userId } = req.params;
 
     log.info(`request for user recipes ${userId}`);
-    return fetchAll(Recipe, {
+    return {
       where: {
         userId
       }
-    });
-  }
+    };
+  })
 );
 
 /**
@@ -181,11 +152,11 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  req => {
+  handleFindAll(UsersFlavors, req => {
     const { userId } = req.params;
 
     log.info(`request flavor stash for user ${userId}`);
-    return fetchAll(UsersFlavors, {
+    return {
       where: {
         userId
       },
@@ -201,8 +172,8 @@ router.get(
           ]
         }
       ]
-    });
-  }
+    };
+  })
 );
 /**
  * GET A User Flavor
@@ -223,14 +194,11 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  req => {
+  handleFindAll(UsersFlavors, req => {
     const { userId, flavorId } = req.params;
 
-    log.info(
-      `request flavor stash flavor id ${req.params.userId} for user ${req.params.userId}`
-    );
-
-    return fetchAll(UsersFlavors, {
+    log.info(`request flavor stash flavor id ${flavorId} for user ${userId}`);
+    return {
       where: {
         userId,
         flavorId
@@ -247,8 +215,8 @@ router.get(
           ]
         }
       ]
-    });
-  }
+    };
+  })
 );
 /**
  * POST Add Flavor to User's Flavor Stash
@@ -264,31 +232,21 @@ router.post(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(UsersFlavors, 'create', req => {
     const { userId } = req.params;
     const { flavorId, created, minMillipercent, maxMillipercent } = req.body;
 
     log.info(`create flavor stash for user ${userId}`);
-    try {
-      const result = await UsersFlavors.create({
+    return [
+      {
         userId,
         flavorId,
         created,
         minMillipercent,
         maxMillipercent
-      });
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * PUT Update User's Flavor Stash Entry
@@ -309,36 +267,24 @@ router.put(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(UsersFlavors, 'update', req => {
     const { minMillipercent, maxMillipercent } = req.body;
     const { userId, flavorId } = req.params;
 
     log.info(`update user ${userId} flavor ${flavorId}`);
-    try {
-      const result = await UsersFlavors.update(
-        {
-          minMillipercent,
-          maxMillipercent
-        },
-        {
-          where: {
-            userId,
-            flavorId
-          }
+    return [
+      {
+        minMillipercent,
+        maxMillipercent
+      },
+      {
+        where: {
+          userId,
+          flavorId
         }
-      );
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 
 /**
@@ -360,29 +306,19 @@ router.delete(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(UsersFlavors, 'destroy', req => {
     const { userId, flavorId } = req.params;
 
     log.info(`delete from flavor stash for ${flavorId}`);
-    try {
-      const result = await UsersFlavors.destroy({
+    return [
+      {
         where: {
           userId,
           flavorId
         }
-      });
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * GET User Roles
@@ -398,11 +334,11 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  req => {
+  handleFindAll(UsersRoles, req => {
     const { userId } = req.params;
 
     log.info(`request roles for user ${userId}`);
-    return fetchAll(UsersRoles, {
+    return {
       where: {
         userId
       },
@@ -412,8 +348,8 @@ router.get(
           required: true
         }
       ]
-    });
-  }
+    };
+  })
 );
 /**
  * GET A User Role
@@ -434,12 +370,12 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(UsersRoles, 'findOne', req => {
     const { userId, roleId } = req.params;
 
     log.info(`request role id ${roleId} for user ${userId}`);
-    try {
-      const result = await UsersRoles.findOne({
+    return [
+      {
         where: {
           userId,
           roleId
@@ -450,19 +386,9 @@ router.get(
             required: true
           }
         ]
-      });
-
-      if (!result) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * POST Add Role to User's Roles
@@ -485,29 +411,19 @@ router.post(
     body('active').isBoolean()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(UsersRoles, 'create', req => {
     const { userId } = req.params;
     const { roleId, active } = req.body;
 
     log.info(`add role to user ${userId}`);
-    try {
-      const result = await UsersRoles.create({
+    return [
+      {
         userId,
         roleId,
         active: active || true
-      });
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * PUT Update User's Role
@@ -530,35 +446,23 @@ router.put(
     body('active').isBoolean()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(UsersRoles, 'update', req => {
     const { userId, roleId } = req.params;
     const { active } = req.body;
 
     log.info(`update user ${userId} role ${roleId}`);
-    try {
-      const result = await UsersRoles.update(
-        {
-          active
-        },
-        {
-          where: {
-            userId,
-            roleId
-          }
+    return [
+      {
+        active
+      },
+      {
+        where: {
+          userId,
+          roleId
         }
-      );
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 
 /**
@@ -580,29 +484,19 @@ router.delete(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(UsersRoles, 'destroy', req => {
     const { userId, roleId } = req.params;
 
     log.info(`delete from role ${roleId} from user ${userId}`);
-    try {
-      const result = await UsersRoles.destroy({
+    return [
+      {
         where: {
           userId,
           roleId
         }
-      });
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 
 router.get('/current', authenticate(), async (req, res) => {
@@ -624,12 +518,12 @@ router.get(
   authenticate(),
   [param('name').isString()],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(UserProfile, 'findOne', req => {
     const { name } = req.params;
 
     log.info(`request for username ${name}`);
-    try {
-      const result = await UserProfile.findOne({
+    return [
+      {
         where: {
           name
         },
@@ -639,19 +533,9 @@ router.get(
             required: true
           }
         ]
-      });
-
-      if (!result) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 
 export default router;

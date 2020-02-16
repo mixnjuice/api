@@ -5,8 +5,8 @@ import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
-  countAll,
-  fetchAll,
+  handleCount,
+  handleFindAll,
   handleValidationErrors
 } from 'modules/utils/request';
 
@@ -33,14 +33,13 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  req => {
+  handleFindAll(UserProfile, req => {
     const limit = req.query.limit || 20;
-
     const offset = req.query.offset - 1 || 0;
 
     log.info(`request for user profiles ${limit}`);
-    return fetchAll(UserProfile, { limit, offset });
-  }
+    return { limit, offset };
+  })
 );
 
 /**
@@ -62,14 +61,13 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  req => {
+  handleFindAll(req => {
     const limit = req.query.limit || 20;
-
     const offset = req.query.offset - 1 || 0;
 
     log.info(`request for user accounts ${limit}`);
-    return fetchAll(User, { limit, offset });
-  }
+    return { limit, offset };
+  })
 );
 /**
  * GET Role Users
@@ -92,13 +90,13 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  req => {
+  handleFindAll(UsersRoles, req => {
     const limit = req.query.limit || 20;
     const offset = req.query.offset - 1 || 0;
     const { roleId } = req.params;
 
     log.info(`request for all users with role id ${roleId}`);
-    return fetchAll(UsersRoles, {
+    return {
       where: {
         roleId
       },
@@ -114,13 +112,13 @@ router.get(
       ],
       limit,
       offset
-    });
-  }
+    };
+  })
 );
 
 /**
  * GET User Stats
  */
-router.get('/count', authenticate(), countAll(User));
+router.get('/count', authenticate(), handleCount(User));
 
 export default router;

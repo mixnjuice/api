@@ -5,8 +5,9 @@ import { authenticate, ensureRole } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
-  countAll,
-  fetchAll,
+  handleCount,
+  handleFindAll,
+  handleModelOperation,
   handleValidationErrors
 } from 'modules/utils/request';
 
@@ -28,28 +29,18 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(DataSupplier, 'findOne', req => {
     const { id } = req.params;
 
     log.info(`request for data supplier id ${id}`);
-    try {
-      const result = await DataSupplier.findOne({
+    return [
+      {
         where: {
           id
         }
-      });
-
-      if (!result) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 
 /**
@@ -68,26 +59,12 @@ router.post(
     body('code').isString()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(DataSupplier, 'create', req => {
+    const { name, code } = req.body;
+
     log.info(`request for new data supplier`);
-    try {
-      const { name, code } = req.body;
-      const result = await DataSupplier.create({
-        name,
-        code
-      });
-
-      if (result.length === 0) {
-        return res.status(204).end();
-      }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    return [{ name, code }];
+  })
 );
 /**
  * PUT Update a Data Supplier
@@ -112,35 +89,23 @@ router.put(
     body('code').isString()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(DataSupplier, 'update', req => {
     const { id } = req.params;
     const { name, code } = req.body;
 
     log.info(`request to update data supplier id ${id}`);
-    try {
-      const result = await DataSupplier.update(
-        {
-          name,
-          code
-        },
-        {
-          where: {
-            id
-          }
+    return [
+      {
+        name,
+        code
+      },
+      {
+        where: {
+          id
         }
-      );
-
-      if (result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * Delete a Data Supplier
@@ -156,33 +121,23 @@ router.delete(
       .toInt()
   ],
   handleValidationErrors(),
-  async (req, res) => {
+  handleModelOperation(DataSupplier, 'destroy', req => {
     const { id } = req.params;
 
     log.info(`request to delete data supplier id ${id}`);
-    try {
-      const result = await DataSupplier.destroy({
+    return [
+      {
         where: {
           id
         }
-      });
-
-      if (!result || result.length === 0) {
-        return res.status(204).end();
       }
-
-      res.type('application/json');
-      res.json(result);
-    } catch (error) {
-      log.error(error.message);
-      res.status(500).send(error.message);
-    }
-  }
+    ];
+  })
 );
 /**
  * GET Suppliers Stats
  */
-router.get('/suppliers/count', authenticate(), countAll(DataSupplier));
+router.get('/suppliers/count', authenticate(), handleCount(DataSupplier));
 /**
  * GET Data Suppliers
  */
@@ -200,20 +155,20 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  req => {
-    const limit = req.query.limit || 20;
-    const offset = req.query.offset - 1 || 0;
-
-    log.info(`request for data suppliers`);
-    return fetchAll(DataSupplier, { limit, offset });
-  }
+  handleFindAll(DataSupplier, req => ({
+    limit: req.query.limit || 20,
+    offset: req.query.offset - 1 || 0
+  }))
 );
+
 /**
  * GET Database Schema Version Info
  */
-router.get('/version', authenticate(), ensureRole('Administrator'), () => {
-  log.info(`request for Schema Version`);
-  return fetchAll(SchemaVersion);
-});
+router.get(
+  '/version',
+  authenticate(),
+  ensureRole('Administrator'),
+  handleFindAll(SchemaVersion)
+);
 
 export default router;

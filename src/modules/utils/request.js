@@ -18,9 +18,12 @@ export const handleValidationErrors = () => (req, res, next) => {
   }
 };
 
-export const fetchAll = (model, query) => async (req, res) => {
+export const handleFindAll = (model, queryMapper = () => undefined) => async (
+  req,
+  res
+) => {
   try {
-    const result = await model.findAll(query);
+    const result = await model.findAll(queryMapper(req));
 
     if (!Array.isArray(result) || result.length === 0) {
       return res.status(204).end();
@@ -35,7 +38,7 @@ export const fetchAll = (model, query) => async (req, res) => {
   }
 };
 
-export const countAll = model => async (req, res) => {
+export const handleCount = model => async (req, res) => {
   try {
     const result = await model.count();
 
@@ -43,6 +46,29 @@ export const countAll = model => async (req, res) => {
     return res.json({ result });
   } catch (error) {
     log.error(error.message);
+    log.error(error.stack);
+    return res.status(500).send(error.message);
+  }
+};
+
+export const handleModelOperation = (
+  model,
+  operation,
+  argMapper = () => []
+) => async (req, res) => {
+  log.info(`request to ${operation} ${model.name}`);
+  try {
+    const result = await model[operation](...argMapper(req));
+
+    if (result.length === 0) {
+      return res.status(204).end();
+    }
+
+    res.type('application/json');
+    return res.json(result);
+  } catch (error) {
+    log.error(error.message);
+    log.error(error.stack);
     return res.status(500).send(error.message);
   }
 };

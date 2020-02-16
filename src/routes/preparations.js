@@ -4,7 +4,7 @@ import { query } from 'express-validator';
 import { authenticate } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
-import { fetchAll, handleValidationErrors } from 'modules/utils/request';
+import { handleFindAll, handleValidationErrors } from 'modules/utils/request';
 
 const router = Router();
 const log = loggers('preparations');
@@ -29,14 +29,13 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  req => {
+  handleFindAll(Preparation, req => {
     const limit = req.query.limit || 20;
-
     const offset = req.query.offset - 1 || 0;
 
     log.info(`request for preparations ${limit}`);
-    return fetchAll(Preparation, { limit, offset });
-  }
+    return { limit, offset };
+  })
 );
 
 export default router;

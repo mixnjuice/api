@@ -514,7 +514,7 @@ router.get('/current', authenticate(), async (req, res) => {
  * @param userName string
  */
 router.get(
-  '/:name',
+  '/name/:name',
   authenticate(),
   [param('name').isString()],
   handleValidationErrors(),

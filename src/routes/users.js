@@ -61,12 +61,21 @@ router.get(
       .toInt()
   ],
   handleValidationErrors(),
-  handleFindAll(req => {
+  handleFindAll(User, req => {
     const limit = req.query.limit || 20;
     const offset = req.query.offset - 1 || 0;
 
     log.info(`request for user accounts ${limit}`);
-    return { limit, offset };
+    return {
+      include: [
+        {
+          model: UserProfile,
+          required: true
+        }
+      ],
+      limit,
+      offset
+    };
   })
 );
 /**
@@ -107,7 +116,13 @@ router.get(
         },
         {
           model: User,
-          required: true
+          required: true,
+          include: [
+            {
+              model: UserProfile,
+              required: true
+            }
+          ]
         }
       ],
       limit,

@@ -150,7 +150,7 @@ describe('user route resource', () => {
   it('GET user profile', () => {
     tryCatch(done => {
       request
-        .get('/mixnjuice')
+        .get('/name/mixnjuice')
         .expect('Content-Type', /json/)
         .expect(200, done);
     });

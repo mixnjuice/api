@@ -139,11 +139,13 @@ router.delete(
       .toInt()
   ],
   handleValidationErrors(),
-  handleModelOperation(Vendor, 'destroy', req => ({
-    where: {
-      id: req.params.id
+  handleModelOperation(Vendor, 'destroy', req => [
+    {
+      where: {
+        id: req.params.id
+      }
     }
-  }))
+  ])
 );
 /**
  * GET Vendor Data Supplier Identifiers

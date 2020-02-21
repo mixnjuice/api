@@ -99,11 +99,13 @@ router.delete(
       .toInt()
   ],
   handleValidationErrors(),
-  handleModelOperation(Role, 'destroy', req => ({
-    where: {
-      id: req.params.id
+  handleModelOperation(Role, 'destroy', req => [
+    {
+      where: {
+        id: req.params.id
+      }
     }
-  }))
+  ])
 );
 
 export default router;

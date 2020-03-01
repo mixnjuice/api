@@ -12,6 +12,7 @@ jobs:
     working_directory: ~/mixnjuice-api
     steps:
       - checkout
+      - run: docker network create proxy_proxy
       - run: docker-compose up -d --build
       - run: docker-compose exec api npm run migrate
       - run:

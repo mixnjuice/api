@@ -1,6 +1,6 @@
 FROM node:lts-alpine
 
-WORKDIR /usr/src/flavor-api
+WORKDIR /usr/src/mixnjuice-api
 
 # copy source code to image
 COPY . .

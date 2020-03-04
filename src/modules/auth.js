@@ -17,6 +17,7 @@ const { UserToken, User, Role } = models;
 
 const { age: tokenAge, validate: validateTokens } = webConfig.tokens;
 const { validate: validateRoles } = webConfig.roles;
+const useBearerStrategy = !isTestEnvironment() && validateTokens;
 
 const authorize = async (token, done) => {
   try {
@@ -132,11 +133,17 @@ authServer.exchange(
  * Provide a wrapper around passport.authenticate with the appropriate strategies selected.
  */
 export const authenticate = () => {
-  const useBearerStrategy = !isTestEnvironment() && validateTokens;
+  const strategies = [];
+
+  if (useBearerStrategy) {
+    strategies.push('bearer');
+  }
+
+  strategies.push('anonymous');
 
   return [
     passport.initialize(),
-    passport.authenticate(useBearerStrategy ? 'bearer' : 'anonymous', {
+    passport.authenticate(strategies, {
       session: false
     })
   ];
@@ -191,9 +198,11 @@ export const useMockStrategy = (passportRef, user) =>
   );
 
 export default app => {
-  passport.use(
-    validateTokens ? new BearerStrategy(authorize) : new AnonymousStrategy()
-  );
+  if (useBearerStrategy) {
+    passport.use(new BearerStrategy(authorize));
+  }
+
+  passport.use(new AnonymousStrategy());
 
   // allow requests to obtain a token
   app.post('/oauth/token', authServer.token(), authServer.errorHandler());

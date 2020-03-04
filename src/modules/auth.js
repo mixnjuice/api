@@ -75,14 +75,14 @@ authServer.exchange(
         );
       }
 
-      const result = await User.findAll({
+      const user = await User.findOne({
         where: {
           emailAddress: username,
           activationCode: null
         }
       });
 
-      if (!Array.isArray(result) || result.length === 0) {
+      if (!user) {
         return done(
           new oauth2orize.AuthorizationError(
             'Authentication failed.',
@@ -91,7 +91,6 @@ authServer.exchange(
         );
       }
 
-      const [user] = result;
       const valid = await compareHashAndPassword(
         user.get('password'),
         password

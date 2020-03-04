@@ -26,28 +26,32 @@ const authorize = async (token, done) => {
       );
     }
 
-    const result = await UserToken.findAll({
+    const userToken = await UserToken.findOne({
       where: {
         token,
         expires: {
           [Op.gt]: Date.now()
         }
-      },
-      include: [
-        {
-          model: User,
-          required: true
-        }
-      ]
+      }
     });
 
-    if (!Array.isArray(result) || result.length === 0) {
+    if (!userToken) {
       return done(
         new oauth2orize.TokenError('Authentication failed.', 'invalid_grant')
       );
     }
 
-    const [{ User: user }] = result;
+    const user = await User.findOne({
+      where: {
+        id: userToken.userId
+      },
+      include: [
+        {
+          model: Role,
+          as: 'Roles'
+        }
+      ]
+    });
 
     done(null, user, { scope: 'all' });
   } catch (error) {

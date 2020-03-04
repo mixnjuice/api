@@ -68,6 +68,7 @@ router.post(
     return [{ name, code }];
   })
 );
+
 /**
  * PUT Update a Data Supplier
  * @param id int
@@ -110,6 +111,7 @@ router.put(
     ];
   })
 );
+
 /**
  * Delete a Data Supplier
  * @param id int
@@ -138,6 +140,7 @@ router.delete(
     ];
   })
 );
+
 /**
  * GET Suppliers Stats
  */
@@ -147,6 +150,7 @@ router.get(
   ensurePermission('data', 'read'),
   handleCount(DataSupplier)
 );
+
 /**
  * GET Data Suppliers
  */

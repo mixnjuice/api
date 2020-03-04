@@ -156,46 +156,6 @@ export const authenticate = () => {
   ];
 };
 
-export const ensureRole = name => async (req, _, next) => {
-  if (isTestEnvironment() || !validateRoles) {
-    return next(null);
-  }
-
-  try {
-    const { user } = req;
-
-    if (!user) {
-      throw new Error('No user found!');
-    }
-
-    const id = parseInt(user.id, 10);
-
-    const role = await Role.findOne({
-      where: {
-        name
-      },
-      include: [
-        {
-          as: 'Users',
-          model: User,
-          required: true,
-          through: {
-            where: { userId: id }
-          }
-        }
-      ]
-    });
-
-    if (!role) {
-      throw new Error('User lacks required role!');
-    }
-
-    next(null);
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const ensurePermission = (subject, action) => async (req, _, next) => {
   if (isTestEnvironment() || !validateRoles) {
     return next(null);

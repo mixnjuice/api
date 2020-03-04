@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param, query } from 'express-validator';
 
-import { authenticate, ensureRole } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
@@ -167,7 +167,7 @@ router.get(
 router.get(
   '/version',
   authenticate(),
-  ensureRole('Administrator'),
+  ensurePermission('data', 'read'),
   handleFindAll(SchemaVersion)
 );
 

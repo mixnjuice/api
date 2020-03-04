@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param } from 'express-validator';
 
-import { authenticate, ensureRole } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
@@ -41,7 +41,7 @@ router.get(
 router.put(
   '/:id(\\d+)',
   authenticate(),
-  ensureRole('Administrator'),
+  ensurePermission('role', 'update'),
   [
     param('id')
       .isNumeric()
@@ -75,7 +75,7 @@ router.put(
 router.post(
   '/',
   authenticate(),
-  ensureRole('Administrator'),
+  ensurePermission('role', 'create'),
   [body('name').isString()],
   handleValidationErrors(),
   handleModelOperation(Role, 'create', req => [
@@ -91,7 +91,7 @@ router.post(
 router.delete(
   '/:id(\\d+)',
   authenticate(),
-  ensureRole('Administrator'),
+  ensurePermission('role', 'delete'),
   [
     param('id')
       .isNumeric()

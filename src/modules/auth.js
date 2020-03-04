@@ -167,9 +167,6 @@ export const ensurePermission = (subject, action) => async (req, _, next) => {
     const { user } = req;
 
     if (user) {
-      // eslint-disable-next-line
-      console.dir(user);
-
       role = await Role.findOne({
         where: {
           id: user.Roles.map(r => r.id)

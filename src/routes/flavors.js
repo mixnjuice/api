@@ -22,7 +22,8 @@ const { Flavor, Vendor } = models;
 router.get(
   '/',
   authenticate(),
-  ensurePermission('flavors', 'read')[
+  ensurePermission('flavors', 'read'),
+  [
     (query('offset')
       .optional()
       .isNumeric()

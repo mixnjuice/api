@@ -22,6 +22,7 @@ const { DataSupplier, SchemaVersion } = models;
 router.get(
   '/supplier/:id',
   authenticate(),
+  ensurePermission('data', 'read'),
   [
     param('id')
       .isNumeric()
@@ -51,6 +52,7 @@ router.get(
 router.post(
   '/supplier',
   authenticate(),
+  ensurePermission('data', 'create'),
   [
     body('name')
       .isString()
@@ -77,6 +79,7 @@ router.post(
 router.put(
   '/supplier/:id',
   authenticate(),
+  ensurePermission('data', 'update'),
   [
     param('id')
       .isNumeric()
@@ -114,6 +117,7 @@ router.put(
 router.delete(
   '/supplier/:id',
   authenticate(),
+  ensurePermission('data', 'delete'),
   [
     param('id')
       .isNumeric()
@@ -137,13 +141,19 @@ router.delete(
 /**
  * GET Suppliers Stats
  */
-router.get('/suppliers/count', authenticate(), handleCount(DataSupplier));
+router.get(
+  '/suppliers/count',
+  authenticate(),
+  ensurePermission('data', 'read'),
+  handleCount(DataSupplier)
+);
 /**
  * GET Data Suppliers
  */
 router.get(
   '/suppliers',
   authenticate(),
+  ensurePermission('data', 'read'),
   [
     query('offset')
       .optional()

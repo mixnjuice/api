@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { query } from 'express-validator';
 
-import { authenticate } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import { handleFindAll, handleValidationErrors } from 'modules/utils/request';
@@ -18,6 +18,7 @@ const { Diluent } = models;
 router.get(
   '/',
   authenticate(),
+  ensurePermission('diluents', 'read'),
   [
     query('offset')
       .optional()
@@ -41,21 +42,26 @@ router.get(
 /**
  * GET Diluent Stats
  */
-router.get('/count', authenticate(), async (req, res) => {
-  log.info(`request for user stats`);
-  try {
-    const diluents = await Diluent.count();
-    // Results
-    const result = {
-      diluents
-    };
+router.get(
+  '/count',
+  authenticate(),
+  ensurePermission('diluent', 'read'),
+  async (req, res) => {
+    log.info(`request for user stats`);
+    try {
+      const diluents = await Diluent.count();
+      // Results
+      const result = {
+        diluents
+      };
 
-    res.type('application/json');
-    res.json(result);
-  } catch (error) {
-    log.error(error.message);
-    res.status(500).send(error.message);
+      res.type('application/json');
+      res.json(result);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
   }
-});
+);
 
 export default router;

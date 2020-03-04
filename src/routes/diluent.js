@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param } from 'express-validator';
 
-import { authenticate } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
@@ -20,6 +20,7 @@ const { Diluent } = models;
 router.get(
   '/:id',
   authenticate(),
+  ensurePermission('diluent', 'read'),
   [
     param('id')
       .isNumeric()
@@ -46,6 +47,7 @@ router.get(
 router.post(
   '/',
   authenticate(),
+  ensurePermission('diluent', 'create'),
   [
     body('name')
       .isString()
@@ -81,6 +83,7 @@ router.post(
 router.put(
   '/:id',
   authenticate(),
+  ensurePermission('diluent', 'update'),
   [
     param('id')
       .isNumeric()
@@ -122,6 +125,7 @@ router.put(
 router.delete(
   '/:id',
   authenticate(),
+  ensurePermission('diluent', 'delete'),
   [
     param('id')
       .isNumeric()

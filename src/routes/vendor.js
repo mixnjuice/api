@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param } from 'express-validator';
 
-import { authenticate } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
@@ -21,6 +21,7 @@ const { DataSupplier, Vendor, VendorIdentifier } = models;
 router.get(
   '/:id',
   authenticate(),
+  ensurePermission('vendor', 'read'),
   [
     param('id')
       .isNumeric()
@@ -41,6 +42,7 @@ router.get(
     ];
   })
 );
+
 /**
  * POST Create a Vendor
  * @body name string
@@ -50,6 +52,7 @@ router.get(
 router.post(
   '/',
   authenticate(),
+  ensurePermission('vendor', 'create'),
   [
     body('name')
       .isString()
@@ -78,6 +81,7 @@ router.post(
     ];
   })
 );
+
 /**
  * PUT Updates a Vendor
  * @param id int
@@ -89,6 +93,7 @@ router.post(
 router.put(
   '/:id',
   authenticate(),
+  ensurePermission('vendor', 'update'),
   [
     param('id')
       .isNumeric()
@@ -125,6 +130,7 @@ router.put(
     ];
   })
 );
+
 /**
  * DELETE Deletes a Vendor
  * @param id int
@@ -132,6 +138,7 @@ router.put(
 router.delete(
   '/:id',
   authenticate(),
+  ensurePermission('vendor', 'delete'),
   [
     param('id')
       .isNumeric()
@@ -147,6 +154,7 @@ router.delete(
     }
   ])
 );
+
 /**
  * GET Vendor Data Supplier Identifiers
  * @param id int
@@ -154,6 +162,7 @@ router.delete(
 router.get(
   '/:vendorId/identifiers',
   authenticate(),
+  ensurePermission('vendor', 'read'),
   [
     param('vendorId')
       .isNumeric()
@@ -179,6 +188,7 @@ router.get(
     };
   })
 );
+
 /**
  * GET Vendor Data Supplier Identifier
  * @param vendorId int
@@ -187,6 +197,7 @@ router.get(
 router.get(
   '/:vendorId/identifier/:dataSupplierId',
   authenticate(),
+  ensurePermission('vendor', 'read'),
   [
     param('vendorId')
       .isNumeric()
@@ -220,6 +231,7 @@ router.get(
     ];
   })
 );
+
 /**
  * POST Create a Vendor Identifier
  * @param id int
@@ -229,6 +241,7 @@ router.get(
 router.post(
   '/:vendorId/identifier',
   authenticate(),
+  ensurePermission('vendor', 'create'),
   [
     param('vendorId')
       .isNumeric()
@@ -258,6 +271,7 @@ router.post(
     ];
   })
 );
+
 /**
  * PUT Update a Vendor Identifier
  * @param vendorId int
@@ -267,6 +281,7 @@ router.post(
 router.put(
   '/:vendorId/identifier/:dataSupplierId',
   authenticate(),
+  ensurePermission('vendor', 'update'),
   [
     param('vendorId')
       .isNumeric()
@@ -302,14 +317,16 @@ router.put(
     ];
   })
 );
+
 /**
- * Delete Diluent
+ * Delete Vendor Identifier
  * @param vendorId int
  * @param dataSupplierId int
  */
 router.delete(
   '/:vendorId/identifier/:dataSupplierId',
   authenticate(),
+  ensurePermission('vendor', 'delete'),
   [
     param('vendorId')
       .isNumeric()

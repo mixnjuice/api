@@ -20,6 +20,7 @@ const { Role } = models;
 router.get(
   '/:id(\\d+)',
   authenticate(),
+  ensurePermission('role', 'read'),
   [
     param('id')
       .isNumeric()
@@ -33,6 +34,7 @@ router.get(
     }
   }))
 );
+
 /**
  * PUT Update Role
  * @param roleId int
@@ -84,6 +86,7 @@ router.post(
     }
   ])
 );
+
 /**
  * DELETE Role
  * @param roleId int

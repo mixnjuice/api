@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { query, param } from 'express-validator';
 
-import { authenticate } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
@@ -22,6 +22,7 @@ const { Role, User, UserProfile, UsersRoles } = models;
 router.get(
   '/',
   authenticate(),
+  ensurePermission('users', 'read'),
   [
     query('offset')
       .optional()
@@ -50,6 +51,7 @@ router.get(
 router.get(
   '/accounts',
   authenticate(),
+  ensurePermission('users', 'read'),
   [
     query('offset')
       .optional()
@@ -78,6 +80,7 @@ router.get(
     };
   })
 );
+
 /**
  * GET Role Users
  * @param roleid int
@@ -85,6 +88,7 @@ router.get(
 router.get(
   '/role/:roleId(\\d+)',
   authenticate(),
+  ensurePermission('users', 'read'),
   [
     param('roleId')
       .isNumeric()
@@ -134,6 +138,11 @@ router.get(
 /**
  * GET User Stats
  */
-router.get('/count', authenticate(), handleCount(User));
+router.get(
+  '/count',
+  authenticate(),
+  ensurePermission('users', 'read'),
+  handleCount(User)
+);
 
 export default router;

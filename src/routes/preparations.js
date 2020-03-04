@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { query } from 'express-validator';
 
-import { authenticate } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import { handleFindAll, handleValidationErrors } from 'modules/utils/request';
@@ -18,6 +18,7 @@ const { Preparation } = models;
 router.get(
   '/',
   authenticate(),
+  ensurePermission('preparations', 'read'),
   [
     query('offset')
       .optional()

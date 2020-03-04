@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param } from 'express-validator';
 
-import { authenticate } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
@@ -29,6 +29,7 @@ const {
 router.get(
   '/:id',
   authenticate(),
+  ensurePermission('recipe', 'read'),
   [
     param('id')
       .isNumeric()
@@ -56,6 +57,7 @@ router.get(
     ]
   }))
 );
+
 /**
  * POST Create a Recipe and associations
  * @body userId int
@@ -67,6 +69,7 @@ router.get(
 router.post(
   '/',
   authenticate(),
+  ensurePermission('recipe', 'create'),
   [
     body('name')
       .isString()
@@ -177,6 +180,7 @@ router.post(
 router.put(
   '/:id',
   authenticate(),
+  ensurePermission('recipe', 'update'),
   [
     param('id')
       .isNumeric()
@@ -304,6 +308,7 @@ router.put(
     }
   }
 );
+
 /**
  * DELETE Recipe
  * @param id int
@@ -311,6 +316,7 @@ router.put(
 router.delete(
   '/:id',
   authenticate(),
+  ensurePermission('recipe', 'delete'),
   [
     param('id')
       .isNumeric()

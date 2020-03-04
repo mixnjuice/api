@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param } from 'express-validator';
 
-import { authenticate } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
@@ -27,6 +27,7 @@ const {
 router.get(
   '/:id',
   authenticate(),
+  ensurePermission('preparation', 'read'),
   [
     param('id')
       .isNumeric()
@@ -71,6 +72,7 @@ router.get(
     ];
   })
 );
+
 /**
  * POST Create a Preparation
  * @body recipeId int
@@ -82,6 +84,7 @@ router.get(
 router.post(
   '/',
   authenticate(),
+  ensurePermission('preparation', 'create'),
   [
     body('recipeId')
       .isNumeric()
@@ -158,6 +161,7 @@ router.post(
 router.put(
   '/:id',
   authenticate(),
+  ensurePermission('preparation', 'update'),
   [
     param('id')
       .isNumeric()
@@ -260,6 +264,7 @@ router.put(
 router.delete(
   '/:id',
   authenticate(),
+  ensurePermission('preparation', 'delete'),
   [
     param('id')
       .isNumeric()

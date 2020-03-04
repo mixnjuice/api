@@ -13,7 +13,14 @@ import MockStrategy from 'passport-mock-strategy';
 
 const log = logging('auth');
 const { Op } = models.Sequelize;
-const { UserToken, User, Role } = models;
+const {
+  UserToken,
+  User,
+  Role,
+  RolesPermissions,
+  PermissionSubject,
+  PermissionAction
+} = models;
 
 const { age: tokenAge, validate: validateTokens } = webConfig.tokens;
 const { validate: validateRoles } = webConfig.roles;
@@ -181,6 +188,69 @@ export const ensureRole = name => async (req, _, next) => {
 
     if (!role) {
       throw new Error('User lacks required role!');
+    }
+
+    next(null);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const ensurePermission = (subject, action) => async (req, _, next) => {
+  if (isTestEnvironment() || !validateRoles) {
+    return next(null);
+  }
+
+  try {
+    let role;
+
+    const { user } = req;
+
+    if (user) {
+      // eslint-disable-next-line
+      console.dir(user);
+
+      role = await Role.findOne({
+        where: {
+          id: user.Roles.map(r => r.id)
+        }
+      });
+    } else {
+      role = await Role.findOne({
+        where: {
+          name: 'Guest'
+        }
+      });
+    }
+
+    if (!role) {
+      throw new Error('User is missing a role!');
+    }
+
+    const permission = await RolesPermissions.findOne({
+      where: {
+        roleId: role.id
+      },
+      include: [
+        {
+          model: PermissionSubject,
+          as: 'Subject',
+          where: {
+            name: subject
+          }
+        },
+        {
+          model: PermissionAction,
+          as: 'Action',
+          where: {
+            name: action
+          }
+        }
+      ]
+    });
+
+    if (!permission) {
+      throw new Error('User does not have the required permissions!');
     }
 
     next(null);

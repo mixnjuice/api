@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param } from 'express-validator';
 
-import { authenticate } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
@@ -30,6 +30,7 @@ const {
 router.get(
   '/:id(\\d+)',
   authenticate(),
+  ensurePermission('user', 'read'),
   [
     param('id')
       .isNumeric()
@@ -60,6 +61,7 @@ router.get(
 router.get(
   '/:userId(\\d+)/profile',
   authenticate(),
+  ensurePermission('user', 'read'),
   [
     param('userId')
       .isNumeric()
@@ -80,6 +82,7 @@ router.get(
     ];
   })
 );
+
 /**
  * PUT Update User's Profile
  * @param userId int
@@ -87,6 +90,7 @@ router.get(
 router.put(
   '/:userId(\\d+)/profile',
   authenticate(),
+  ensurePermission('user', 'update'),
   [
     param('userId')
       .isNumeric()
@@ -112,6 +116,7 @@ router.put(
     ];
   })
 );
+
 /**
  * GET User Recipes
  * @param userId int
@@ -119,6 +124,7 @@ router.put(
 router.get(
   '/:userId(\\d+)/recipes',
   authenticate(),
+  ensurePermission('user', 'read'),
   [
     param('userId')
       .isNumeric()
@@ -145,6 +151,7 @@ router.get(
 router.get(
   '/:userId(\\d+)/flavors',
   authenticate(),
+  ensurePermission('user', 'read'),
   [
     param('userId')
       .isNumeric()
@@ -175,6 +182,7 @@ router.get(
     };
   })
 );
+
 /**
  * GET A User Flavor
  * @param userId int
@@ -183,6 +191,7 @@ router.get(
 router.get(
   '/:userId(\\d+)/flavor/:flavorId(\\d+)',
   authenticate(),
+  ensurePermission('user', 'read'),
   [
     param('userId')
       .isNumeric()
@@ -218,6 +227,7 @@ router.get(
     };
   })
 );
+
 /**
  * POST Add Flavor to User's Flavor Stash
  * @param userId int - User ID
@@ -225,6 +235,7 @@ router.get(
 router.post(
   '/:userId(\\d+)/flavor',
   authenticate(),
+  ensurePermission('user', 'create'),
   [
     param('userId')
       .isNumeric()
@@ -248,6 +259,7 @@ router.post(
     ];
   })
 );
+
 /**
  * PUT Update User's Flavor Stash Entry
  * @param userId int
@@ -256,6 +268,7 @@ router.post(
 router.put(
   '/:userId(\\d+)/flavor/:flavorId(\\d+)',
   authenticate(),
+  ensurePermission('user', 'update'),
   [
     param('userId')
       .isNumeric()
@@ -295,6 +308,7 @@ router.put(
 router.delete(
   '/:userId(\\d+)/flavor/:flavorId(\\d+)',
   authenticate(),
+  ensurePermission('user', 'delete'),
   [
     param('userId')
       .isNumeric()
@@ -320,6 +334,7 @@ router.delete(
     ];
   })
 );
+
 /**
  * GET User Roles
  * @param userId int
@@ -327,6 +342,7 @@ router.delete(
 router.get(
   '/:userId(\\d+)/roles',
   authenticate(),
+  ensurePermission('user', 'read'),
   [
     param('userId')
       .isNumeric()
@@ -351,6 +367,7 @@ router.get(
     };
   })
 );
+
 /**
  * GET A User Role
  * @param userId int
@@ -359,6 +376,7 @@ router.get(
 router.get(
   '/:userId(\\d+)/role/:roleId(\\d+)',
   authenticate(),
+  ensurePermission('user', 'read'),
   [
     param('userId')
       .isNumeric()
@@ -390,6 +408,7 @@ router.get(
     ];
   })
 );
+
 /**
  * POST Add Role to User's Roles
  * @param userId int - User ID
@@ -399,6 +418,8 @@ router.get(
 router.post(
   '/:userId(\\d+)/role',
   authenticate(),
+  ensurePermission('user', 'update'),
+  ensurePermission('user', 'manage'),
   [
     param('userId')
       .isNumeric()
@@ -425,6 +446,7 @@ router.post(
     ];
   })
 );
+
 /**
  * PUT Update User's Role
  * @param userId int
@@ -434,6 +456,8 @@ router.post(
 router.put(
   '/:userId(\\d+)/role/:roleId(\\d+)',
   authenticate(),
+  ensurePermission('user', 'update'),
+  ensurePermission('user', 'manage'),
   [
     param('userId')
       .isNumeric()
@@ -473,6 +497,8 @@ router.put(
 router.delete(
   '/:userId(\\d+)/role/:roleId(\\d+)',
   authenticate(),
+  ensurePermission('user', 'delete'),
+  ensurePermission('user', 'manage'),
   [
     param('userId')
       .isNumeric()
@@ -499,15 +525,20 @@ router.delete(
   })
 );
 
-router.get('/current', authenticate(), async (req, res) => {
-  try {
-    res.type('application/json');
-    res.json(req.user);
-  } catch (error) {
-    log.error(error.message);
-    res.status(500).send(error.message);
+router.get(
+  '/current',
+  authenticate(),
+  ensurePermission('user', 'read'),
+  async (req, res) => {
+    try {
+      res.type('application/json');
+      res.json(req.user);
+    } catch (error) {
+      log.error(error.message);
+      res.status(500).send(error.message);
+    }
   }
-});
+);
 
 /**
  * GET User Info by Username
@@ -516,6 +547,7 @@ router.get('/current', authenticate(), async (req, res) => {
 router.get(
   '/name/:name',
   authenticate(),
+  ensurePermission('user', 'read'),
   [param('name').isString()],
   handleValidationErrors(),
   handleModelOperation(UserProfile, 'findOne', req => {

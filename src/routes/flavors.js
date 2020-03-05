@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { query } from 'express-validator';
 
-import { authenticate } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
@@ -22,15 +22,16 @@ const { Flavor, Vendor } = models;
 router.get(
   '/',
   authenticate(),
+  ensurePermission('flavors', 'read'),
   [
-    query('offset')
+    (query('offset')
       .optional()
       .isNumeric()
       .toInt(),
     query('limit')
       .optional()
       .isNumeric()
-      .toInt()
+      .toInt())
   ],
   handleValidationErrors(),
   handleFindAll(Flavor, req => {
@@ -54,6 +55,11 @@ router.get(
 /**
  * GET Flavor Stats
  */
-router.get('/count', authenticate(), handleCount(Flavor));
+router.get(
+  '/count',
+  authenticate(),
+  ensurePermission('flavors', 'read'),
+  handleCount(Flavor)
+);
 
 export default router;

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { authenticate } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import { handleCount, handleFindAll } from 'modules/utils/request';
 
@@ -10,11 +10,21 @@ const { Role } = models;
 /**
  * GET Roles
  */
-router.get('/', authenticate(), handleFindAll(Role));
+router.get(
+  '/',
+  authenticate(),
+  ensurePermission('roles', 'read'),
+  handleFindAll(Role)
+);
 
 /**
  * GET Roles Stats
  */
-router.get('/count', authenticate(), handleCount(Role));
+router.get(
+  '/count',
+  authenticate(),
+  ensurePermission('roles', 'read'),
+  handleCount(Role)
+);
 
 export default router;

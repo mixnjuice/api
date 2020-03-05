@@ -13,10 +13,18 @@ import MockStrategy from 'passport-mock-strategy';
 
 const log = logging('auth');
 const { Op } = models.Sequelize;
-const { UserToken, User, Role } = models;
+const {
+  UserToken,
+  User,
+  Role,
+  RolesPermissions,
+  PermissionSubject,
+  PermissionAction
+} = models;
 
 const { age: tokenAge, validate: validateTokens } = webConfig.tokens;
 const { validate: validateRoles } = webConfig.roles;
+const useBearerStrategy = !isTestEnvironment() && validateTokens;
 
 const authorize = async (token, done) => {
   try {
@@ -26,28 +34,32 @@ const authorize = async (token, done) => {
       );
     }
 
-    const result = await UserToken.findAll({
+    const userToken = await UserToken.findOne({
       where: {
         token,
         expires: {
           [Op.gt]: Date.now()
         }
-      },
-      include: [
-        {
-          model: User,
-          required: true
-        }
-      ]
+      }
     });
 
-    if (!Array.isArray(result) || result.length === 0) {
+    if (!userToken) {
       return done(
         new oauth2orize.TokenError('Authentication failed.', 'invalid_grant')
       );
     }
 
-    const [{ User: user }] = result;
+    const user = await User.findOne({
+      where: {
+        id: userToken.userId
+      },
+      include: [
+        {
+          model: Role,
+          as: 'Roles'
+        }
+      ]
+    });
 
     done(null, user, { scope: 'all' });
   } catch (error) {
@@ -71,14 +83,14 @@ authServer.exchange(
         );
       }
 
-      const result = await User.findAll({
+      const user = await User.findOne({
         where: {
           emailAddress: username,
           activationCode: null
         }
       });
 
-      if (!Array.isArray(result) || result.length === 0) {
+      if (!user) {
         return done(
           new oauth2orize.AuthorizationError(
             'Authentication failed.',
@@ -87,7 +99,6 @@ authServer.exchange(
         );
       }
 
-      const [user] = result;
       const valid = await compareHashAndPassword(
         user.get('password'),
         password
@@ -129,48 +140,74 @@ authServer.exchange(
  * Provide a wrapper around passport.authenticate with the appropriate strategies selected.
  */
 export const authenticate = () => {
-  const useBearerStrategy = !isTestEnvironment() && validateTokens;
+  const strategies = [];
+
+  if (useBearerStrategy) {
+    strategies.push('bearer');
+  }
+
+  strategies.push('anonymous');
 
   return [
     passport.initialize(),
-    passport.authenticate(useBearerStrategy ? 'bearer' : 'anonymous', {
+    passport.authenticate(strategies, {
       session: false
     })
   ];
 };
 
-export const ensureRole = name => async (req, _, next) => {
+export const ensurePermission = (subject, action) => async (req, _, next) => {
   if (isTestEnvironment() || !validateRoles) {
     return next(null);
   }
 
   try {
+    let role;
+
     const { user } = req;
 
-    if (!user) {
-      throw new Error('No user found!');
+    if (user) {
+      role = await Role.findOne({
+        where: {
+          id: user.Roles.map(r => r.id)
+        }
+      });
+    } else {
+      role = await Role.findOne({
+        where: {
+          name: 'Guest'
+        }
+      });
     }
 
-    const id = parseInt(user.id, 10);
+    if (!role) {
+      throw new Error('User is missing a role!');
+    }
 
-    const role = await Role.findOne({
+    const permission = await RolesPermissions.findOne({
       where: {
-        name
+        roleId: role.id
       },
       include: [
         {
-          as: 'Users',
-          model: User,
-          required: true,
-          through: {
-            where: { userId: id }
+          model: PermissionSubject,
+          as: 'Subject',
+          where: {
+            name: subject
+          }
+        },
+        {
+          model: PermissionAction,
+          as: 'Action',
+          where: {
+            name: action
           }
         }
       ]
     });
 
-    if (!role) {
-      throw new Error('User lacks required role!');
+    if (!permission) {
+      throw new Error('User does not have the required permissions!');
     }
 
     next(null);
@@ -188,9 +225,11 @@ export const useMockStrategy = (passportRef, user) =>
   );
 
 export default app => {
-  passport.use(
-    validateTokens ? new BearerStrategy(authorize) : new AnonymousStrategy()
-  );
+  if (useBearerStrategy) {
+    passport.use(new BearerStrategy(authorize));
+  }
+
+  passport.use(new AnonymousStrategy());
 
   // allow requests to obtain a token
   app.post('/oauth/token', authServer.token(), authServer.errorHandler());

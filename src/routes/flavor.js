@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param } from 'express-validator';
 
-import { authenticate } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
@@ -21,6 +21,7 @@ const { DataSupplier, Flavor, FlavorIdentifier, Vendor } = models;
 router.get(
   '/:id',
   authenticate(),
+  ensurePermission('flavor', 'read'),
   [
     param('id')
       .isNumeric()
@@ -58,6 +59,7 @@ router.get(
 router.post(
   '/',
   authenticate(),
+  ensurePermission('flavor', 'create'),
   [
     body('vendorId')
       .isNumeric()
@@ -100,6 +102,7 @@ router.post(
 router.put(
   '/:id',
   authenticate(),
+  ensurePermission('flavor', 'update'),
   [
     param('id')
       .isNumeric()
@@ -148,6 +151,7 @@ router.put(
 router.delete(
   '/:id',
   authenticate(),
+  ensurePermission('flavor', 'delete'),
   [
     param('id')
       .isNumeric()
@@ -176,6 +180,7 @@ router.delete(
 router.get(
   '/:flavorId/identifiers',
   authenticate(),
+  ensurePermission('flavor', 'read'),
   [
     param('flavorId')
       .isNumeric()
@@ -209,6 +214,7 @@ router.get(
 router.get(
   '/:flavorId/identifier/:dataSupplierId',
   authenticate(),
+  ensurePermission('flavor', 'read'),
   [
     param('flavorId')
       .isNumeric()
@@ -252,6 +258,7 @@ router.get(
 router.post(
   '/:flavorId/identifier',
   authenticate(),
+  ensurePermission('flavor', 'create'),
   [
     param('flavorId')
       .isNumeric()
@@ -281,6 +288,7 @@ router.post(
     ];
   })
 );
+
 /**
  * PUT Update a Flavor Identifier
  * @param flavorId int
@@ -290,6 +298,8 @@ router.post(
 router.put(
   '/:flavorId/identifier/:dataSupplierId',
   authenticate(),
+  ensurePermission('flavor', 'update'),
+  ensurePermission('flavor', 'manage'),
   [
     param('flavorId')
       .isNumeric()
@@ -325,14 +335,17 @@ router.put(
     ];
   })
 );
+
 /**
- * Delete Diluent
+ * Delete Flavor Identifier
  * @param flavorId int
  * @param dataSupplierId int
  */
 router.delete(
   '/:flavorId/identifier/:dataSupplierId',
   authenticate(),
+  ensurePermission('flavor', 'delete'),
+  ensurePermission('flavor', 'manage'),
   [
     param('flavorId')
       .isNumeric()

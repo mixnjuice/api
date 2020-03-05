@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, param, query } from 'express-validator';
 
-import { authenticate, ensureRole } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 import {
@@ -22,6 +22,7 @@ const { DataSupplier, SchemaVersion } = models;
 router.get(
   '/supplier/:id',
   authenticate(),
+  ensurePermission('data', 'read'),
   [
     param('id')
       .isNumeric()
@@ -51,6 +52,7 @@ router.get(
 router.post(
   '/supplier',
   authenticate(),
+  ensurePermission('data', 'create'),
   [
     body('name')
       .isString()
@@ -66,6 +68,7 @@ router.post(
     return [{ name, code }];
   })
 );
+
 /**
  * PUT Update a Data Supplier
  * @param id int
@@ -77,6 +80,7 @@ router.post(
 router.put(
   '/supplier/:id',
   authenticate(),
+  ensurePermission('data', 'update'),
   [
     param('id')
       .isNumeric()
@@ -107,6 +111,7 @@ router.put(
     ];
   })
 );
+
 /**
  * Delete a Data Supplier
  * @param id int
@@ -114,6 +119,7 @@ router.put(
 router.delete(
   '/supplier/:id',
   authenticate(),
+  ensurePermission('data', 'delete'),
   [
     param('id')
       .isNumeric()
@@ -134,16 +140,24 @@ router.delete(
     ];
   })
 );
+
 /**
  * GET Suppliers Stats
  */
-router.get('/suppliers/count', authenticate(), handleCount(DataSupplier));
+router.get(
+  '/suppliers/count',
+  authenticate(),
+  ensurePermission('data', 'read'),
+  handleCount(DataSupplier)
+);
+
 /**
  * GET Data Suppliers
  */
 router.get(
   '/suppliers',
   authenticate(),
+  ensurePermission('data', 'read'),
   [
     query('offset')
       .optional()
@@ -167,7 +181,7 @@ router.get(
 router.get(
   '/version',
   authenticate(),
-  ensureRole('Administrator'),
+  ensurePermission('data', 'read'),
   handleFindAll(SchemaVersion)
 );
 

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authenticate, ensureRole } from 'modules/auth';
+import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
 import loggers from 'modules/logging';
 
@@ -22,7 +22,7 @@ const {
 router.get(
   '/dashboard',
   authenticate(),
-  ensureRole('Administrator'),
+  ensurePermission('stats', 'read'),
   async (req, res) => {
     log.info(`request for dashboard stats`);
     try {

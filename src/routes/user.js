@@ -17,6 +17,7 @@ const {
   Recipe,
   Role,
   User,
+  UserFlavorNote,
   UsersFlavors,
   UserProfile,
   UsersRoles,
@@ -334,6 +335,211 @@ router.delete(
     ];
   })
 );
+
+/**
+ * Begin Flavor Notes
+ */
+
+/**
+ * GET User Flavor Notes
+ * @param userId int
+ */
+router.get(
+  '/:userId(\\d+)/notes',
+  authenticate(),
+  ensurePermission('user', 'read'),
+  [
+    param('userId')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt()
+  ],
+  handleValidationErrors(),
+  handleFindAll(UserFlavorNote, req => {
+    const { userId } = req.params;
+
+    log.info(`request flavor notes for user ${userId}`);
+    return {
+      where: {
+        userId
+      },
+      include: [
+        {
+          model: Flavor,
+          required: true,
+          include: [
+            {
+              model: Vendor,
+              required: true
+            }
+          ]
+        },
+        {
+          model: UserProfile,
+          required: true
+        }
+      ]
+    };
+  })
+);
+
+/**
+ * GET A User Flavor Note
+ * @param userId int
+ * @param flavorId int
+ */
+router.get(
+  '/:userId(\\d+)/note/:flavorId(\\d+)',
+  authenticate(),
+  ensurePermission('user', 'read'),
+  [
+    param('userId')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt(),
+    param('flavorId')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt()
+  ],
+  handleValidationErrors(),
+  handleFindAll(UserFlavorNote, req => {
+    const { userId, flavorId } = req.params;
+
+    log.info(`request flavor note flavor id ${flavorId} for user ${userId}`);
+    return {
+      where: {
+        userId,
+        flavorId
+      },
+      include: [
+        {
+          model: Flavor,
+          required: true,
+          include: [
+            {
+              model: Vendor,
+              required: true
+            }
+          ]
+        },
+        {
+          model: UserProfile,
+          required: true
+        }
+      ]
+    };
+  })
+);
+
+/**
+ * POST Add Flavor Note
+ * @param userId int - User ID
+ */
+router.post(
+  '/:userId(\\d+)/note',
+  authenticate(),
+  ensurePermission('user', 'create'),
+  [
+    param('userId')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt()
+  ],
+  handleValidationErrors(),
+  handleModelOperation(UserFlavorNote, 'create', req => {
+    const { userId } = req.params;
+    const { flavorId, created, note } = req.body;
+
+    log.info(`create flavor note for user ${userId}`);
+    return [
+      {
+        userId,
+        flavorId,
+        created,
+        note
+      }
+    ];
+  })
+);
+
+/**
+ * PUT Update User's Flavor Note
+ * @param userId int
+ * @param flavorId int
+ */
+router.put(
+  '/:userId(\\d+)/note/:flavorId(\\d+)',
+  authenticate(),
+  ensurePermission('user', 'update'),
+  [
+    param('userId')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt(),
+    param('flavorId')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt()
+  ],
+  handleValidationErrors(),
+  handleModelOperation(UserFlavorNote, 'update', req => {
+    const { note } = req.body;
+    const { userId, flavorId } = req.params;
+
+    log.info(`update user ${userId} flavor note ${flavorId}`);
+    return [
+      {
+        note
+      },
+      {
+        where: {
+          userId,
+          flavorId
+        }
+      }
+    ];
+  })
+);
+
+/**
+ * DELETE Remove User's Flavor Note
+ * @param userId int
+ * @param flavorId int
+ */
+router.delete(
+  '/:userId(\\d+)/note/:flavorId(\\d+)',
+  authenticate(),
+  ensurePermission('user', 'delete'),
+  [
+    param('userId')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt(),
+    param('flavorId')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt()
+  ],
+  handleValidationErrors(),
+  handleModelOperation(UsersFlavors, 'destroy', req => {
+    const { userId, flavorId } = req.params;
+
+    log.info(`delete from flavor stash for ${flavorId}`);
+    return [
+      {
+        where: {
+          userId,
+          flavorId
+        }
+      }
+    ];
+  })
+);
+
+/**
+ * End Flavor Notes
+ */
 
 /**
  * GET User Roles

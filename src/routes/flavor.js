@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body, param } from 'express-validator';
+import { body, param, query } from 'express-validator';
 
 import { authenticate, ensurePermission } from 'modules/auth';
 import models from 'modules/database';
@@ -12,7 +12,14 @@ import {
 
 const router = Router();
 const log = loggers('flavor');
-const { DataSupplier, Flavor, FlavorIdentifier, Vendor } = models;
+const {
+  DataSupplier,
+  Flavor,
+  FlavorIdentifier,
+  UserFlavorNote,
+  UserProfile,
+  Vendor
+} = models;
 
 /**
  * GET Flavor by ID
@@ -368,6 +375,85 @@ router.delete(
         where: {
           flavorId,
           dataSupplierId
+        }
+      }
+    ];
+  })
+);
+
+/**
+ * GET Flavor Notes
+ * @query offset int
+ * @query limit int
+ */
+router.get(
+  '/:flavorId/notes',
+  authenticate(),
+  ensurePermission('flavors', 'read'),
+  [
+    param('flavorId')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt(),
+    query('offset')
+      .optional()
+      .isNumeric()
+      .toInt(),
+    query('limit')
+      .optional()
+      .isNumeric()
+      .toInt()
+  ],
+  handleValidationErrors(),
+  handleFindAll(UserFlavorNote, req => {
+    const { flavorId } = req.params;
+    const limit = req.query.limit || 20;
+    const offset = req.query.offset - 1 || 0;
+
+    log.info(`request for flavor notes ${limit}`);
+    return {
+      limit,
+      offset,
+      where: {
+        flavorId
+      },
+      include: [
+        {
+          model: Flavor,
+          require: true
+        },
+        {
+          model: UserProfile,
+          require: true
+        }
+      ]
+    };
+  })
+);
+
+/**
+ * GET Flavor Notes Count
+ * @param id int
+ */
+router.get(
+  '/:flavorId/notes/count',
+  authenticate(),
+  ensurePermission('flavor', 'read'),
+  [
+    param('flavorId')
+      .isNumeric()
+      .isInt({ min: 1 })
+      .toInt()
+  ],
+  handleValidationErrors(),
+  handleModelOperation(UserFlavorNote, 'count', req => {
+    const { flavorId } = req.params;
+
+    log.info(`counted notes of flavor ${flavorId}`);
+    return [
+      {
+        where: {
+          flavorId
         }
       }
     ];

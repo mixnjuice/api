@@ -32,6 +32,7 @@ Now, in a shell:
 
 ```sh
 npm install
+npm run build
 cp .env.default .env
 ```
 

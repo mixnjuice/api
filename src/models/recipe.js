@@ -69,7 +69,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Recipe.associate = function(models) {
+  Recipe.associate = function (models) {
     this.hasOne(models.Recipe, { as: 'Parent', foreignKey: 'parentId' });
     this.hasOne(models.Recipe, { as: 'AdaptedFrom', foreignKey: 'adaptedId' });
     this.belongsTo(models.User, { foreignKey: 'creatorId' });

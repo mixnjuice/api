@@ -9,13 +9,13 @@ describe('vendor route resource', () => {
   afterAll(() => Promise.all(database.sequelize.close(), app.close()));
 
   it('returns valid vendor', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/1').expect(200, done);
     });
   });
 
   it('POST creates vendor', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .post('/')
         .send({
@@ -29,7 +29,7 @@ describe('vendor route resource', () => {
   });
 
   it('PUT updates vendor', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .put('/801')
         .send({
@@ -43,37 +43,37 @@ describe('vendor route resource', () => {
   });
 
   it('DELETE deletes vendor', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.delete('/801').expect(200, done);
     });
   });
 
   it('returns 200 for vendor', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/20000').expect(200, done);
     });
   });
 
   it('returns 400 for invalid vendor', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/ham').expect(400, done);
     });
   });
 
   it('GET returns valid vendor identifiers', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/1/identifiers').expect(200, done);
     });
   });
 
   it('GET returns valid vendor identifier', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/1/identifier/1').expect(200, done);
     });
   });
 
   it('POST creates valid vendor identifier', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .post('/1/identifier')
         .send({ dataSupplierId: 1, identifier: 'capellar' })
@@ -82,7 +82,7 @@ describe('vendor route resource', () => {
   });
 
   it('PUT updates valid vendor identifier', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .put('/1/identifier/1')
         .send({ identifier: 'capellary' })
@@ -91,7 +91,7 @@ describe('vendor route resource', () => {
   });
 
   it('DELETE deletes vendor identifier', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .delete('/1/identifier/1')
         .send({ identifier: 'cap_27-bears' })

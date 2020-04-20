@@ -23,14 +23,9 @@ router.get(
   '/supplier/:id',
   authenticate(),
   ensurePermission('data', 'read'),
-  [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(DataSupplier, 'findOne', req => {
+  handleModelOperation(DataSupplier, 'findOne', (req) => {
     const { id } = req.params;
 
     log.info(`request for data supplier id ${id}`);
@@ -54,14 +49,11 @@ router.post(
   authenticate(),
   ensurePermission('data', 'create'),
   [
-    body('name')
-      .isString()
-      .isLength({ min: 1 })
-      .withMessage('length'),
+    body('name').isString().isLength({ min: 1 }).withMessage('length'),
     body('code').isString()
   ],
   handleValidationErrors(),
-  handleModelOperation(DataSupplier, 'create', req => {
+  handleModelOperation(DataSupplier, 'create', (req) => {
     const { name, code } = req.body;
 
     log.info(`request for new data supplier`);
@@ -82,18 +74,12 @@ router.put(
   authenticate(),
   ensurePermission('data', 'update'),
   [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    body('name')
-      .isString()
-      .isLength({ min: 1 })
-      .withMessage('length'),
+    param('id').isNumeric().isInt({ min: 1 }).toInt(),
+    body('name').isString().isLength({ min: 1 }).withMessage('length'),
     body('code').isString()
   ],
   handleValidationErrors(),
-  handleModelOperation(DataSupplier, 'update', req => {
+  handleModelOperation(DataSupplier, 'update', (req) => {
     const { id } = req.params;
     const { name, code } = req.body;
 
@@ -120,14 +106,9 @@ router.delete(
   '/supplier/:id',
   authenticate(),
   ensurePermission('data', 'delete'),
-  [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(DataSupplier, 'destroy', req => {
+  handleModelOperation(DataSupplier, 'destroy', (req) => {
     const { id } = req.params;
 
     log.info(`request to delete data supplier id ${id}`);
@@ -159,17 +140,11 @@ router.get(
   authenticate(),
   ensurePermission('data', 'read'),
   [
-    query('offset')
-      .optional()
-      .isNumeric()
-      .toInt(),
-    query('limit')
-      .optional()
-      .isNumeric()
-      .toInt()
+    query('offset').optional().isNumeric().toInt(),
+    query('limit').optional().isNumeric().toInt()
   ],
   handleValidationErrors(),
-  handleFindAll(DataSupplier, req => ({
+  handleFindAll(DataSupplier, (req) => ({
     limit: req.query.limit || 20,
     offset: req.query.offset - 1 || 0
   }))

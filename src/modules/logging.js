@@ -5,7 +5,7 @@ const { combine, label, prettyPrint, printf, timestamp } = format;
 const loggers = {};
 const container = new Container();
 
-const formatter = data =>
+const formatter = (data) =>
   `${data.timestamp} [${data.level}][${data.label}] ${data.message}`;
 
 const createLogger = (category, categoryLabel) => {

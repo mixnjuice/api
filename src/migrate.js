@@ -15,7 +15,7 @@ const postgrator = new Postgrator({
   ...config
 });
 
-const logMigration = migration => {
+const logMigration = (migration) => {
   const { name, action, version } = migration;
   const apply = action === 'do';
 
@@ -29,7 +29,7 @@ const logMigration = migration => {
 program
   .version(packageInfo.version)
   .arguments('[target]')
-  .action(async target => {
+  .action(async (target) => {
     try {
       const applied = await postgrator.migrate(target ? target : 'max');
 

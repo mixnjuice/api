@@ -38,7 +38,7 @@ export const handleFindAll = (model, queryMapper = () => undefined) => async (
   }
 };
 
-export const handleCount = model => async (req, res) => {
+export const handleCount = (model) => async (req, res) => {
   try {
     const result = await model.count();
 

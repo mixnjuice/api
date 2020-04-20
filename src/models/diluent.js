@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Diluent.associate = function(models) {
+  Diluent.associate = function (models) {
     this.belongsToMany(models.Recipe, {
       as: 'Recipes',
       through: models.RecipesDiluents,

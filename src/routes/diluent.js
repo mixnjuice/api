@@ -21,14 +21,9 @@ router.get(
   '/:id',
   authenticate(),
   ensurePermission('diluent', 'read'),
-  [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(Diluent, 'findOne', req => {
+  handleModelOperation(Diluent, 'findOne', (req) => {
     const { id } = req.params;
 
     log.info(`request for diluent id ${id}`);
@@ -50,16 +45,13 @@ router.post(
   authenticate(),
   ensurePermission('diluent', 'create'),
   [
-    body('name')
-      .isString()
-      .isLength({ min: 1 })
-      .withMessage('length'),
+    body('name').isString().isLength({ min: 1 }).withMessage('length'),
     body('slug').isString(),
     body('code').isString(),
     body('density').isNumeric()
   ],
   handleValidationErrors(),
-  handleModelOperation(Diluent, 'create', req => {
+  handleModelOperation(Diluent, 'create', (req) => {
     const { name, slug, code, density } = req.body;
 
     log.info(`request for new diluent`);
@@ -87,20 +79,14 @@ router.put(
   authenticate(),
   ensurePermission('diluent', 'update'),
   [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    body('name')
-      .isString()
-      .isLength({ min: 1 })
-      .withMessage('length'),
+    param('id').isNumeric().isInt({ min: 1 }).toInt(),
+    body('name').isString().isLength({ min: 1 }).withMessage('length'),
     body('slug').isString(),
     body('code').isString(),
     body('density').isDecimal()
   ],
   handleValidationErrors(),
-  handleModelOperation(Diluent, 'update', req => {
+  handleModelOperation(Diluent, 'update', (req) => {
     const { id } = req.params;
     const { name, slug, code, density } = req.body;
 
@@ -129,14 +115,9 @@ router.delete(
   '/:id',
   authenticate(),
   ensurePermission('diluent', 'delete'),
-  [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(Diluent, 'destroy', req => {
+  handleModelOperation(Diluent, 'destroy', (req) => {
     const { id } = req.params;
 
     log.info(`request to delete diluent id ${id}`);

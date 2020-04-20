@@ -30,14 +30,9 @@ router.get(
   '/:id',
   authenticate(),
   ensurePermission('recipe', 'read'),
-  [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(Recipe, 'findOne', req => ({
+  handleModelOperation(Recipe, 'findOne', (req) => ({
     where: {
       id: req.params.id
     },
@@ -71,26 +66,13 @@ router.post(
   authenticate(),
   ensurePermission('recipe', 'create'),
   [
-    body('name')
-      .isString()
-      .isLength({ min: 1 })
-      .withMessage('length'),
-    body('volumeMl')
-      .isNumeric()
-      .toInt(),
+    body('name').isString().isLength({ min: 1 }).withMessage('length'),
+    body('volumeMl').isNumeric().toInt(),
     body('notes').isString(),
-    body('version')
-      .isNumeric()
-      .toInt(),
-    body('flavors')
-      .isArray()
-      .withMessage('array'),
-    body('recipeDiluents')
-      .isArray()
-      .withMessage('array'),
-    body('preparationDiluents')
-      .isArray()
-      .withMessage('array')
+    body('version').isNumeric().toInt(),
+    body('flavors').isArray().withMessage('array'),
+    body('recipeDiluents').isArray().withMessage('array'),
+    body('preparationDiluents').isArray().withMessage('array')
   ],
   handleValidationErrors(),
   async (req, res) => {
@@ -182,23 +164,12 @@ router.put(
   authenticate(),
   ensurePermission('recipe', 'update'),
   [
-    param('id')
-      .isNumeric()
-      .toInt(),
-    body('userId')
-      .isNumeric()
-      .toInt(),
-    body('name')
-      .isString()
-      .isLength({ min: 1 })
-      .withMessage('length'),
+    param('id').isNumeric().toInt(),
+    body('userId').isNumeric().toInt(),
+    body('name').isString().isLength({ min: 1 }).withMessage('length'),
     body('notes').isString(),
-    body('flavors')
-      .isArray()
-      .withMessage('array'),
-    body('recipeDiluents')
-      .isArray()
-      .withMessage('array')
+    body('flavors').isArray().withMessage('array'),
+    body('recipeDiluents').isArray().withMessage('array')
   ],
   handleValidationErrors(),
   async (req, res) => {
@@ -249,7 +220,7 @@ router.put(
               recipeId: diluent.recipeId,
               diluentId: diluent.diluentId
             }
-          }).then(async function(obj) {
+          }).then(async function (obj) {
             if (obj) {
               // update
               return await obj.update({ millipercent: diluent.millipercent });
@@ -282,7 +253,7 @@ router.put(
               recipeId: flavor.recipeId,
               flavorId: flavor.flavorId
             }
-          }).then(async function(obj) {
+          }).then(async function (obj) {
             if (obj) {
               // update
               return await obj.update({ millipercent: flavor.millipercent });
@@ -317,11 +288,7 @@ router.delete(
   '/:id',
   authenticate(),
   ensurePermission('recipe', 'delete'),
-  [
-    param('id')
-      .isNumeric()
-      .toInt()
-  ],
+  [param('id').isNumeric().toInt()],
   handleValidationErrors(),
   async (req, res) => {
     const { id } = req.params;

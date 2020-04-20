@@ -31,14 +31,9 @@ router.get(
   '/:id(\\d+)',
   authenticate(),
   ensurePermission('user', 'read'),
-  [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(User, 'findOne', req => {
+  handleModelOperation(User, 'findOne', (req) => {
     const { id } = req.params;
 
     log.info(`request for user ${id}`);
@@ -62,14 +57,9 @@ router.get(
   '/:userId(\\d+)/profile',
   authenticate(),
   ensurePermission('user', 'read'),
-  [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('userId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(UserProfile, 'findOne', req => {
+  handleModelOperation(UserProfile, 'findOne', (req) => {
     const { userId } = req.params;
 
     log.info(`request for user profile ${userId}`);
@@ -91,14 +81,9 @@ router.put(
   '/:userId(\\d+)/profile',
   authenticate(),
   ensurePermission('user', 'update'),
-  [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('userId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(UserProfile, 'update', req => {
+  handleModelOperation(UserProfile, 'update', (req) => {
     const { userId } = req.params;
     const { location, bio, url } = req.body;
 
@@ -125,14 +110,9 @@ router.get(
   '/:userId(\\d+)/recipes',
   authenticate(),
   ensurePermission('user', 'read'),
-  [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('userId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleFindAll(Recipe, req => {
+  handleFindAll(Recipe, (req) => {
     const { userId } = req.params;
 
     log.info(`request for user recipes ${userId}`);
@@ -152,14 +132,9 @@ router.get(
   '/:userId(\\d+)/flavors',
   authenticate(),
   ensurePermission('user', 'read'),
-  [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('userId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleFindAll(UsersFlavors, req => {
+  handleFindAll(UsersFlavors, (req) => {
     const { userId } = req.params;
 
     log.info(`request flavor stash for user ${userId}`);
@@ -193,17 +168,11 @@ router.get(
   authenticate(),
   ensurePermission('user', 'read'),
   [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
+    param('userId').isNumeric().isInt({ min: 1 }).toInt(),
+    param('flavorId').isNumeric().isInt({ min: 1 }).toInt()
   ],
   handleValidationErrors(),
-  handleFindAll(UsersFlavors, req => {
+  handleFindAll(UsersFlavors, (req) => {
     const { userId, flavorId } = req.params;
 
     log.info(`request flavor stash flavor id ${flavorId} for user ${userId}`);
@@ -236,14 +205,9 @@ router.post(
   '/:userId(\\d+)/flavor',
   authenticate(),
   ensurePermission('user', 'create'),
-  [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('userId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(UsersFlavors, 'create', req => {
+  handleModelOperation(UsersFlavors, 'create', (req) => {
     const { userId } = req.params;
     const { flavorId, created, minMillipercent, maxMillipercent } = req.body;
 
@@ -270,17 +234,11 @@ router.put(
   authenticate(),
   ensurePermission('user', 'update'),
   [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
+    param('userId').isNumeric().isInt({ min: 1 }).toInt(),
+    param('flavorId').isNumeric().isInt({ min: 1 }).toInt()
   ],
   handleValidationErrors(),
-  handleModelOperation(UsersFlavors, 'update', req => {
+  handleModelOperation(UsersFlavors, 'update', (req) => {
     const { minMillipercent, maxMillipercent } = req.body;
     const { userId, flavorId } = req.params;
 
@@ -310,17 +268,11 @@ router.delete(
   authenticate(),
   ensurePermission('user', 'delete'),
   [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
+    param('userId').isNumeric().isInt({ min: 1 }).toInt(),
+    param('flavorId').isNumeric().isInt({ min: 1 }).toInt()
   ],
   handleValidationErrors(),
-  handleModelOperation(UsersFlavors, 'destroy', req => {
+  handleModelOperation(UsersFlavors, 'destroy', (req) => {
     const { userId, flavorId } = req.params;
 
     log.info(`delete from flavor stash for ${flavorId}`);
@@ -343,14 +295,9 @@ router.get(
   '/:userId(\\d+)/roles',
   authenticate(),
   ensurePermission('user', 'read'),
-  [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('userId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleFindAll(UsersRoles, req => {
+  handleFindAll(UsersRoles, (req) => {
     const { userId } = req.params;
 
     log.info(`request roles for user ${userId}`);
@@ -378,17 +325,11 @@ router.get(
   authenticate(),
   ensurePermission('user', 'read'),
   [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    param('roleId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
+    param('userId').isNumeric().isInt({ min: 1 }).toInt(),
+    param('roleId').isNumeric().isInt({ min: 1 }).toInt()
   ],
   handleValidationErrors(),
-  handleModelOperation(UsersRoles, 'findOne', req => {
+  handleModelOperation(UsersRoles, 'findOne', (req) => {
     const { userId, roleId } = req.params;
 
     log.info(`request role id ${roleId} for user ${userId}`);
@@ -421,18 +362,12 @@ router.post(
   ensurePermission('user', 'update'),
   ensurePermission('user', 'manage'),
   [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    body('roleId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
+    param('userId').isNumeric().isInt({ min: 1 }).toInt(),
+    body('roleId').isNumeric().isInt({ min: 1 }).toInt(),
     body('active').isBoolean()
   ],
   handleValidationErrors(),
-  handleModelOperation(UsersRoles, 'create', req => {
+  handleModelOperation(UsersRoles, 'create', (req) => {
     const { userId } = req.params;
     const { roleId, active } = req.body;
 
@@ -459,18 +394,12 @@ router.put(
   ensurePermission('user', 'update'),
   ensurePermission('user', 'manage'),
   [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    param('roleId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
+    param('userId').isNumeric().isInt({ min: 1 }).toInt(),
+    param('roleId').isNumeric().isInt({ min: 1 }).toInt(),
     body('active').isBoolean()
   ],
   handleValidationErrors(),
-  handleModelOperation(UsersRoles, 'update', req => {
+  handleModelOperation(UsersRoles, 'update', (req) => {
     const { userId, roleId } = req.params;
     const { active } = req.body;
 
@@ -500,17 +429,11 @@ router.delete(
   ensurePermission('user', 'delete'),
   ensurePermission('user', 'manage'),
   [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    param('roleId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
+    param('userId').isNumeric().isInt({ min: 1 }).toInt(),
+    param('roleId').isNumeric().isInt({ min: 1 }).toInt()
   ],
   handleValidationErrors(),
-  handleModelOperation(UsersRoles, 'destroy', req => {
+  handleModelOperation(UsersRoles, 'destroy', (req) => {
     const { userId, roleId } = req.params;
 
     log.info(`delete from role ${roleId} from user ${userId}`);
@@ -550,7 +473,7 @@ router.get(
   ensurePermission('user', 'read'),
   [param('name').isString()],
   handleValidationErrors(),
-  handleModelOperation(UserProfile, 'findOne', req => {
+  handleModelOperation(UserProfile, 'findOne', (req) => {
     const { name } = req.params;
 
     log.info(`request for username ${name}`);

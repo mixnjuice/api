@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  RecipesDiluents.associate = function(models) {
+  RecipesDiluents.associate = function (models) {
     this.belongsTo(models.Recipe, { foreignKey: 'recipeId' });
     this.belongsTo(models.Diluent, { foreignKey: 'diluentId' });
   };

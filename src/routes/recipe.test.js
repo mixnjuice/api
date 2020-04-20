@@ -47,7 +47,7 @@ describe('recipe route resource', () => {
   };
 
   it('can create recipe', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .post('/')
         .send(mockData)
@@ -57,16 +57,13 @@ describe('recipe route resource', () => {
   });
 
   it('can request valid recipe', () => {
-    tryCatch(done => {
-      request
-        .get('/123')
-        .expect('Content-Type', /json/)
-        .expect(200, done);
+    tryCatch((done) => {
+      request.get('/123').expect('Content-Type', /json/).expect(200, done);
     });
   });
 
   it('can update existing recipe', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .put('/123')
         .send(mockData)
@@ -76,29 +73,20 @@ describe('recipe route resource', () => {
   });
 
   it('can delete existing recipe', () => {
-    tryCatch(done => {
-      request
-        .delete('/123')
-        .expect('Content-Type', /json/)
-        .expect(200, done);
+    tryCatch((done) => {
+      request.delete('/123').expect('Content-Type', /json/).expect(200, done);
     });
   });
 
   it('returns 400 for invalid number in GET request', () => {
-    tryCatch(done => {
-      request
-        .get('/0')
-        .expect('Content-Type', /json/)
-        .expect(400, done);
+    tryCatch((done) => {
+      request.get('/0').expect('Content-Type', /json/).expect(400, done);
     });
   });
 
   it('returns 400 for string in GET request', () => {
-    tryCatch(done => {
-      request
-        .get('/ham')
-        .expect('Content-Type', /json/)
-        .expect(400, done);
+    tryCatch((done) => {
+      request.get('/ham').expect('Content-Type', /json/).expect(400, done);
     });
   });
 });

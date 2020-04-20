@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 // utility to test for boolean true
 const trueRegex = /^t(rue|$)$/i;
 
-export const isTrue = value => value === true || trueRegex.test(value);
+export const isTrue = (value) => value === true || trueRegex.test(value);
 
 const result = dotenv.config();
 

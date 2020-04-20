@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  UserToken.associate = function(models) {
+  UserToken.associate = function (models) {
     this.belongsTo(models.User, { foreignKey: 'userId' });
   };
   return UserToken;

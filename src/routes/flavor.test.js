@@ -10,14 +10,14 @@ describe('flavor route resource', () => {
 
   it(
     'GET returns valid flavor',
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/123').expect(200, done);
     })
   );
 
   it(
     'POST creates flavor',
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .post('/')
         .send({
@@ -32,7 +32,7 @@ describe('flavor route resource', () => {
 
   it(
     'PUT updates flavor',
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .put('/801')
         .send({
@@ -47,28 +47,28 @@ describe('flavor route resource', () => {
 
   it(
     'DELETE deletes flavor',
-    tryCatch(done => {
+    tryCatch((done) => {
       request.delete('/801').expect(200, done);
     })
   );
 
   it(
     'GET returns valid flavor identifiers',
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/1/identifiers').expect(200, done);
     })
   );
 
   it(
     'GET returns valid flavor identifier',
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/1/identifier/1').expect(200, done);
     })
   );
 
   it(
     'POST creates valid flavor identifier',
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .post('/1/identifier')
         .send({ dataSupplierId: 1, identifier: 'cap_27-bears' })
@@ -78,7 +78,7 @@ describe('flavor route resource', () => {
 
   it(
     'PUT updates valid flavor identifier',
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .put('/1/identifier/1')
         .send({ identifier: 'cap_27-bears' })
@@ -88,7 +88,7 @@ describe('flavor route resource', () => {
 
   it(
     'DELETE deletes flavor identifier',
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .delete('/1/identifier/1')
         .send({ identifier: 'cap_27-bears' })
@@ -98,14 +98,14 @@ describe('flavor route resource', () => {
 
   it(
     'returns 400 for missing flavor',
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/0').expect(400, done);
     })
   );
 
   it(
     'returns 400 for invalid flavor',
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/ham').expect(400, done);
     })
   );

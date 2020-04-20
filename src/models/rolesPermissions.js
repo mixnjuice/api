@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  RolesPermissions.associate = function(models) {
+  RolesPermissions.associate = function (models) {
     this.belongsTo(models.Role, { foreignKey: 'roleId' });
     this.hasOne(models.PermissionSubject, {
       as: 'Subject',

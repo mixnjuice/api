@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  VendorIdentifier.associate = function(models) {
+  VendorIdentifier.associate = function (models) {
     this.belongsTo(models.Vendor, { foreignKey: 'vendorId' });
     this.belongsTo(models.DataSupplier, { foreignKey: 'dataSupplierId' });
   };

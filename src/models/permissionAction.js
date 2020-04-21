@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  PermissionAction.associate = function(models) {
+  PermissionAction.associate = function (models) {
     this.hasMany(models.RolesPermissions, {
       as: 'RolesPermissions',
       foreignKey: 'permissionActionId'

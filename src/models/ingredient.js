@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Ingredient.associate = function(models) {
+  Ingredient.associate = function (models) {
     this.hasOne(models.IngredientCategory, {
       foreignKey: 'ingredientCategoryId'
     });

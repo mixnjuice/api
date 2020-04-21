@@ -16,7 +16,7 @@ describe('diluent route resource', () => {
   };
 
   it('POST returns 200 for creating diluent', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .post('/')
         .send(mockData)
@@ -26,19 +26,19 @@ describe('diluent route resource', () => {
   });
 
   it('GET returns 404 for missing id', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/').expect(404, done);
     });
   });
 
   it('GET returns 200 for valid diluent', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/2').expect(200, done);
     });
   });
 
   it('PUT returns 200 for updating diluent', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .put('/3')
         .send(mockData)
@@ -48,34 +48,31 @@ describe('diluent route resource', () => {
   });
 
   it('PUT returns 404 for updating without an id', () => {
-    tryCatch(done => {
-      request
-        .put('/')
-        .send(mockData)
-        .expect(404, done);
+    tryCatch((done) => {
+      request.put('/').send(mockData).expect(404, done);
     });
   });
 
   it('GET returns 400 for invalid diluent', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/0').expect(400, done);
     });
   });
 
   it('GET returns 400 for invalid diluent #2', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/ham').expect(400, done);
     });
   });
 
   it('DELETE returns 200 after deleting diluent', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.delete('/4').expect(200, done);
     });
   });
 
   it('DELETE returns 404 for deleting without an id', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.delete('/').expect(404, done);
     });
   });

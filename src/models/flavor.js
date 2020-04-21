@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Flavor.associate = function(models) {
+  Flavor.associate = function (models) {
     this.belongsTo(models.Vendor, { foreignKey: 'vendorId' });
     this.hasMany(models.FlavorIdentifier, { foreignKey: 'flavorId' });
     this.belongsToMany(models.Recipe, {

@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Tag.associate = function(models) {
+  Tag.associate = function (models) {
     this.hasOne(models.User, {
       foreignKey: 'id',
       sourceKey: 'creatorId'

@@ -15,10 +15,10 @@ UserToken.destroy({
     }
   }
 })
-  .then(rowCount => {
+  .then((rowCount) => {
     log.info(`Successfully purged ${rowCount} expired tokens!`);
   })
-  .catch(error => {
+  .catch((error) => {
     log.error('Failed to purge expired tokens!');
     log.error(error.message);
     log.error(error.stack);

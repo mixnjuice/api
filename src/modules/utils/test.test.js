@@ -59,7 +59,7 @@ describe('test utilities', () => {
   describe('bootstrapApp', () => {
     it(
       'works for a valid router',
-      tryCatch(async done => {
+      tryCatch(async (done) => {
         const router = new express.Router();
 
         router.get('/', (req, res) => {

@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Preparation.associate = function(models) {
+  Preparation.associate = function (models) {
     this.belongsTo(models.Recipe, { foreignKey: 'recipeId' });
     this.belongsTo(models.User, { foreignKey: 'userId' });
     this.belongsTo(models.UserProfile, {

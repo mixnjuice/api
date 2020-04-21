@@ -21,14 +21,9 @@ router.get(
   '/:id(\\d+)',
   authenticate(),
   ensurePermission('role', 'read'),
-  [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(Role, 'findOne', req => ({
+  handleModelOperation(Role, 'findOne', (req) => ({
     where: {
       id: req.params.id
     }
@@ -44,15 +39,9 @@ router.put(
   '/:id(\\d+)',
   authenticate(),
   ensurePermission('role', 'update'),
-  [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    body('name').isString()
-  ],
+  [param('id').isNumeric().isInt({ min: 1 }).toInt(), body('name').isString()],
   handleValidationErrors(),
-  handleModelOperation(Role, 'update', req => {
+  handleModelOperation(Role, 'update', (req) => {
     const { id } = req.params;
     const { name } = req.body;
 
@@ -80,7 +69,7 @@ router.post(
   ensurePermission('role', 'create'),
   [body('name').isString()],
   handleValidationErrors(),
-  handleModelOperation(Role, 'create', req => [
+  handleModelOperation(Role, 'create', (req) => [
     {
       name: req.body.name
     }
@@ -95,14 +84,9 @@ router.delete(
   '/:id(\\d+)',
   authenticate(),
   ensurePermission('role', 'delete'),
-  [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(Role, 'destroy', req => [
+  handleModelOperation(Role, 'destroy', (req) => [
     {
       where: {
         id: req.params.id

@@ -19,17 +19,13 @@ const emailer = new Email(emailConfig);
 router.post(
   '/',
   [
-    body('username')
-      .isLength(4, 64)
-      .withMessage('length'),
+    body('username').isLength(4, 64).withMessage('length'),
     body('emailAddress')
       .isEmail()
       .withMessage('email')
       .isLength(0, 200)
       .withMessage('length'),
-    body('password')
-      .isLength(8)
-      .withMessage('length')
+    body('password').isLength(8).withMessage('length')
   ],
   handleValidationErrors(),
   async (req, res) => {
@@ -39,7 +35,7 @@ router.post(
       const activationCode = generateToken();
       const password = await hashPassword(rawPassword);
 
-      await models.sequelize.transaction(async transaction => {
+      await models.sequelize.transaction(async (transaction) => {
         const newUser = await User.create(
           {
             emailAddress,

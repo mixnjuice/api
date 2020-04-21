@@ -12,14 +12,14 @@ const log = logging('util');
 
 export const isTestEnvironment = () => process?.env?.NODE_ENV === 'test';
 
-export const captureTestErrors = app =>
+export const captureTestErrors = (app) =>
   use(supertest(app)).use(
     captureError((error, test) => {
       error.message += `\nURL: ${test.url}\nResponse: ${test.res.text}`;
     })
   );
 
-export const tryCatch = fn => done => {
+export const tryCatch = (fn) => (done) => {
   try {
     fn(done);
   } catch (error) {
@@ -28,7 +28,7 @@ export const tryCatch = fn => done => {
   }
 };
 
-export const bootstrapApp = router => {
+export const bootstrapApp = (router) => {
   const app = express();
 
   passport.use(new AnonymousStrategy());

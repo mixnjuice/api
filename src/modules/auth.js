@@ -169,7 +169,7 @@ export const ensurePermission = (subject, action) => async (req, _, next) => {
     if (user) {
       role = await Role.findOne({
         where: {
-          id: user.Roles.map(r => r.id)
+          id: user.Roles.map((r) => r.id)
         }
       });
     } else {
@@ -224,7 +224,7 @@ export const useMockStrategy = (passportRef, user) =>
     })
   );
 
-export default app => {
+export default (app) => {
   if (useBearerStrategy) {
     passport.use(new BearerStrategy(authorize));
   }

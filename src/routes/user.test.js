@@ -9,19 +9,19 @@ describe('user route resource', () => {
   afterAll(() => Promise.all(database.sequelize.close(), app.close()));
 
   it('GET returns valid user', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/7').expect(200, done);
     });
   });
 
   it('GET returns valid user profile', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/7/profile').expect(200, done);
     });
   });
 
   it('PUT updates user profile', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .put('/7/profile')
         .send({
@@ -35,13 +35,13 @@ describe('user route resource', () => {
   });
 
   it('GET returns valid user recipes', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/8/recipes').expect(200, done);
     });
   });
 
   it('POST adds user flavor', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .post('/9/flavor')
         .send({
@@ -53,13 +53,13 @@ describe('user route resource', () => {
   });
 
   it('GET returns valid user flavor', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/10/flavor/3').expect(200, done);
     });
   });
 
   it('PUT updates user flavor', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .put('/7/flavor/123')
         .send({
@@ -72,31 +72,31 @@ describe('user route resource', () => {
   });
 
   it('GET returns valid user flavors', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/10/flavors').expect(200, done);
     });
   });
 
   it('DELETE deletes a user flavor', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.delete('/11/flavor/200').expect(200, done);
     });
   });
 
   it('GET returns valid user roles', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/10/roles').expect(200, done);
     });
   });
 
   it('GET returns a valid user role', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/10/role/1').expect(200, done);
     });
   });
 
   it('POST assigns a user role', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .post('/9/role/')
         .send({
@@ -109,7 +109,7 @@ describe('user route resource', () => {
   });
 
   it('PUT updates a user role', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .put('/9/role/3')
         .send({
@@ -121,34 +121,31 @@ describe('user route resource', () => {
   });
 
   it('DELETE deletes a user role', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.delete('/11/role/1').expect(200, done);
     });
   });
 
   it('returns 200 for missing user', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/100000000').expect(200, done);
     });
   });
 
   it('returns 400 for invalid user', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/0').expect(400, done);
     });
   });
 
   it('GET current user', () => {
-    tryCatch(done => {
-      request
-        .get('/current')
-        .expect('Content-Type', /json/)
-        .expect(200, done);
+    tryCatch((done) => {
+      request.get('/current').expect('Content-Type', /json/).expect(200, done);
     });
   });
 
   it('GET user profile', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .get('/name/mixnjuice')
         .expect('Content-Type', /json/)

@@ -28,14 +28,9 @@ router.get(
   '/:id',
   authenticate(),
   ensurePermission('preparation', 'read'),
-  [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(Preparation, 'findOne', req => {
+  handleModelOperation(Preparation, 'findOne', (req) => {
     const { id } = req.params;
 
     log.info(`request for preparation ${id}`);
@@ -86,19 +81,11 @@ router.post(
   authenticate(),
   ensurePermission('preparation', 'create'),
   [
-    body('recipeId')
-      .isNumeric()
-      .toInt(),
-    body('userId')
-      .isNumeric()
-      .toInt(),
-    body('volumeMl')
-      .isNumeric()
-      .toInt(),
+    body('recipeId').isNumeric().toInt(),
+    body('userId').isNumeric().toInt(),
+    body('volumeMl').isNumeric().toInt(),
     body('nicotineMillipercent').isString(),
-    body('PreparationsDiluents')
-      .isArray()
-      .withMessage('array')
+    body('PreparationsDiluents').isArray().withMessage('array')
   ],
   handleValidationErrors(),
   async (req, res) => {
@@ -163,16 +150,10 @@ router.put(
   authenticate(),
   ensurePermission('preparation', 'update'),
   [
-    param('id')
-      .isNumeric()
-      .toInt(),
-    body('volumeMl')
-      .isNumeric()
-      .toInt(),
+    param('id').isNumeric().toInt(),
+    body('volumeMl').isNumeric().toInt(),
     body('nicotineMillipercent').isString(),
-    body('PreparationsDiluents')
-      .isArray()
-      .withMessage('array')
+    body('PreparationsDiluents').isArray().withMessage('array')
   ],
   handleValidationErrors(),
   async (req, res) => {
@@ -226,7 +207,7 @@ router.put(
                 diluentId: diluent.diluentId
               }
             }
-          ).then(async function(obj) {
+          ).then(async function (obj) {
             if (obj) {
               // update
               return await obj.update({
@@ -265,11 +246,7 @@ router.delete(
   '/:id',
   authenticate(),
   ensurePermission('preparation', 'delete'),
-  [
-    param('id')
-      .isNumeric()
-      .toInt()
-  ],
+  [param('id').isNumeric().toInt()],
   handleValidationErrors(),
   async (req, res) => {
     const { id } = req.params;

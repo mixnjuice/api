@@ -522,7 +522,7 @@ router.delete(
       .toInt()
   ],
   handleValidationErrors(),
-  handleModelOperation(UsersFlavors, 'destroy', req => {
+  handleModelOperation(UserFlavorNote, 'destroy', req => {
     const { userId, flavorId } = req.params;
 
     log.info(`delete from flavor stash for ${flavorId}`);

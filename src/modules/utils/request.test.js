@@ -6,7 +6,7 @@ import {
 } from './request';
 
 jest.mock('express-validator', () => ({
-  validationResult: jest.fn(req =>
+  validationResult: jest.fn((req) =>
     req
       ? {
           isEmpty: () => true

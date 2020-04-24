@@ -29,14 +29,9 @@ router.get(
   '/:id',
   authenticate(),
   ensurePermission('flavor', 'read'),
-  [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(Flavor, 'findOne', req => {
+  handleModelOperation(Flavor, 'findOne', (req) => {
     const { id } = req.params;
 
     log.info(`request for ${id}`);
@@ -68,22 +63,13 @@ router.post(
   authenticate(),
   ensurePermission('flavor', 'create'),
   [
-    body('vendorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    body('name')
-      .isString()
-      .isLength({ min: 1 })
-      .withMessage('length'),
-    body('slug')
-      .isString()
-      .isLength({ min: 1 })
-      .withMessage('length'),
+    body('vendorId').isNumeric().isInt({ min: 1 }).toInt(),
+    body('name').isString().isLength({ min: 1 }).withMessage('length'),
+    body('slug').isString().isLength({ min: 1 }).withMessage('length'),
     body('density').isDecimal()
   ],
   handleValidationErrors(),
-  handleModelOperation(Flavor, 'create', req => {
+  handleModelOperation(Flavor, 'create', (req) => {
     const { vendorId, name, slug, density } = req.body;
 
     log.info(`request for new flavor`);
@@ -111,26 +97,14 @@ router.put(
   authenticate(),
   ensurePermission('flavor', 'update'),
   [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    body('vendorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    body('name')
-      .isString()
-      .isLength({ min: 1 })
-      .withMessage('length'),
-    body('slug')
-      .isString()
-      .isLength({ min: 1 })
-      .withMessage('length'),
+    param('id').isNumeric().isInt({ min: 1 }).toInt(),
+    body('vendorId').isNumeric().isInt({ min: 1 }).toInt(),
+    body('name').isString().isLength({ min: 1 }).withMessage('length'),
+    body('slug').isString().isLength({ min: 1 }).withMessage('length'),
     body('density').isDecimal()
   ],
   handleValidationErrors(),
-  handleModelOperation(Flavor, 'update', req => {
+  handleModelOperation(Flavor, 'update', (req) => {
     const { id } = req.params;
     const { vendorId, name, slug, density } = req.body;
 
@@ -159,14 +133,9 @@ router.delete(
   '/:id',
   authenticate(),
   ensurePermission('flavor', 'delete'),
-  [
-    param('id')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(Flavor, 'destroy', req => {
+  handleModelOperation(Flavor, 'destroy', (req) => {
     const { id } = req.params;
 
     log.info(`request to delete flavor id ${id}`);
@@ -188,14 +157,9 @@ router.get(
   '/:flavorId/identifiers',
   authenticate(),
   ensurePermission('flavor', 'read'),
-  [
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('flavorId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleFindAll(FlavorIdentifier, req => {
+  handleFindAll(FlavorIdentifier, (req) => {
     const { flavorId } = req.params;
 
     log.info(`request for flavor id ${flavorId} identifiers`);
@@ -223,17 +187,11 @@ router.get(
   authenticate(),
   ensurePermission('flavor', 'read'),
   [
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    param('dataSupplierId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
+    param('flavorId').isNumeric().isInt({ min: 1 }).toInt(),
+    param('dataSupplierId').isNumeric().isInt({ min: 1 }).toInt()
   ],
   handleValidationErrors(),
-  handleModelOperation(FlavorIdentifier, 'findOne', req => {
+  handleModelOperation(FlavorIdentifier, 'findOne', (req) => {
     const { flavorId, dataSupplierId } = req.params;
 
     log.info(
@@ -267,21 +225,12 @@ router.post(
   authenticate(),
   ensurePermission('flavor', 'create'),
   [
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    body('dataSupplierId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    body('identifier')
-      .isString()
-      .isLength({ min: 1 })
-      .withMessage('length')
+    param('flavorId').isNumeric().isInt({ min: 1 }).toInt(),
+    body('dataSupplierId').isNumeric().isInt({ min: 1 }).toInt(),
+    body('identifier').isString().isLength({ min: 1 }).withMessage('length')
   ],
   handleValidationErrors(),
-  handleModelOperation(FlavorIdentifier, 'create', req => {
+  handleModelOperation(FlavorIdentifier, 'create', (req) => {
     const { flavorId } = req.params;
     const { dataSupplierId, identifier } = req.body;
 
@@ -308,21 +257,12 @@ router.put(
   ensurePermission('flavor', 'update'),
   ensurePermission('flavor', 'manage'),
   [
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    param('dataSupplierId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    body('identifier')
-      .isString()
-      .isLength({ min: 1 })
-      .withMessage('length')
+    param('flavorId').isNumeric().isInt({ min: 1 }).toInt(),
+    param('dataSupplierId').isNumeric().isInt({ min: 1 }).toInt(),
+    body('identifier').isString().isLength({ min: 1 }).withMessage('length')
   ],
   handleValidationErrors(),
-  handleModelOperation(FlavorIdentifier, 'update', req => {
+  handleModelOperation(FlavorIdentifier, 'update', (req) => {
     const { flavorId, dataSupplierId } = req.params;
     const { identifier } = req.body;
 
@@ -354,17 +294,11 @@ router.delete(
   ensurePermission('flavor', 'delete'),
   ensurePermission('flavor', 'manage'),
   [
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    param('dataSupplierId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
+    param('flavorId').isNumeric().isInt({ min: 1 }).toInt(),
+    param('dataSupplierId').isNumeric().isInt({ min: 1 }).toInt()
   ],
   handleValidationErrors(),
-  handleModelOperation(FlavorIdentifier, 'destroy', req => {
+  handleModelOperation(FlavorIdentifier, 'destroy', (req) => {
     const { flavorId, dataSupplierId } = req.params;
 
     log.info(

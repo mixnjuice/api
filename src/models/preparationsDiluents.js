@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  PreparationsDiluents.associate = function(models) {
+  PreparationsDiluents.associate = function (models) {
     this.belongsTo(models.Preparation, { foreignKey: 'preparationId' });
     this.belongsTo(models.Diluent, { foreignKey: 'diluentId' });
   };

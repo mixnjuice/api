@@ -9,7 +9,7 @@ describe('register route resource', () => {
   afterAll(() => Promise.all(database.sequelize.close(), app.close()));
 
   it('can register user', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .post('/')
         .send({
@@ -22,19 +22,19 @@ describe('register route resource', () => {
   });
 
   it('returns 400 for registration error (no data)', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.post('/').expect(400, done);
     });
   });
 
   it('returns 400 for token error (invalid token)', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/activate/?code=123456').expect(400, done);
     });
   });
 
   it('returns 400 for token error (missing token)', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/activate').expect(400, done);
     });
   });

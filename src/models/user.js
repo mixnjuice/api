@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  User.associate = function(models) {
+  User.associate = function (models) {
     this.hasOne(models.UserProfile, {
       foreignKey: 'userId'
     });

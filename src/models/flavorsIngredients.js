@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  FlavorsIngredients.associate = function(models) {
+  FlavorsIngredients.associate = function (models) {
     this.belongsTo(models.Ingredient, {
       foreignKey: 'ingredientId'
     });

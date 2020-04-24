@@ -29,7 +29,7 @@ export const handleError = (error, res = {}) => {
     const { errors } = error;
 
     response = {
-      errors: errors.map(validationError =>
+      errors: errors.map((validationError) =>
         pick(validationError, validationProps)
       )
     };

@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Vendor.associate = function(models) {
+  Vendor.associate = function (models) {
     this.hasMany(models.VendorIdentifier, { foreignKey: 'flavorId' });
     this.hasMany(models.Flavor, { foreignKey: 'vendorId' });
   };

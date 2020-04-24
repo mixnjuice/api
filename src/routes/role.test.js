@@ -13,7 +13,7 @@ describe('role route resource', () => {
   };
 
   it('POST returns 200 for creating role', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .post('/')
         .send(mockData)
@@ -23,13 +23,13 @@ describe('role route resource', () => {
   });
 
   it('GET returns 200 for valid role', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/5').expect(200, done);
     });
   });
 
   it('PUT returns 200 for updating role', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request
         .put('/6')
         .send(mockData)
@@ -39,19 +39,19 @@ describe('role route resource', () => {
   });
 
   it('GET returns 400 for invalid role', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/0').expect(400, done);
     });
   });
 
   it('GET returns 404 for invalid role route', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.get('/ham').expect(404, done);
     });
   });
 
   it('DELETE returns 200 after deleting role', () => {
-    tryCatch(done => {
+    tryCatch((done) => {
       request.delete('/15').expect(200, done);
     });
   });

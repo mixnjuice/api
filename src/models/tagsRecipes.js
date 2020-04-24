@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  TagsRecipes.associate = function(models) {
+  TagsRecipes.associate = function (models) {
     this.belongsTo(models.Tag, { foreignKey: 'tagId' });
     this.belongsTo(models.User, { foreignKey: 'creatorId' });
     this.belongsTo(models.Recipe, { foreignKey: 'recipeId' });

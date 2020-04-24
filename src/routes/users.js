@@ -24,17 +24,11 @@ router.get(
   authenticate(),
   ensurePermission('users', 'read'),
   [
-    query('offset')
-      .optional()
-      .isNumeric()
-      .toInt(),
-    query('limit')
-      .optional()
-      .isNumeric()
-      .toInt()
+    query('offset').optional().isNumeric().toInt(),
+    query('limit').optional().isNumeric().toInt()
   ],
   handleValidationErrors(),
-  handleFindAll(UserProfile, req => {
+  handleFindAll(UserProfile, (req) => {
     const limit = req.query.limit || 20;
     const offset = req.query.offset - 1 || 0;
 
@@ -53,17 +47,11 @@ router.get(
   authenticate(),
   ensurePermission('users', 'read'),
   [
-    query('offset')
-      .optional()
-      .isNumeric()
-      .toInt(),
-    query('limit')
-      .optional()
-      .isNumeric()
-      .toInt()
+    query('offset').optional().isNumeric().toInt(),
+    query('limit').optional().isNumeric().toInt()
   ],
   handleValidationErrors(),
-  handleFindAll(User, req => {
+  handleFindAll(User, (req) => {
     const limit = req.query.limit || 20;
     const offset = req.query.offset - 1 || 0;
 
@@ -90,20 +78,12 @@ router.get(
   authenticate(),
   ensurePermission('users', 'read'),
   [
-    param('roleId')
-      .isNumeric()
-      .toInt(),
-    query('offset')
-      .optional()
-      .isNumeric()
-      .toInt(),
-    query('limit')
-      .optional()
-      .isNumeric()
-      .toInt()
+    param('roleId').isNumeric().toInt(),
+    query('offset').optional().isNumeric().toInt(),
+    query('limit').optional().isNumeric().toInt()
   ],
   handleValidationErrors(),
-  handleFindAll(UsersRoles, req => {
+  handleFindAll(UsersRoles, (req) => {
     const limit = req.query.limit || 20;
     const offset = req.query.offset - 1 || 0;
     const { roleId } = req.params;

@@ -300,14 +300,9 @@ router.get(
   '/:userId(\\d+)/notes',
   authenticate(),
   ensurePermission('user', 'read'),
-  [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('userId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleFindAll(UserFlavorNote, req => {
+  handleFindAll(UserFlavorNote, (req) => {
     const { userId } = req.params;
 
     log.info(`request flavor notes for user ${userId}`);
@@ -345,17 +340,11 @@ router.get(
   authenticate(),
   ensurePermission('user', 'read'),
   [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
+    param('userId').isNumeric().isInt({ min: 1 }).toInt(),
+    param('flavorId').isNumeric().isInt({ min: 1 }).toInt()
   ],
   handleValidationErrors(),
-  handleFindAll(UserFlavorNote, req => {
+  handleFindAll(UserFlavorNote, (req) => {
     const { userId, flavorId } = req.params;
 
     log.info(`request flavor note flavor id ${flavorId} for user ${userId}`);
@@ -392,14 +381,9 @@ router.post(
   '/:userId(\\d+)/note',
   authenticate(),
   ensurePermission('user', 'create'),
-  [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('userId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(UserFlavorNote, 'create', req => {
+  handleModelOperation(UserFlavorNote, 'create', (req) => {
     const { userId } = req.params;
     const { flavorId, created, note } = req.body;
 
@@ -425,17 +409,11 @@ router.put(
   authenticate(),
   ensurePermission('user', 'update'),
   [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
+    param('userId').isNumeric().isInt({ min: 1 }).toInt(),
+    param('flavorId').isNumeric().isInt({ min: 1 }).toInt()
   ],
   handleValidationErrors(),
-  handleModelOperation(UserFlavorNote, 'update', req => {
+  handleModelOperation(UserFlavorNote, 'update', (req) => {
     const { note } = req.body;
     const { userId, flavorId } = req.params;
 
@@ -464,17 +442,11 @@ router.delete(
   authenticate(),
   ensurePermission('user', 'delete'),
   [
-    param('userId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
+    param('userId').isNumeric().isInt({ min: 1 }).toInt(),
+    param('flavorId').isNumeric().isInt({ min: 1 }).toInt()
   ],
   handleValidationErrors(),
-  handleModelOperation(UserFlavorNote, 'destroy', req => {
+  handleModelOperation(UserFlavorNote, 'destroy', (req) => {
     const { userId, flavorId } = req.params;
 
     log.info(`delete from flavor stash for ${flavorId}`);

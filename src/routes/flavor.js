@@ -325,21 +325,12 @@ router.get(
   authenticate(),
   ensurePermission('flavors', 'read'),
   [
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt(),
-    query('offset')
-      .optional()
-      .isNumeric()
-      .toInt(),
-    query('limit')
-      .optional()
-      .isNumeric()
-      .toInt()
+    param('flavorId').isNumeric().isInt({ min: 1 }).toInt(),
+    query('offset').optional().isNumeric().toInt(),
+    query('limit').optional().isNumeric().toInt()
   ],
   handleValidationErrors(),
-  handleFindAll(UserFlavorNote, req => {
+  handleFindAll(UserFlavorNote, (req) => {
     const { flavorId } = req.params;
     const limit = req.query.limit || 20;
     const offset = req.query.offset - 1 || 0;
@@ -373,14 +364,9 @@ router.get(
   '/:flavorId/notes/count',
   authenticate(),
   ensurePermission('flavor', 'read'),
-  [
-    param('flavorId')
-      .isNumeric()
-      .isInt({ min: 1 })
-      .toInt()
-  ],
+  [param('flavorId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(UserFlavorNote, 'count', req => {
+  handleModelOperation(UserFlavorNote, 'count', (req) => {
     const { flavorId } = req.params;
 
     log.info(`counted notes of flavor ${flavorId}`);

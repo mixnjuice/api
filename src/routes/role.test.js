@@ -12,47 +12,53 @@ describe('role route resource', () => {
     name: 'Luser'
   };
 
-  it('POST returns 200 for creating role', () => {
+  it(
+    'POST returns 200 for creating role',
     tryCatch((done) => {
       request
         .post('/')
         .send(mockData)
         .expect('Content-type', /json/)
         .expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('GET returns 200 for valid role', () => {
+  it(
+    'GET returns 200 for valid role',
     tryCatch((done) => {
       request.get('/5').expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('PUT returns 200 for updating role', () => {
+  it(
+    'PUT returns 200 for updating role',
     tryCatch((done) => {
       request
         .put('/6')
         .send(mockData)
         .expect('Content-type', /json/)
         .expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('GET returns 400 for invalid role', () => {
+  it(
+    'GET returns 400 for invalid role',
     tryCatch((done) => {
       request.get('/0').expect(400, done);
-    });
-  });
+    })
+  );
 
-  it('GET returns 404 for invalid role route', () => {
+  it(
+    'GET returns 404 for invalid role route',
     tryCatch((done) => {
       request.get('/ham').expect(404, done);
-    });
-  });
+    })
+  );
 
-  it('DELETE returns 200 after deleting role', () => {
+  it(
+    'DELETE returns 200 after deleting role',
     tryCatch((done) => {
       request.delete('/15').expect(200, done);
-    });
-  });
+    })
+  );
 });

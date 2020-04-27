@@ -109,4 +109,18 @@ describe('flavor route resource', () => {
       request.get('/ham').expect(400, done);
     })
   );
+
+  it(
+    'GET returns valid flavor notes',
+    tryCatch((done) => {
+      request.get('/12/notes').expect(200, done);
+    })
+  );
+
+  it(
+    'GET returns valid flavor notes count',
+    tryCatch((done) => {
+      request.get('/12/notes/count').expect(200, done);
+    })
+  );
 });

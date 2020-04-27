@@ -23,11 +23,15 @@ router.get(
   ensurePermission('role', 'read'),
   [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(Role, 'findOne', (req) => ({
-    where: {
-      id: req.params.id
-    }
-  }))
+  handleModelOperation(Role, 'findOne', (req) => {
+    return [
+      {
+        where: {
+          id: req.params.id
+        }
+      }
+    ];
+  })
 );
 
 /**

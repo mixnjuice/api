@@ -22,7 +22,7 @@ const { Role, User, UserProfile, UsersRoles } = models;
 router.get(
   '/',
   authenticate(),
-  ensurePermission('users', 'read'),
+  ensurePermission('user', 'read'),
   [
     query('offset').optional().isNumeric().toInt(),
     query('limit').optional().isNumeric().toInt()
@@ -45,7 +45,7 @@ router.get(
 router.get(
   '/accounts',
   authenticate(),
-  ensurePermission('users', 'read'),
+  ensurePermission('user', 'read'),
   [
     query('offset').optional().isNumeric().toInt(),
     query('limit').optional().isNumeric().toInt()
@@ -76,7 +76,7 @@ router.get(
 router.get(
   '/role/:roleId(\\d+)',
   authenticate(),
-  ensurePermission('users', 'read'),
+  ensurePermission('user', 'read'),
   [
     param('roleId').isNumeric().toInt(),
     query('offset').optional().isNumeric().toInt(),
@@ -121,7 +121,7 @@ router.get(
 router.get(
   '/count',
   authenticate(),
-  ensurePermission('users', 'read'),
+  ensurePermission('user', 'read'),
   handleCount(User)
 );
 

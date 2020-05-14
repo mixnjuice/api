@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   UserFlavorNote.associate = function (models) {
-    this.belongsTo(models.User, { foreignKey: 'UserId' });
+    this.belongsTo(models.User, { foreignKey: 'userId' });
     this.belongsTo(models.UserProfile, { foreignKey: 'userId' });
     this.hasOne(models.Flavor, { foreignKey: 'id', sourceKey: 'flavorId' });
   };

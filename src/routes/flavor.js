@@ -326,8 +326,8 @@ router.get(
   ensurePermission('flavors', 'read'),
   [
     param('flavorId').isNumeric().isInt({ min: 1 }).toInt(),
-    query('offset').optional().isNumeric().toInt(),
-    query('limit').optional().isNumeric().toInt()
+    query('offset').optional().isNumeric().isInt({ min: 1 }).toInt(),
+    query('limit').optional().isNumeric().isInt({ min: 1 }).toInt()
   ],
   handleValidationErrors(),
   handleFindAll(UserFlavorNote, (req) => {
@@ -335,7 +335,7 @@ router.get(
     const limit = req.query.limit || 20;
     const offset = req.query.offset - 1 || 0;
 
-    log.info(`request for flavor notes ${limit}`);
+    log.info(`request for flavor notes ${flavorId}`);
     return {
       limit,
       offset,

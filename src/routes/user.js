@@ -299,7 +299,7 @@ router.delete(
 router.get(
   '/:userId(\\d+)/notes',
   authenticate(),
-  ensurePermission('user', 'read'),
+  ensurePermission('flavorNote', 'read'),
   [param('userId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
   handleFindAll(UserFlavorNote, (req) => {
@@ -338,7 +338,7 @@ router.get(
 router.get(
   '/:userId(\\d+)/note/:flavorId(\\d+)',
   authenticate(),
-  ensurePermission('user', 'read'),
+  ensurePermission('flavorNote', 'read'),
   [
     param('userId').isNumeric().isInt({ min: 1 }).toInt(),
     param('flavorId').isNumeric().isInt({ min: 1 }).toInt()
@@ -380,7 +380,7 @@ router.get(
 router.post(
   '/:userId(\\d+)/note',
   authenticate(),
-  ensurePermission('user', 'create'),
+  ensurePermission('flavorNote', 'create'),
   [param('userId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
   handleModelOperation(UserFlavorNote, 'create', (req) => {
@@ -407,7 +407,7 @@ router.post(
 router.put(
   '/:userId(\\d+)/note/:flavorId(\\d+)',
   authenticate(),
-  ensurePermission('user', 'update'),
+  ensurePermission('flavorNote', 'update'),
   [
     param('userId').isNumeric().isInt({ min: 1 }).toInt(),
     param('flavorId').isNumeric().isInt({ min: 1 }).toInt()
@@ -440,7 +440,7 @@ router.put(
 router.delete(
   '/:userId(\\d+)/note/:flavorId(\\d+)',
   authenticate(),
-  ensurePermission('user', 'delete'),
+  ensurePermission('flavorNote', 'delete'),
   [
     param('userId').isNumeric().isInt({ min: 1 }).toInt(),
     param('flavorId').isNumeric().isInt({ min: 1 }).toInt()

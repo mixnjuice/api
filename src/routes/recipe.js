@@ -32,29 +32,27 @@ router.get(
   ensurePermission('recipe', 'read'),
   [param('id').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
-  handleModelOperation(Recipe, 'findOne', (req) => {
-    return [
-      {
-        where: {
-          id: req.params.id
+  handleModelOperation(Recipe, 'findOne', (req) => [
+    {
+      where: {
+        id: req.params.id
+      },
+      include: [
+        {
+          model: UserProfile,
+          required: true
         },
-        include: [
-          {
-            model: UserProfile,
-            required: true
-          },
-          {
-            model: Flavor,
-            as: 'Flavors'
-          },
-          {
-            model: Diluent,
-            as: 'Diluents'
-          }
-        ]
-      }
-    ];
-  })
+        {
+          model: Flavor,
+          as: 'Flavors'
+        },
+        {
+          model: Diluent,
+          as: 'Diluents'
+        }
+      ]
+    }
+  ])
 );
 
 /**

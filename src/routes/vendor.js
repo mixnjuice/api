@@ -88,7 +88,8 @@ router.put(
   ],
   handleValidationErrors(),
   handleModelOperation(Vendor, 'update', (req) => {
-    const { id, name, slug, code } = req.params;
+    const { id } = req.params;
+    const { name, slug, code } = req.body;
 
     return [
       {

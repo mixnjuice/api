@@ -8,39 +8,45 @@ describe('diluents route resource', () => {
 
   afterAll(() => Promise.all(database.sequelize.close(), app.close()));
 
-  it('returns valid list of diluents', () => {
+  it(
+    'returns valid list of diluents',
     tryCatch((done) => {
       request.get('/').expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('returns valid list of 2 diluents', () => {
+  it(
+    'returns valid list of 2 diluents',
     tryCatch((done) => {
       request.get('/?limit=2').expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('returns 404 for invalid route', () => {
+  it(
+    'returns 404 for invalid route',
     tryCatch((done) => {
       request.get('/3').expect(404, done);
-    });
-  });
+    })
+  );
 
-  it('returns 200 diluents list', () => {
+  it(
+    'returns 200 diluents list',
     tryCatch((done) => {
       request.get('/?offset=800000').expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('returns 400 for invalid diluents list', () => {
+  it(
+    'returns 400 for invalid diluents list',
     tryCatch((done) => {
       request.get('/?limit=stop').expect(400, done);
-    });
-  });
+    })
+  );
 
-  it('returns 200 diluents count', () => {
+  it(
+    'returns 200 diluents count',
     tryCatch((done) => {
       request.get('/count').expect(200, done);
-    });
-  });
+    })
+  );
 });

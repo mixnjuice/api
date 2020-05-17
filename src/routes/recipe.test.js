@@ -43,7 +43,8 @@ describe('recipe route resource', () => {
         millipercent: 1000
       }
     ],
-    preparationDiluents: []
+    preparationDiluents: [],
+    recipe: { id: 1 }
   };
 
   it('can create recipe', () => {
@@ -56,37 +57,42 @@ describe('recipe route resource', () => {
     });
   });
 
-  it('can request valid recipe', () => {
+  it(
+    'can request valid recipe',
     tryCatch((done) => {
       request.get('/123').expect('Content-Type', /json/).expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('can update existing recipe', () => {
+  it(
+    'can update existing recipe',
     tryCatch((done) => {
       request
         .put('/123')
         .send(mockData)
         .expect('Content-Type', /json/)
         .expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('can delete existing recipe', () => {
+  it(
+    'can delete existing recipe',
     tryCatch((done) => {
       request.delete('/123').expect('Content-Type', /json/).expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('returns 400 for invalid number in GET request', () => {
+  it(
+    'returns 400 for invalid number in GET request',
     tryCatch((done) => {
       request.get('/0').expect('Content-Type', /json/).expect(400, done);
-    });
-  });
+    })
+  );
 
-  it('returns 400 for string in GET request', () => {
+  it(
+    'returns 400 for string in GET request',
     tryCatch((done) => {
       request.get('/ham').expect('Content-Type', /json/).expect(400, done);
-    });
-  });
+    })
+  );
 });

@@ -36,47 +36,53 @@ describe('preparation route resource', () => {
     ]
   };
 
-  it('can create preparation', () => {
+  it(
+    'can create preparation',
     tryCatch((done) => {
       request
         .post('/')
         .send(mockData)
         .expect('Content-Type', /json/)
         .expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('can request valid preparation', () => {
+  it(
+    'can request valid preparation',
     tryCatch((done) => {
       request.get('/123').expect('Content-Type', /json/).expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('can update existing preparation', () => {
+  it(
+    'can update existing preparation',
     tryCatch((done) => {
       request
         .put('/123')
         .send(mockData)
         .expect('Content-Type', /json/)
         .expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('can delete existing preparation', () => {
+  it(
+    'can delete existing preparation',
     tryCatch((done) => {
       request.delete('/123').expect('Content-Type', /json/).expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('returns 400 for invalid number in GET request', () => {
+  it(
+    'returns 400 for invalid number in GET request',
     tryCatch((done) => {
       request.get('/0').expect('Content-Type', /json/).expect(400, done);
-    });
-  });
+    })
+  );
 
-  it('returns 400 for string in GET request', () => {
+  it(
+    'returns 400 for string in GET request',
     tryCatch((done) => {
       request.get('/ham').expect('Content-Type', /json/).expect(400, done);
-    });
-  });
+    })
+  );
 });

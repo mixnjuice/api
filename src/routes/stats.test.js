@@ -8,15 +8,17 @@ describe('stats route resource', () => {
 
   afterAll(() => Promise.all(database.sequelize.close(), app.close()));
 
-  it('returns valid stats', () => {
+  it(
+    'returns valid stats',
     tryCatch((done) => {
       request.get('/dashboard').expect(200, done);
-    });
-  });
+    })
+  );
 
-  it('returns 404 for page not found', () => {
+  it(
+    'returns 404 for page not found',
     tryCatch((done) => {
       request.get('/error').expect(404, done);
-    });
-  });
+    })
+  );
 });

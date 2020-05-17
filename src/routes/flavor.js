@@ -323,7 +323,7 @@ router.delete(
 router.get(
   '/:flavorId/notes',
   authenticate(),
-  ensurePermission('flavors', 'read'),
+  ensurePermission('flavorNote', 'read'),
   [
     param('flavorId').isNumeric().isInt({ min: 1 }).toInt(),
     query('offset').optional().isNumeric().isInt({ min: 1 }).toInt(),
@@ -363,7 +363,7 @@ router.get(
 router.get(
   '/:flavorId/notes/count',
   authenticate(),
-  ensurePermission('flavor', 'read'),
+  ensurePermission('flavorNote', 'read'),
   [param('flavorId').isNumeric().isInt({ min: 1 }).toInt()],
   handleValidationErrors(),
   handleModelOperation(UserFlavorNote, 'count', (req) => {

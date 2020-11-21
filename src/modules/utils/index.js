@@ -21,11 +21,11 @@ export const compareHashAndPassword = async (hash, password) => {
 };
 
 export const buildWebUrl = (path) => {
-  const { useTls, hostname, port } = webConfig;
-  const needsPort = (!useTls && port !== 80) || (useTls && port !== 443);
+  const { hostname, port } = webConfig;
+  const needsPort = port !== 443;
   const needsSlash = !path.startsWith('/');
 
-  return `http${useTls ? 's' : ''}://${hostname}${needsPort ? `:${port}` : ''}${
+  return `https://${hostname}${needsPort ? `:${port}` : ''}${
     needsSlash ? '/' : ''
   }${path}`;
 };

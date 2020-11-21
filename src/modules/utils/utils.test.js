@@ -15,9 +15,8 @@ jest.mock('bcrypt', () => ({
 
 jest.mock('modules/config', () => ({
   web: {
-    hostname: 'localhost',
-    useTls: false,
-    port: 9000
+    hostname: jest.fn(),
+    port: jest.fn()
   },
   api: {
     passwords: {
@@ -66,21 +65,15 @@ describe('utility methods', () => {
 
   describe('buildWebUrl', () => {
     it('can construct local http url', () => {
-      expect(buildWebUrl('/test')).toEqual('http://localhost:9000/test');
+      webConfig.hostname.mockReturnValue('localhost');
+      webConfig.port.mockReturnValue(9000);
+
+      expect(buildWebUrl('/test')).toEqual('https://localhost:9000/test');
     });
 
     it('can construct https url', () => {
-      Object.defineProperties(webConfig, {
-        hostname: {
-          get: jest.fn().mockReturnValue('localhost')
-        },
-        useTls: {
-          get: jest.fn().mockReturnValue(true)
-        },
-        port: {
-          get: jest.fn().mockReturnValue(443)
-        }
-      });
+      webConfig.hostname.mockReturnValue('localhost');
+      webConfig.port.mockReturnValue(443);
 
       expect(buildWebUrl('/test')).toEqual('https://localhost/test');
     });

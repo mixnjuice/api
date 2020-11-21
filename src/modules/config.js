@@ -1,15 +1,9 @@
-import dotenv from 'dotenv';
+import 'dotenv/config';
 
 // utility to test for boolean true
 const trueRegex = /^t(rue|$)$/i;
 
 export const isTrue = (value) => value === true || trueRegex.test(value);
-
-const result = dotenv.config();
-
-if (result.error) {
-  throw result.error;
-}
 
 const { env: config } = process;
 

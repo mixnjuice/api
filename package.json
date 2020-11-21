@@ -1,11 +1,11 @@
 {
   "name": "@mixnjuice/api",
   "version": "0.1.0",
-  "description": "A simple REST API for recipe and flavor information",
+  "description": "The Mixnjuice REST API",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:mixnjuice/api.git"
+    "url": "https://github.com/mixnjuice/api.git"
   },
   "scripts": {
     "build": "gulp",

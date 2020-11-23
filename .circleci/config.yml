@@ -7,8 +7,8 @@ executors:
       - image: circleci/buildpack-deps:stretch
 jobs:
   build:
-    machine:
-      image: circleci/node:current
+    docker:
+      - image: circleci/node:current
     working_directory: ~/mixnjuice-api
     steps:
       - checkout

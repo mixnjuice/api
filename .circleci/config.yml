@@ -8,7 +8,7 @@ executors:
 jobs:
   build:
     machine:
-      image: node:lts-alpine
+      image: circleci/node:current
     working_directory: ~/mixnjuice-api
     steps:
       - checkout

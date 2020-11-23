@@ -12,15 +12,10 @@ jobs:
     working_directory: ~/mixnjuice-api
     steps:
       - checkout
-      - run: docker network create proxy_proxy
-      - run: docker-compose up -d --build
-      - run: docker-compose exec api npm run migrate
-      - run:
-          command: |
-            mkdir -p coverage/
-            docker-compose run --rm -v "$(pwd)"/coverage:/usr/src/flavor-api/coverage \
-              api npm test
-            bash <(curl -s https://codecov.io/bash) -f ./coverage/lcov.info
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: bash <(curl -s https://codecov.io/bash) -f ./coverage/lcov.info
   docker_build:
     executor: docker-publisher
     steps:

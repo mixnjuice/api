@@ -12,27 +12,31 @@ import {
 
 const router = Router();
 const log = loggers('flavors');
+const { Op } = models.Sequelize;
 const { Flavor, Vendor } = models;
 
 /**
  * GET Flavors
  * @query offset int
  * @query limit int
+ * @query filter string
  */
 router.get(
   '/',
   authenticate(),
   ensurePermission('flavors', 'read'),
   [
-    (query('offset').optional().isNumeric().toInt(),
-    query('limit').optional().isNumeric().toInt())
+    query('offset').optional().isNumeric().toInt(),
+    query('limit').optional().isNumeric().toInt(),
+    query('filter').optional().isLength({ min: 3 })
   ],
   handleValidationErrors(),
   handleFindAll(Flavor, (req) => {
     const limit = req.query.limit || 20;
     const offset = req.query.offset - 1 || 0;
+    const filter = req.query.filter ? `%${req.query.filter}%` : '%';
 
-    log.info(`request for flavors ${limit}`);
+    log.info(`request for flavors ${limit}/${offset} with filter ${filter}`);
     return {
       limit,
       offset,
@@ -41,6 +45,15 @@ router.get(
           model: Vendor,
           require: true
         }
+      ],
+      where: {
+        name: {
+          [Op.iLike]: filter
+        }
+      },
+      order: [
+        ['Vendor', 'code', 'ASC'],
+        ['name', 'ASC']
       ]
     };
   })
